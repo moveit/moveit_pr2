@@ -1,0 +1,34 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+\b pr2_arm_kinematics is a PR2 specific implementation of forward and inverse kinematics. 
+To see examples of how to use this package, check out these <a href="http://www.ros.org/wiki/pr2_kinematics/Tutorials</a> tutorials
+<a href="</a>.
+
+<!-- 
+In addition to providing an overview of your package,
+this is the section where the specification and design/architecture 
+should be detailed. While the original specification may be done on the
+wiki, it should be transferred here once your package starts to take shape.
+You can then link to this documentation page from the Wiki. 
+-->
+
+
+\section codeapi Code API
+
+The code API for the pr2_arm_kinematics package is in two forms: a KDL API that takes KDL structures as inputs and returns solutions as a KDL JntArray and a node API that takes a service call request as input and returns a service call response. The KDL solver API can be found <a href="http://www.ros.org/doc/api/pr2_arm_ik/html/classpr2__arm__ik_1_1PR2ArmIKSolver.html">here</a>. The node API can be found <a href="http://www.ros.org/doc/api/pr2_arm_kinematics/html/classpr2__arm__kinematics_1_1PR2ArmKinematics.html">here</a>.
+
+<!--
+Provide links to specific auto-generated API documentation within your
+package that is of particular interest to a reader. Doxygen will
+document pretty much every part of your code, so do your best here to
+point the reader to the actual API.
+
+If your codebase is fairly large or has different sets of APIs, you
+should use the doxygen 'group' tag to keep these APIs together. For
+example, the roscpp documentation has 'libros' group.
+-->
+
+
+*/
