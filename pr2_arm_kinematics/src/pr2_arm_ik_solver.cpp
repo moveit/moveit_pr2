@@ -186,7 +186,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout)
 {
   KDL::JntArray q_init = q_in;
-  //  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
+  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   double initial_guess = q_init(free_angle_);
 
   ros::Time start_time = ros::Time::now();
@@ -225,7 +225,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout)
 {
   KDL::JntArray q_init = q_in;
-  //  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
+  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   double initial_guess = q_init(free_angle_);
 
   ros::Time start_time = ros::Time::now();
@@ -260,13 +260,57 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
 
 int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in, 
                                     const KDL::Frame& p_in, 
+                                    const double& consistency_limit,
+                                    KDL::JntArray &q_out, 
+                                    const double &timeout)
+{
+  KDL::JntArray q_init = q_in;
+  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
+  double initial_guess = q_init(free_angle_);
+
+  ros::Time start_time = ros::Time::now();
+  double loop_time = 0;
+  int count = 0;
+
+  double max_limit = fmin(pr2_arm_ik_.solver_info_.limits[free_angle_].max_position, initial_guess+consistency_limit);
+  double min_limit = fmax(pr2_arm_ik_.solver_info_.limits[free_angle_].min_position, initial_guess-consistency_limit);
+    
+  int num_positive_increments = (int)((max_limit-initial_guess)/search_discretization_angle_);
+  int num_negative_increments = (int)((initial_guess-min_limit)/search_discretization_angle_);
+
+  ROS_DEBUG("%f %f %f %d %d \n\n",initial_guess,pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,pr2_arm_ik_.solver_info_.limits[free_angle_].min_position,num_positive_increments,num_negative_increments);
+  while(loop_time < timeout)
+  {
+    if(CartToJnt(q_init,p_in,q_out) > 0)
+      return 1;
+    if(!getCount(count,num_positive_increments,-num_negative_increments))
+      return -1;
+    q_init(free_angle_) = initial_guess + search_discretization_angle_ * count;
+    ROS_DEBUG("%d, %f",count,q_init(free_angle_));
+    loop_time = (ros::Time::now()-start_time).toSec();
+  }
+  if(loop_time >= timeout)
+  {
+    ROS_DEBUG("IK Timed out in %f seconds",timeout);
+    return TIMED_OUT;
+  }
+  else
+  {
+    ROS_DEBUG("No IK solution was found");
+    return NO_IK_SOLUTION;
+  }
+  return NO_IK_SOLUTION;
+}
+
+int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in, 
+                                    const KDL::Frame& p_in, 
                                     KDL::JntArray &q_out, 
                                     const double &timeout, 
                                     moveit_msgs::MoveItErrorCodes &error_code,
-                                    const KDLIKCallbackFn &desired_pose_callback,
-                                    const KDLIKCallbackFn &solution_callback)
+                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
-    //  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
+  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
 
@@ -277,7 +321,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   int num_positive_increments = (int)((pr2_arm_ik_.solver_info_.limits[free_angle_].max_position-initial_guess)/search_discretization_angle_);
   int num_negative_increments = (int)((initial_guess-pr2_arm_ik_.solver_info_.limits[free_angle_].min_position)/search_discretization_angle_);
   ROS_DEBUG("%f %f %f %d %d \n\n",initial_guess,pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,pr2_arm_ik_.solver_info_.limits[free_angle_].min_position,num_positive_increments,num_negative_increments);
-
+  unsigned int testnum = 0;
   if(!desired_pose_callback.empty())
     desired_pose_callback(q_init,p_in,error_code);
   if(error_code.val != error_code.SUCCESS)
@@ -288,8 +332,11 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   if(solution_callback.empty())
     callback_check = false;
 
+  ros::WallTime s = ros::WallTime::now();
+
   while(loop_time < timeout)
   {
+    testnum++;
     if(CartToJnt(q_init,p_in,q_out) > 0)
     {
       if(callback_check)
@@ -297,6 +344,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
         solution_callback(q_out,p_in,error_code);
         if(error_code.val == error_code.SUCCESS)
         {
+          ROS_DEBUG_STREAM("Success with " << testnum << " in " << (ros::WallTime::now()-s));
           return 1;
         }
       }
@@ -308,6 +356,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
     }
     if(!getCount(count,num_positive_increments,-num_negative_increments))
     {
+      ROS_DEBUG_STREAM("Failure with " << testnum << " in " << (ros::WallTime::now()-s));
       error_code.val = error_code.NO_IK_SOLUTION;
       return -1;
     }
@@ -327,6 +376,91 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   }
   return -1;
 }
+
+int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in, 
+                                    const KDL::Frame& p_in, 
+                                    KDL::JntArray &q_out, 
+                                    const double &timeout, 
+                                    const double &max_consistency,
+                                    moveit_msgs::MoveItErrorCodes &error_code,
+                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
+{
+  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
+  KDL::JntArray q_init = q_in;
+  double initial_guess = q_init(free_angle_);
+
+  ros::Time start_time = ros::Time::now();
+  double loop_time = 0;
+  int count = 0;
+
+  double max_limit = fmin(pr2_arm_ik_.solver_info_.limits[free_angle_].max_position, initial_guess+max_consistency);
+  double min_limit = fmax(pr2_arm_ik_.solver_info_.limits[free_angle_].min_position, initial_guess-max_consistency);
+ 
+  ROS_DEBUG_STREAM("Initial guess " << initial_guess << " max " << max_consistency);
+  ROS_DEBUG_STREAM("Max limit " << max_limit << " " << pr2_arm_ik_.solver_info_.limits[free_angle_].max_position << " " << initial_guess+max_consistency);
+  ROS_DEBUG_STREAM("Min limit " << min_limit << " " << pr2_arm_ik_.solver_info_.limits[free_angle_].min_position << " " << initial_guess-max_consistency);
+  
+  int num_positive_increments = (int)((max_limit-initial_guess)/search_discretization_angle_);
+  int num_negative_increments = (int)((initial_guess-min_limit)/search_discretization_angle_);
+  ROS_DEBUG("%f %f %f %d %d \n\n",initial_guess,pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,pr2_arm_ik_.solver_info_.limits[free_angle_].min_position,num_positive_increments,num_negative_increments);
+  unsigned int testnum = 0;
+  if(!desired_pose_callback.empty())
+    desired_pose_callback(q_init,p_in,error_code);
+  if(error_code.val != error_code.SUCCESS)
+  {
+    return -1;
+  }
+  bool callback_check = true;
+  if(solution_callback.empty())
+    callback_check = false;
+
+  ros::WallTime s = ros::WallTime::now();
+
+  while(loop_time < timeout)
+  {
+    testnum++;
+    if(CartToJnt(q_init,p_in,q_out) > 0)
+    {
+      if(callback_check)
+      {
+        solution_callback(q_out,p_in,error_code);
+        if(error_code.val == error_code.SUCCESS)
+        {
+          ROS_DEBUG_STREAM("Difference is " << abs(q_in(free_angle_)-q_out(free_angle_)));
+          ROS_DEBUG_STREAM("Success with " << testnum << " in " << (ros::WallTime::now()-s));
+          return 1;
+        }
+      }
+      else
+      {
+        error_code.val = error_code.SUCCESS;
+        return 1;
+      }
+    }
+    if(!getCount(count,num_positive_increments,-num_negative_increments))
+    {
+      ROS_DEBUG_STREAM("Failure with " << testnum << " in " << (ros::WallTime::now()-s));
+      error_code.val = error_code.NO_IK_SOLUTION;
+      return -1;
+    }
+    q_init(free_angle_) = initial_guess + search_discretization_angle_ * count;
+    ROS_DEBUG("Redundancy search, index:%d, free angle value: %f",count,q_init(free_angle_));
+    loop_time = (ros::Time::now()-start_time).toSec();
+  }
+  if(loop_time >= timeout)
+  {
+    ROS_DEBUG("IK Timed out in %f seconds",timeout);
+    error_code.val = error_code.TIMED_OUT;
+  }
+  else
+  {
+    ROS_DEBUG("No IK solution was found");
+    error_code.val = error_code.NO_IK_SOLUTION;
+  }
+  return -1;
+}
+
 
 std::string PR2ArmIKSolver::getFrameId()
 {

@@ -53,8 +53,6 @@ static const int TIMED_OUT = -2;
   {
     public:
 
-      typedef boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> KDLIKCallbackFn;
-      
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     
     /** @class
@@ -141,6 +139,12 @@ static const int TIMED_OUT = -2;
                         const KDL::Frame& p_in, 
                         KDL::JntArray &q_out, 
                         const double &timeout);
+
+    int CartToJntSearch(const KDL::JntArray& q_in, 
+                        const KDL::Frame& p_in, 
+                        const double& consistency_limit, 
+                        KDL::JntArray &q_out, 
+                        const double &timeout);
     /**
        @brief A method to get chain information about the serial chain that the IK operates on 
        @param response This class gets populated with information about the joints that IK operates on, including joint names and limits.
@@ -162,12 +166,31 @@ static const int TIMED_OUT = -2;
                         KDL::JntArray &q_out, 
                         const double &timeout, 
                         moveit_msgs::MoveItErrorCodes &error_code,
-                        const KDLIKCallbackFn &desired_pose_callback,
-                        const KDLIKCallbackFn &solution_callback);
+                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
+
+    int CartToJntSearch(const KDL::JntArray& q_in, 
+                        const KDL::Frame& p_in, 
+                        KDL::JntArray &q_out, 
+                        const double &timeout, 
+                        const double& consistency_limit, 
+                        moveit_msgs::MoveItErrorCodes &error_code,
+                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
+
+
 
     std::string getFrameId();
 
-    private:
+    unsigned int getFreeAngle() const {
+      return free_angle_;
+    }
+
+    void setFreeAngle(const unsigned int& free_angle) {
+      free_angle_ = free_angle;
+    }
+
+  private:
 
     bool getCount(int &count, const int &max_count, const int &min_count);
 

@@ -49,6 +49,7 @@
 
 #include <kinematics_msgs/GetPositionFK.h>
 #include <kinematics_msgs/GetPositionIK.h>
+#include <kinematics_msgs/GetConstraintAwarePositionIK.h>
 #include <kinematics_msgs/GetKinematicSolverInfo.h>
 
 
@@ -77,10 +78,8 @@ namespace pr2_arm_kinematics
                       double &soln1, 
                       double &soln2);
 
-  bool loadRobotModel(ros::NodeHandle& node_handle, 
+  bool loadRobotModel(ros::NodeHandle node_handle, 
                       urdf::Model &robot_model, 
-                      std::string &root_name, 
-                      std::string &tip_name, 
                       std::string &xml_string);
 
   bool getKDLChain(const std::string &xml_string, 
@@ -113,6 +112,10 @@ namespace pr2_arm_kinematics
                       kinematics_msgs::GetPositionIK::Response &response,
                       const kinematics_msgs::KinematicSolverInfo &chain_info);
  
+  bool checkConstraintAwareIKService(kinematics_msgs::GetConstraintAwarePositionIK::Request &request, 
+                                     kinematics_msgs::GetConstraintAwarePositionIK::Response &response,
+                                     const kinematics_msgs::KinematicSolverInfo &chain_info);
+
   int getJointIndex(const std::string &name,
                     const kinematics_msgs::KinematicSolverInfo &chain_info);
 

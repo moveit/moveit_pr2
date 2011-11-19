@@ -36,34 +36,30 @@
 namespace pr2_arm_kinematics
 {
   static const double IK_DEFAULT_TIMEOUT = 10.0;
-  bool loadRobotModel(ros::NodeHandle& node_handle, urdf::Model &robot_model, std::string &root_name, std::string &tip_name, std::string &xml_string)
+  bool loadRobotModel(ros::NodeHandle node_handle, urdf::Model &robot_model, std::string &xml_string)
   {
     std::string urdf_xml,full_urdf_xml;
     node_handle.param("urdf_xml",urdf_xml,std::string("robot_description"));
     node_handle.searchParam(urdf_xml,full_urdf_xml);
-
+    TiXmlDocument xml;
     ROS_DEBUG("Reading xml file from parameter server\n");
     std::string result;
     if (node_handle.getParam(full_urdf_xml, result))
-    {
-	xml_string = result;
-	if (!robot_model.initString(result))
-	  return false;
-    }
+      xml.Parse(result.c_str());
     else
     {
       ROS_FATAL("Could not load the xml from parameter server: %s\n", urdf_xml.c_str());
       return false;
-    } 
-    
-    if (!node_handle.getParam("root_name", root_name)){
-      ROS_FATAL("PR2IK: No root name found on parameter server");
-      return false;
     }
-    if (!node_handle.getParam("tip_name", tip_name)){
-      ROS_FATAL("PR2IK: No tip name found on parameter server");
-      return false;
+    xml_string = result;
+    TiXmlElement *root_element = xml.RootElement();
+    TiXmlElement *root = xml.FirstChildElement("robot");
+    if (!root || !root_element)
+    {
+      ROS_FATAL("Could not parse the xml from %s\n", urdf_xml.c_str());
+      exit(1);
     }
+    robot_model.initXml(root);
     return true;
   }
 
@@ -78,7 +74,7 @@ namespace pr2_arm_kinematics
     }
     if (!tree.getChain(root_name, tip_name, kdl_chain))
     {
-	ROS_ERROR("Could not initialize chain object: %s -> %s", root_name.c_str(), tip_name.c_str());
+      ROS_ERROR_STREAM("Could not initialize chain object for base " << root_name << " tip " << tip_name);
       return false;
     }
     return true;
@@ -281,7 +277,7 @@ bool checkJointNames(const std::vector<std::string> &joint_names,
   }
 
   bool checkRobotState(moveit_msgs::RobotState &robot_state,
-		       const kinematics_msgs::KinematicSolverInfo &chain_info)
+                     const kinematics_msgs::KinematicSolverInfo &chain_info)
   {
     if((int) robot_state.joint_state.position.size() != (int) robot_state.joint_state.name.size())
     {
@@ -316,6 +312,29 @@ bool checkJointNames(const std::vector<std::string> &joint_names,
 
   bool checkIKService(kinematics_msgs::GetPositionIK::Request &request, 
                       kinematics_msgs::GetPositionIK::Response &response,
+                      const kinematics_msgs::KinematicSolverInfo &chain_info)
+  {
+    if(!checkLinkName(request.ik_request.ik_link_name,chain_info))
+    {
+      ROS_ERROR("Link name in service request does not match links that kinematics can provide solutions for.");      
+      response.error_code.val = response.error_code.INVALID_LINK_NAME;
+      return false;
+    }
+    if(!checkRobotState(request.ik_request.ik_seed_state,chain_info))
+    {
+      response.error_code.val = response.error_code.INVALID_ROBOT_STATE;
+      return false;
+    }
+    if(request.timeout <= ros::Duration(0.0))
+      {
+        response.error_code.val = response.error_code.INVALID_TIMEOUT;
+	return false;
+      }
+    return true;
+  }
+
+  bool checkConstraintAwareIKService(kinematics_msgs::GetConstraintAwarePositionIK::Request &request, 
+                      kinematics_msgs::GetConstraintAwarePositionIK::Response &response,
                       const kinematics_msgs::KinematicSolverInfo &chain_info)
   {
     if(!checkLinkName(request.ik_request.ik_link_name,chain_info))

@@ -57,10 +57,19 @@ PR2ArmKinematics::PR2ArmKinematics(bool create_tf_listener):  node_handle_("~"),
   urdf::Model robot_model;
   std::string tip_name, xml_string;
 
-  while(!loadRobotModel(node_handle_,robot_model,root_name_,tip_name,xml_string) && node_handle_.ok())
+  while(!loadRobotModel(node_handle_,robot_model, xml_string) && node_handle_.ok())
   {
     ROS_ERROR("Could not load robot model. Are you sure the robot model is on the parameter server?");
     ros::Duration(0.5).sleep();
+  }
+
+  if (!node_handle_.getParam("root_name", root_name_)){
+    ROS_FATAL("PR2IK: No root name found on parameter server");
+    exit(-1);
+  }
+  if (!node_handle_.getParam("tip_name", tip_name)){
+    ROS_FATAL("PR2IK: No tip name found on parameter server");
+    exit(-1);
   }
 
   ROS_DEBUG("Loading KDL Tree");
@@ -266,6 +275,7 @@ bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &re
   response.pose_stamped.resize(request.fk_link_names.size());
   response.fk_link_names.resize(request.fk_link_names.size());
 
+  bool valid = true;
   for(unsigned int i=0; i < request.fk_link_names.size(); i++)
   {
     ROS_DEBUG("End effector index: %d",pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,request.fk_link_names[i]));
@@ -287,7 +297,7 @@ bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &re
     {
       ROS_ERROR("Could not compute FK for %s",request.fk_link_names[i].c_str());
       response.error_code.val = response.error_code.NO_FK_SOLUTION;
-      return false;
+      valid = false;
     }
   }
   return true;
