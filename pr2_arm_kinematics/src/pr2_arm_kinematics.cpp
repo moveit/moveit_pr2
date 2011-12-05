@@ -145,11 +145,11 @@ bool PR2ArmKinematics::getPositionIK(kinematics_msgs::GetPositionIK::Request &re
   if(!active_)
   {
     ROS_ERROR("IK service not active");
-    return true;
+    return false;
   }
 
   if(!checkIKService(request,response,ik_solver_info_))
-    return true;
+    return false;
 
   geometry_msgs::PoseStamped pose_msg_in = request.ik_request.pose_stamped;
   geometry_msgs::PoseStamped pose_msg_out;
@@ -163,7 +163,7 @@ bool PR2ArmKinematics::getPositionIK(kinematics_msgs::GetPositionIK::Request &re
   } else {
     ROS_WARN_STREAM("No tf listener.  Can't transform anything");
     response.error_code.val = response.error_code.FRAME_TRANSFORM_FAILURE;
-    return true;
+    return false;
   }
   request.ik_request.pose_stamped = pose_msg_out;
   return getPositionIKHelper(request, response);
@@ -219,32 +219,32 @@ bool PR2ArmKinematics::getPositionIKHelper(kinematics_msgs::GetPositionIK::Reque
   else
   {
     ROS_DEBUG("An IK solution could not be found");   
-    return true;
+    return false;
   }
 }
 
 bool PR2ArmKinematics::getIKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request, 
                                        kinematics_msgs::GetKinematicSolverInfo::Response &response)
 {
-  if(!active_)
+  if (active_)
   {
-    ROS_ERROR("IK node not active");
+    response.kinematic_solver_info = ik_solver_info_;
     return true;
   }
-  response.kinematic_solver_info = ik_solver_info_;
-  return true;
+  ROS_ERROR("IK node not active");
+  return false;
 }
 
 bool PR2ArmKinematics::getFKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request, 
                                        kinematics_msgs::GetKinematicSolverInfo::Response &response)
 {
-  if(!active_)
+  if(active_)
   {
-    ROS_ERROR("IK node not active");
+    response.kinematic_solver_info = fk_solver_info_;
     return true;
   }
-  response.kinematic_solver_info = fk_solver_info_;
-  return true;
+  ROS_ERROR("IK node not active");
+  return false;
 }
 
 bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &request, 
@@ -253,11 +253,11 @@ bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &re
   if(!active_)
   {
     ROS_ERROR("FK service not active");
-    return true;
+    return false;
   }
 
   if(!checkFKService(request,response,fk_solver_info_))
-    return true;
+    return false;
 
   KDL::Frame p_out;
   KDL::JntArray jnt_pos_in;
@@ -275,7 +275,6 @@ bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &re
   response.pose_stamped.resize(request.fk_link_names.size());
   response.fk_link_names.resize(request.fk_link_names.size());
 
-  bool valid = true;
   for(unsigned int i=0; i < request.fk_link_names.size(); i++)
   {
     ROS_DEBUG("End effector index: %d",pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,request.fk_link_names[i]));
@@ -297,7 +296,7 @@ bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &re
     {
       ROS_ERROR("Could not compute FK for %s",request.fk_link_names[i].c_str());
       response.error_code.val = response.error_code.NO_FK_SOLUTION;
-      valid = false;
+      return false;
     }
   }
   return true;

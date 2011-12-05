@@ -49,7 +49,6 @@
 
 #include <kinematics_msgs/GetPositionFK.h>
 #include <kinematics_msgs/GetPositionIK.h>
-#include <kinematics_msgs/GetConstraintAwarePositionIK.h>
 #include <kinematics_msgs/GetKinematicSolverInfo.h>
 
 
@@ -112,10 +111,6 @@ namespace pr2_arm_kinematics
                       kinematics_msgs::GetPositionIK::Response &response,
                       const kinematics_msgs::KinematicSolverInfo &chain_info);
  
-  bool checkConstraintAwareIKService(kinematics_msgs::GetConstraintAwarePositionIK::Request &request, 
-                                     kinematics_msgs::GetConstraintAwarePositionIK::Response &response,
-                                     const kinematics_msgs::KinematicSolverInfo &chain_info);
-
   int getJointIndex(const std::string &name,
                     const kinematics_msgs::KinematicSolverInfo &chain_info);
 

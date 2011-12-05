@@ -186,7 +186,6 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout)
 {
   KDL::JntArray q_init = q_in;
-  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   double initial_guess = q_init(free_angle_);
 
   ros::Time start_time = ros::Time::now();
@@ -225,7 +224,6 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout)
 {
   KDL::JntArray q_init = q_in;
-  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   double initial_guess = q_init(free_angle_);
 
   ros::Time start_time = ros::Time::now();
@@ -265,7 +263,6 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout)
 {
   KDL::JntArray q_init = q_in;
-  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   double initial_guess = q_init(free_angle_);
 
   ros::Time start_time = ros::Time::now();
@@ -310,7 +307,6 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
                                     const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
-  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
 
@@ -386,7 +382,6 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
                                     const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
-  Eigen::Matrix4f b = KDLToEigenMatrix(p_in);
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
 

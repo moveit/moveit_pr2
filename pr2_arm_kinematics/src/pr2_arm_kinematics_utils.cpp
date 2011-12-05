@@ -333,29 +333,6 @@ bool checkJointNames(const std::vector<std::string> &joint_names,
     return true;
   }
 
-  bool checkConstraintAwareIKService(kinematics_msgs::GetConstraintAwarePositionIK::Request &request, 
-                      kinematics_msgs::GetConstraintAwarePositionIK::Response &response,
-                      const kinematics_msgs::KinematicSolverInfo &chain_info)
-  {
-    if(!checkLinkName(request.ik_request.ik_link_name,chain_info))
-    {
-      ROS_ERROR("Link name in service request does not match links that kinematics can provide solutions for.");      
-      response.error_code.val = response.error_code.INVALID_LINK_NAME;
-      return false;
-    }
-    if(!checkRobotState(request.ik_request.ik_seed_state,chain_info))
-    {
-      response.error_code.val = response.error_code.INVALID_ROBOT_STATE;
-      return false;
-    }
-    if(request.timeout <= ros::Duration(0.0))
-      {
-        response.error_code.val = response.error_code.INVALID_TIMEOUT;
-	return false;
-      }
-    return true;
-  }
-
   bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg, 
                               KDL::Frame &pose_kdl, 
                               const std::string &root_frame,
