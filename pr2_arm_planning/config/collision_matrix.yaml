@@ -1,0 +1,3439 @@
+default_collision_operations:
+  - object1: base_footprint
+    object2: base_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: base_bellow_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: base_laser_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: bl_caster_rotation_link
+    operation: disable  # Adjacent in collision
+  - object1: bl_caster_rotation_link
+    object2: bl_caster_l_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: bl_caster_rotation_link
+    object2: bl_caster_r_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: br_caster_rotation_link
+    operation: disable  # Adjacent in collision
+  - object1: br_caster_rotation_link
+    object2: br_caster_l_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: br_caster_rotation_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Adjacent in collision
+  - object1: fl_caster_rotation_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: fl_caster_rotation_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Adjacent in collision
+  - object1: fr_caster_rotation_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: fr_caster_rotation_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: torso_lift_link
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: head_pan_link
+    operation: disable  # Adjacent in collision
+  - object1: head_pan_link
+    object2: double_stereo_link
+    operation: disable
+  - object1: head_pan_link
+    object2: head_tilt_link
+    operation: disable  # Adjacent in collision
+  - object1: head_tilt_link
+    object2: head_plate_frame
+    operation: disable  # Adjacent in collision
+  - object1: head_plate_frame
+    object2: projector_wg6802418_frame
+    operation: disable  # Adjacent in collision
+  - object1: projector_wg6802418_frame
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Adjacent in collision
+  - object1: head_plate_frame
+    object2: sensor_mount_link
+    operation: disable  # Adjacent in collision
+  - object1: sensor_mount_link
+    object2: double_stereo_link
+    operation: disable  # Adjacent in collision
+  - object1: double_stereo_link
+    object2: narrow_stereo_link
+    operation: disable  # Adjacent in collision
+  - object1: narrow_stereo_link
+    object2: narrow_stereo_gazebo_l_stereo_camera_frame
+    operation: disable  # Adjacent in collision
+  - object1: narrow_stereo_gazebo_l_stereo_camera_frame
+    object2: narrow_stereo_gazebo_l_stereo_camera_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: narrow_stereo_gazebo_l_stereo_camera_frame
+    object2: narrow_stereo_gazebo_r_stereo_camera_frame
+    operation: disable  # Adjacent in collision
+  - object1: narrow_stereo_gazebo_r_stereo_camera_frame
+    object2: narrow_stereo_gazebo_r_stereo_camera_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: narrow_stereo_link
+    object2: narrow_stereo_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: double_stereo_link
+    object2: wide_stereo_link
+    operation: disable  # Adjacent in collision
+  - object1: wide_stereo_link
+    object2: wide_stereo_gazebo_l_stereo_camera_frame
+    operation: disable  # Adjacent in collision
+  - object1: wide_stereo_gazebo_l_stereo_camera_frame
+    object2: wide_stereo_gazebo_l_stereo_camera_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: wide_stereo_gazebo_l_stereo_camera_frame
+    object2: wide_stereo_gazebo_r_stereo_camera_frame
+    operation: disable  # Adjacent in collision
+  - object1: wide_stereo_gazebo_r_stereo_camera_frame
+    object2: wide_stereo_gazebo_r_stereo_camera_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: wide_stereo_link
+    object2: wide_stereo_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: sensor_mount_link
+    object2: high_def_frame
+    operation: disable  # Adjacent in collision
+  - object1: high_def_frame
+    object2: high_def_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: imu_link
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Adjacent in collision
+  - object1: l_shoulder_pan_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Adjacent in collision
+  - object1: l_shoulder_lift_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Adjacent in collision
+  - object1: l_upper_arm_roll_link
+    object2: l_upper_arm_link
+    operation: disable  # Adjacent in collision
+  - object1: l_upper_arm_link
+    object2: l_elbow_flex_link
+    operation: disable  # Adjacent in collision
+  - object1: l_elbow_flex_link
+    object2: l_forearm_roll_link
+    operation: disable  # Adjacent in collision
+  - object1: l_forearm_roll_link
+    object2: l_forearm_cam_frame
+    operation: disable  # Adjacent in collision
+  - object1: l_forearm_cam_frame
+    object2: l_forearm_cam_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: l_forearm_roll_link
+    object2: l_forearm_link
+    operation: disable  # Adjacent in collision
+  - object1: l_forearm_link
+    object2: l_wrist_flex_link
+    operation: disable  # Adjacent in collision
+  - object1: l_wrist_flex_link
+    object2: l_wrist_roll_link
+    operation: disable  # Adjacent in collision
+  - object1: l_wrist_roll_link
+    object2: l_gripper_palm_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_led_frame
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_motor_slider_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_motor_slider_link
+    object2: l_gripper_motor_screw_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_r_finger_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: l_gripper_l_finger_tip_frame
+    operation: disable  # Adjacent in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_tool_frame
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: l_torso_lift_side_plate_link
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Adjacent in collision
+  - object1: laser_tilt_mount_link
+    object2: laser_tilt_link
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Adjacent in collision
+  - object1: r_shoulder_pan_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Adjacent in collision
+  - object1: r_shoulder_lift_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Adjacent in collision
+  - object1: r_upper_arm_roll_link
+    object2: r_upper_arm_link
+    operation: disable  # Adjacent in collision
+  - object1: r_upper_arm_link
+    object2: r_elbow_flex_link
+    operation: disable  # Adjacent in collision
+  - object1: r_elbow_flex_link
+    object2: r_forearm_roll_link
+    operation: disable  # Adjacent in collision
+  - object1: r_forearm_roll_link
+    object2: r_forearm_cam_frame
+    operation: disable  # Adjacent in collision
+  - object1: r_forearm_cam_frame
+    object2: r_forearm_cam_optical_frame
+    operation: disable  # Adjacent in collision
+  - object1: r_forearm_roll_link
+    object2: r_forearm_link
+    operation: disable  # Adjacent in collision
+  - object1: r_forearm_link
+    object2: r_wrist_flex_link
+    operation: disable  # Adjacent in collision
+  - object1: r_wrist_flex_link
+    object2: r_wrist_roll_link
+    operation: disable  # Adjacent in collision
+  - object1: r_wrist_roll_link
+    object2: r_gripper_palm_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_led_frame
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_motor_slider_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_motor_slider_link
+    object2: r_gripper_motor_screw_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_r_finger_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: r_gripper_l_finger_tip_frame
+    operation: disable  # Adjacent in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_tool_frame
+    operation: disable  # Adjacent in collision
+  - object1: torso_lift_link
+    object2: r_torso_lift_side_plate_link
+    operation: disable  # Adjacent in collision
+  - object1: base_link
+    object2: torso_lift_motor_screw_link
+    operation: disable  # Adjacent in collision
+  - object1: double_stereo_link
+    object2: head_plate_frame
+    operation: disable  # Always in collision
+  - object1: double_stereo_link
+    object2: head_tilt_link
+    operation: disable  # Always in collision
+  - object1: head_pan_link
+    object2: head_plate_frame
+    operation: disable  # Always in collision
+  - object1: head_pan_link
+    object2: sensor_mount_link
+    operation: disable  # Always in collision
+  - object1: head_tilt_link
+    object2: high_def_frame
+    operation: disable  # Always in collision
+  - object1: head_tilt_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Always in collision
+  - object1: head_tilt_link
+    object2: sensor_mount_link
+    operation: disable  # Always in collision
+  - object1: torso_lift_link
+    object2: base_bellow_link
+    operation: disable  # Default in collision
+  - object1: r_shoulder_pan_link
+    object2: r_upper_arm_link
+    operation: disable  # Default in collision
+  - object1: l_shoulder_pan_link
+    object2: l_upper_arm_link
+    operation: disable  # Default in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Default in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Default in collision
+  - object1: base_bellow_link
+    object2: base_footprint
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: bl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: bl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: bl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: br_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: br_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: base_bellow_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: bl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: bl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: bl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: br_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: br_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: base_footprint
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: bl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: bl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: br_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: base_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: bl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: br_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: br_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_l_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: br_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: br_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_r_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: br_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: br_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: bl_caster_rotation_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: br_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: br_caster_l_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: br_caster_r_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: double_stereo_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: br_caster_rotation_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: fl_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: fl_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: double_stereo_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: fl_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_l_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_r_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: fr_caster_l_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: fr_caster_rotation_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: fl_caster_rotation_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: fr_caster_r_wheel_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_l_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_r_wheel_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: head_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: head_plate_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: head_tilt_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: fr_caster_rotation_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: head_pan_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: high_def_frame
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: head_plate_frame
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: high_def_optical_frame
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: head_tilt_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_frame
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: high_def_optical_frame
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_forearm_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_elbow_flex_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_forearm_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_forearm_roll_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_l_finger_tip_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_motor_accelerometer_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: l_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_palm_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: l_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_gripper_r_finger_tip_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: l_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_lift_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: l_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_shoulder_pan_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: l_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: l_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_upper_arm_roll_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: l_wrist_flex_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_wrist_flex_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_wrist_flex_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_wrist_flex_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_wrist_flex_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: l_wrist_roll_link
+    object2: laser_tilt_mount_link
+    operation: disable  # Never in collision
+  - object1: l_wrist_roll_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: l_wrist_roll_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: l_wrist_roll_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: l_wrist_roll_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: projector_wg6802418_child_frame
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: projector_wg6802418_frame
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: laser_tilt_mount_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_child_frame
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_elbow_flex_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_forearm_roll_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: projector_wg6802418_frame
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_forearm_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_elbow_flex_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_gripper_l_finger_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_gripper_l_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_shoulder_pan_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_forearm_roll_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_gripper_motor_accelerometer_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_gripper_palm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_l_finger_tip_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_gripper_r_finger_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_motor_accelerometer_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_palm_link
+    object2: r_gripper_r_finger_tip_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_palm_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_palm_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_palm_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_palm_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_palm_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: r_shoulder_lift_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_gripper_r_finger_tip_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_lift_link
+    object2: r_upper_arm_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_lift_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_lift_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_lift_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_lift_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_pan_link
+    object2: r_upper_arm_roll_link
+    operation: disable  # Never in collision
+  - object1: r_shoulder_pan_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_roll_link
+    object2: r_wrist_flex_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_roll_link
+    object2: r_wrist_roll_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_roll_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_upper_arm_roll_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision
+  - object1: r_wrist_flex_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: r_wrist_roll_link
+    object2: sensor_mount_link
+    operation: disable  # Never in collision
+  - object1: sensor_mount_link
+    object2: torso_lift_link
+    operation: disable  # Never in collision

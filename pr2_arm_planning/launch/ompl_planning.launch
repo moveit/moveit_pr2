@@ -1,8 +1,13 @@
 <launch>
+
     <!-- load robot -->
     <param name="robot_description" command="$(find xacro)/xacro.py '$(find pr2_description)/robots/pr2.urdf.xacro'" />
     <param name="robot_description_semantic" textfile="$(find pr2_description)/robots/pr2.srdf" />
 
+    <group ns="robot_description_planning">
+      <rosparam command="load" file="$(find pr2_arm_planning)/config/collision_matrix.yaml"/>
+    </group>
+    
     <!-- test -->
     <group ns="ompl_planning">
       <rosparam command="load" file="$(find pr2_arm_planning)/config/ompl_planning.yaml"/>
