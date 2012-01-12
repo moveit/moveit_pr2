@@ -8,7 +8,6 @@
   <url>http://ros.org/wiki/pr2_arm_kinematics</url>
   <depend package="roscpp"/>
   <depend package="kdl"/>
-  <depend package="eigen"/>
   <depend package="angles"/>
   <depend package="tf_conversions"/>
   <depend package="urdf"/>
@@ -19,7 +18,8 @@
 
   <depend package="pluginlib"/>
   <depend package="kinematics_base"/>
-
+  
+  <rosdep name="eigen"/>
   <export>
    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lpr2_arm_kinematics_lib"/>
   <kinematics_base plugin="${prefix}/kinematics_plugins.xml" />
