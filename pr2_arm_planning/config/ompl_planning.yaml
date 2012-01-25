@@ -1,0 +1,89 @@
+## the list of groups for which motion planning can be performed
+groups: 
+  - right_arm 
+  - left_arm
+
+## the planner configurations; each config must have a type, which specifies
+## the planner to be used; other parameters can be specified as well, depending 
+## on the planner
+
+right_arm:
+  planner_configs:
+    - SBLkConfigDefault
+    - SBLkConfig1
+    - SBLkConfig2
+    - SBLkConfig3  
+    - SBLkConfig4
+    - LBKPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - ESTkConfigDefault
+    - KPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+  kinematics_solver: pr2_arm_kinematics/PR2ArmKinematicsPlugin
+  redundancy:
+    name: r_upper_arm_roll_joint
+  tip_name: r_wrist_roll_link
+  root_name: torso_lift_link
+  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
+  longest_valid_segment_fraction: 0.001
+
+left_arm: 
+  planner_configs:
+    - SBLkConfigDefault 
+    - LBKPIECEkConfigDefault
+  kinematics_solver: pr2_arm_kinematics/PR2ArmKinematicsPlugin
+  redundancy:
+    name: l_upper_arm_roll_joint
+  tip_name: l_wrist_roll_link
+  root_name: torso_lift_link
+  projection_evaluator: link(l_wrist_roll_link)
+  longest_valid_segment_fraction: 0.001
+
+  
+planner_configs:
+  SBLkConfigDefault:
+    type: geometric::SBL
+
+  SBLkConfig1:
+    type: geometric::SBL
+    projection_evaluator: link(r_wrist_roll_link)
+
+  SBLkConfig2:
+    type: geometric::SBL
+    projection_evaluator: joints(r_shoulder_pan_joint,r_wrist_flex_joint)
+  
+  SBLkConfig3:
+    type: geometric::SBL
+    projection.cellsize_factor: 0.5
+
+  SBLkConfig4:
+    type: geometric::SBL
+    projection_evaluator: link(r_wrist_roll_link)
+    projection.cellsize_factor: 10
+
+  LBKPIECEkConfigDefault:
+    type: geometric::LBKPIECE
+    
+  RRTkConfigDefault:
+    type: geometric::RRT
+
+  RRTConnectkConfigDefault:
+    type: geometric::RRTConnect
+
+  LazyRRTkConfigDefault:
+    type: geometric::LazyRRT
+
+  ESTkConfigDefault:
+    type: geometric::EST
+
+  KPIECEkConfigDefault:
+    type: geometric::KPIECE
+
+  RRTStarkConfigDefault:
+    type: geometric::RRTStar
+
+  BKPIECEkConfigDefault:
+    type: geometric::BKPIECE
+
+publish_diagnostics: true
