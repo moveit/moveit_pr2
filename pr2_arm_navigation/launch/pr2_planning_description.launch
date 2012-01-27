@@ -1,0 +1,5 @@
+<launch>
+    <!-- load robot -->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find pr2_description)/robots/pr2.urdf.xacro'" />
+    <param name="robot_description_semantic" textfile="$(find pr2_arm_navigation)/config/pr2.srdf" />
+</launch>
