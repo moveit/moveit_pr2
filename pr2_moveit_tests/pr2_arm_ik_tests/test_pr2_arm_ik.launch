@@ -1,0 +1,10 @@
+<launch>
+    <!-- load robot -->
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find pr2_description)/robots/pr2.urdf.xacro'" />
+
+    <!-- test -->
+    <test test-name="pr2_ik_test"  pkg="pr2_arm_ik_tests" type="pr2_ik_regression_test"  name="pr2_ik_regression_test" time-limit="180" >
+      <param name="tip_name" value="r_wrist_roll_link" />     
+      <param name="root_name" value="torso_lift_link" />  
+    </test>
+</launch>
