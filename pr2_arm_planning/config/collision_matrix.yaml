@@ -56,6 +56,12 @@ default_collision_operations:
   - object1: head_pan_link
     object2: head_tilt_link
     operation: disable  # Adjacent in collision
+  - object1: head_pan_link
+    object2: head_mount_link
+    operation: disable  # Adjacent in collision
+  - object1: head_tilt_link
+    object2: head_mount_link
+    operation: disable  # Adjacent in collision
   - object1: head_tilt_link
     object2: head_plate_frame
     operation: disable  # Adjacent in collision
