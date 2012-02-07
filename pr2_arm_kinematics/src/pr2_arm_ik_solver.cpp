@@ -304,8 +304,10 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     KDL::JntArray &q_out, 
                                     const double &timeout, 
                                     moveit_msgs::MoveItErrorCodes &error_code,
-                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
+                                    const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
+                                    const kinematics::KinematicsBase::IKCallbackFn &solution_callback) 
+//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
@@ -318,8 +320,19 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   int num_negative_increments = (int)((initial_guess-pr2_arm_ik_.solver_info_.limits[free_angle_].min_position)/search_discretization_angle_);
   ROS_DEBUG("%f %f %f %d %d \n\n",initial_guess,pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,pr2_arm_ik_.solver_info_.limits[free_angle_].min_position,num_positive_increments,num_negative_increments);
   unsigned int testnum = 0;
+
+  geometry_msgs::Pose ik_pose_msg;
+  tf::PoseKDLToMsg(p_in,ik_pose_msg);
+
   if(!desired_pose_callback.empty())
-    desired_pose_callback(q_init,p_in,error_code);
+  {
+    std::vector<double> ik_seed_state(7,0.0);
+    for(int i=0; i < 7; i++)
+      ik_seed_state[i] = q_init(i);
+
+
+    desired_pose_callback(ik_pose_msg,ik_seed_state,error_code);
+  }
   if(error_code.val != error_code.SUCCESS)
   {
     return -1;
@@ -337,7 +350,12 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
     {
       if(callback_check)
       {
-        solution_callback(q_out,p_in,error_code);
+        std::vector<double> ik_solution(7,0.0);
+        for(int i=0; i < 7; i++)
+          ik_solution[i] = q_out(i);
+        
+        solution_callback(ik_pose_msg,ik_solution,error_code);
+
         if(error_code.val == error_code.SUCCESS)
         {
           ROS_DEBUG_STREAM("Success with " << testnum << " in " << (ros::WallTime::now()-s));
@@ -379,8 +397,10 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout, 
                                     const double &max_consistency,
                                     moveit_msgs::MoveItErrorCodes &error_code,
-                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
+                                    const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
+                                    const kinematics::KinematicsBase::IKCallbackFn &solution_callback)
+//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
@@ -400,8 +420,18 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   int num_negative_increments = (int)((initial_guess-min_limit)/search_discretization_angle_);
   ROS_DEBUG("%f %f %f %d %d \n\n",initial_guess,pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,pr2_arm_ik_.solver_info_.limits[free_angle_].min_position,num_positive_increments,num_negative_increments);
   unsigned int testnum = 0;
+
+  geometry_msgs::Pose ik_pose_msg;
+  tf::PoseKDLToMsg(p_in,ik_pose_msg);
+
   if(!desired_pose_callback.empty())
-    desired_pose_callback(q_init,p_in,error_code);
+  {
+    std::vector<double> ik_seed_state(7,0.0);
+    for(int i=0; i < 7; i++)
+      ik_seed_state[i] = q_init(i);
+
+    desired_pose_callback(ik_pose_msg,ik_seed_state,error_code);
+  }
   if(error_code.val != error_code.SUCCESS)
   {
     return -1;
@@ -419,7 +449,11 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
     {
       if(callback_check)
       {
-        solution_callback(q_out,p_in,error_code);
+        std::vector<double> ik_solution(7,0.0);
+        for(int i=0; i < 7; i++)
+          ik_solution[i] = q_out(i);
+        
+        solution_callback(ik_pose_msg,ik_solution,error_code);
         if(error_code.val == error_code.SUCCESS)
         {
           ROS_DEBUG_STREAM("Difference is " << abs(q_in(free_angle_)-q_out(free_angle_)));

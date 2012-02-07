@@ -140,7 +140,7 @@ bool PR2ArmKinematics::isActive()
 }
 
 bool PR2ArmKinematics::getPositionIK(kinematics_msgs::GetPositionIK::Request &request, 
-                                     kinematics_msgs::GetPositionIK::Response &response)
+                                     kinematics_msgs::GetPositionIK::Response &response) 
 {
   if(!active_)
   {
@@ -171,7 +171,7 @@ bool PR2ArmKinematics::getPositionIK(kinematics_msgs::GetPositionIK::Request &re
 
 //this assumes that everything has been checked and is in the correct frame
 bool PR2ArmKinematics::getPositionIKHelper(kinematics_msgs::GetPositionIK::Request &request, 
-                                           kinematics_msgs::GetPositionIK::Response &response)
+                                           kinematics_msgs::GetPositionIK::Response &response) 
 {
   KDL::Frame pose_desired;
   tf::PoseMsgToKDL(request.ik_request.pose_stamped.pose, pose_desired);
@@ -224,7 +224,7 @@ bool PR2ArmKinematics::getPositionIKHelper(kinematics_msgs::GetPositionIK::Reque
 }
 
 bool PR2ArmKinematics::getIKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request, 
-                                       kinematics_msgs::GetKinematicSolverInfo::Response &response)
+                                       kinematics_msgs::GetKinematicSolverInfo::Response &response) 
 {
   if (active_)
   {
@@ -236,7 +236,7 @@ bool PR2ArmKinematics::getIKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::
 }
 
 bool PR2ArmKinematics::getFKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request, 
-                                       kinematics_msgs::GetKinematicSolverInfo::Response &response)
+                                       kinematics_msgs::GetKinematicSolverInfo::Response &response) 
 {
   if(active_)
   {
@@ -248,7 +248,7 @@ bool PR2ArmKinematics::getFKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::
 }
 
 bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &request, 
-                                     kinematics_msgs::GetPositionFK::Response &response)
+                                     kinematics_msgs::GetPositionFK::Response &response) 
 {
   if(!active_)
   {
@@ -302,8 +302,8 @@ bool PR2ArmKinematics::getPositionFK(kinematics_msgs::GetPositionFK::Request &re
   return true;
 }
 bool PR2ArmKinematics::transformPose(const std::string& des_frame,
-				     const geometry_msgs::PoseStamped& pose_in,
-				     geometry_msgs::PoseStamped& pose_out)
+                                     const geometry_msgs::PoseStamped& pose_in,
+                                     geometry_msgs::PoseStamped& pose_out)
 {
   if(tf_ != NULL) {
     try {

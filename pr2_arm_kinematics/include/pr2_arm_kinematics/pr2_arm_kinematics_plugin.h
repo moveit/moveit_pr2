@@ -84,7 +84,7 @@ public:
   virtual bool getPositionIK(const geometry_msgs::Pose &ik_pose,
                              const std::vector<double> &ik_seed_state,
                              std::vector<double> &solution,
-                             moveit_msgs::MoveItErrorCodes &error_code);      
+                             moveit_msgs::MoveItErrorCodes &error_code) const;      
     
   /**
    * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
@@ -98,7 +98,7 @@ public:
                                 const std::vector<double> &ik_seed_state,
                                 double timeout,
                                 std::vector<double> &solution,
-                                moveit_msgs::MoveItErrorCodes &error_code);      
+                                moveit_msgs::MoveItErrorCodes &error_code) const;      
   /**
    * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
    * This particular method is intended for "searching" for a solutions by stepping through the redundancy
@@ -114,7 +114,7 @@ public:
                                 unsigned int redundancy,         
                                 double consistency_limit,
                                 std::vector<double> &solution,
-                                moveit_msgs::MoveItErrorCodes &error_code);      
+                                moveit_msgs::MoveItErrorCodes &error_code) const;      
 
   /**
    * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
@@ -130,7 +130,7 @@ public:
                                 std::vector<double> &solution,
                                 const IKCallbackFn &desired_pose_callback,
                                 const IKCallbackFn &solution_callback,
-                                moveit_msgs::MoveItErrorCodes &error_code);      
+                                moveit_msgs::MoveItErrorCodes &error_code) const;      
 
   /**
    * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
@@ -150,7 +150,7 @@ public:
                                 std::vector<double> &solution,
                                 const IKCallbackFn &desired_pose_callback,
                                 const IKCallbackFn &solution_callback,
-                                moveit_msgs::MoveItErrorCodes &error_code);      
+                                moveit_msgs::MoveItErrorCodes &error_code) const;      
     
   /**
    * @brief Given a set of joint angles and a set of links, compute their pose
@@ -160,7 +160,7 @@ public:
    */
   virtual bool getPositionFK(const std::vector<std::string> &link_names,
                              const std::vector<double> &joint_angles, 
-                             std::vector<geometry_msgs::Pose> &poses);
+                             std::vector<geometry_msgs::Pose> &poses) const;
     
   /**
    * @brief  Initialization function for the kinematics
@@ -196,16 +196,16 @@ protected:
   KDL::Chain kdl_chain_;
   kinematics_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
 
-  IKCallbackFn desiredPoseCallback_;
-  IKCallbackFn solutionCallback_;    
+  mutable IKCallbackFn desiredPoseCallback_;
+  mutable IKCallbackFn solutionCallback_;    
 
   void desiredPoseCallback(const KDL::JntArray& jnt_array, 
                            const KDL::Frame& ik_pose,
-                           moveit_msgs::MoveItErrorCodes& error_code);
+                           moveit_msgs::MoveItErrorCodes& error_code) const;
 
   void jointSolutionCallback(const KDL::JntArray& jnt_array, 
                              const KDL::Frame& ik_pose,
-                             moveit_msgs::MoveItErrorCodes& error_code);
+                             moveit_msgs::MoveItErrorCodes& error_code) const;
 
 
 };

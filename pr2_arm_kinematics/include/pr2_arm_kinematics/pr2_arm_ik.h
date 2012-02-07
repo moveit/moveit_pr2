@@ -69,14 +69,14 @@ public:
      @param Input pose for end-effector
      @param Initial guess for shoulder pan angle
   */
-  void computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &shoulder_pan_initial_guess,std::vector<std::vector<double> > &solution);
+  void computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &shoulder_pan_initial_guess,std::vector<std::vector<double> > &solution) const;
 
   /**
      @brief compute IK based on an initial guess for the shoulder roll angle.
      h       @param Input pose for end-effector
      @param Initial guess for shoulder roll angle
   */
-  void computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &shoulder_roll_initial_guess,std::vector<std::vector<double> > &solution);
+  void computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &shoulder_roll_initial_guess,std::vector<std::vector<double> > &solution) const;
 
     
   //  std::vector<std::vector<double> > solution_ik_;/// a vector of ik solutions
@@ -98,9 +98,9 @@ public:
 
   void addJointToChainInfo(boost::shared_ptr<const urdf::Joint> joint,kinematics_msgs::KinematicSolverInfo &info);
 
-  bool checkJointLimits(const std::vector<double> &joint_values);
+  bool checkJointLimits(const std::vector<double> &joint_values) const;
  
-  bool checkJointLimits(const double &joint_value, const int &joint_num);
+  bool checkJointLimits(const double &joint_value, const int &joint_num) const;
 
   Eigen::Matrix4f grhs_, gf_, home_inv_, home_;
 

@@ -37,6 +37,7 @@
 #include <Eigen/Core>
 #include <kdl/chainiksolver.hpp>
 #include <pr2_arm_kinematics/pr2_arm_ik.h>
+#include <kinematics_base/kinematics_base.h>
 #include <pr2_arm_kinematics/pr2_arm_kinematics_utils.h>
 #include <kinematics_msgs/GetKinematicSolverInfo.h>
 #include <kinematics_msgs/PositionIKRequest.h>
@@ -166,8 +167,10 @@ static const int TIMED_OUT = -2;
                         KDL::JntArray &q_out, 
                         const double &timeout, 
                         moveit_msgs::MoveItErrorCodes &error_code,
-                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
+                        const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
+                        const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
+                        //                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+                        //                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
 
     int CartToJntSearch(const KDL::JntArray& q_in, 
                         const KDL::Frame& p_in, 
@@ -175,8 +178,11 @@ static const int TIMED_OUT = -2;
                         const double &timeout, 
                         const double& consistency_limit, 
                         moveit_msgs::MoveItErrorCodes &error_code,
-                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
+                        const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
+                        const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
+
+    //                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
+    //                  const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
 
 
 

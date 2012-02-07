@@ -151,12 +151,14 @@ void PR2ArmIK::getSolverInfo(kinematics_msgs::KinematicSolverInfo &info)
 }
 
 
-void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t1_in, std::vector<std::vector<double> > &solution)
+void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t1_in, std::vector<std::vector<double> > &solution) const
 {
 //t1 = shoulder/turret pan is specified
 //  solution_ik_.resize(0);
-
+  std::vector<double> solution_ik(NUM_JOINTS_ARM7DOF,0.0);
   Eigen::Matrix4f g = g_in;
+  Eigen::Matrix4f gf_local = home_inv_;
+  Eigen::Matrix4f grhs_local = home_inv_;
 //First bring everything into the arm frame
   g(0,3) = g_in(0,3) - torso_shoulder_offset_x_;
   g(1,3) = g_in(1,3) - torso_shoulder_offset_y_;
@@ -170,7 +172,7 @@ void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t
   double cost1, cost2, cost3, cost4;
   double sint1, sint2, sint3, sint4;
 
-  gf_ = g*home_inv_;
+  gf_local = g*home_inv_;
 
   cost1 = cos(t1);
   sint1 = sin(t1);
@@ -271,27 +273,27 @@ void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t
         if(fabs((shoulder_elbow_offset_-shoulder_wrist_offset_)*sint1*sint3*sint4+cost1*(shoulder_upperarm_offset_+cost2*(-shoulder_upperarm_offset_+shoulder_elbow_offset_+(-shoulder_elbow_offset_+shoulder_wrist_offset_)*cost4)+(shoulder_elbow_offset_-shoulder_wrist_offset_)*cost3*sint2*sint4) - x) > IK_EPS)
           continue;
 
-        grhs_(0,0) = cost4*(gf_(0,0)*cost1*cost2+gf_(1,0)*cost2*sint1-gf_(2,0)*sint2)-(gf_(2,0)*cost2*cost3 + cost3*(gf_(0,0)*cost1 + gf_(1,0)*sint1)*sint2 + (-(gf_(1,0)*cost1) + gf_(0,0)*sint1)*sint3)*sint4;
+        grhs_local(0,0) = cost4*(gf_local(0,0)*cost1*cost2+gf_local(1,0)*cost2*sint1-gf_local(2,0)*sint2)-(gf_local(2,0)*cost2*cost3 + cost3*(gf_local(0,0)*cost1 + gf_local(1,0)*sint1)*sint2 + (-(gf_local(1,0)*cost1) + gf_local(0,0)*sint1)*sint3)*sint4;
 
-        grhs_(0,1) = cost4*(gf_(0,1)*cost1*cost2 + gf_(1,1)*cost2*sint1 - gf_(2,1)*sint2) - (gf_(2,1)*cost2*cost3 + cost3*(gf_(0,1)*cost1 + gf_(1,1)*sint1)*sint2 + (-(gf_(1,1)*cost1) + gf_(0,1)*sint1)*sint3)*sint4;
+        grhs_local(0,1) = cost4*(gf_local(0,1)*cost1*cost2 + gf_local(1,1)*cost2*sint1 - gf_local(2,1)*sint2) - (gf_local(2,1)*cost2*cost3 + cost3*(gf_local(0,1)*cost1 + gf_local(1,1)*sint1)*sint2 + (-(gf_local(1,1)*cost1) + gf_local(0,1)*sint1)*sint3)*sint4;
 
-        grhs_(0,2) = cost4*(gf_(0,2)*cost1*cost2 + gf_(1,2)*cost2*sint1 - gf_(2,2)*sint2) - (gf_(2,2)*cost2*cost3 + cost3*(gf_(0,2)*cost1 + gf_(1,2)*sint1)*sint2 + (-(gf_(1,2)*cost1) + gf_(0,2)*sint1)*sint3)*sint4;
+        grhs_local(0,2) = cost4*(gf_local(0,2)*cost1*cost2 + gf_local(1,2)*cost2*sint1 - gf_local(2,2)*sint2) - (gf_local(2,2)*cost2*cost3 + cost3*(gf_local(0,2)*cost1 + gf_local(1,2)*sint1)*sint2 + (-(gf_local(1,2)*cost1) + gf_local(0,2)*sint1)*sint3)*sint4;
 
-        grhs_(1,0) = cost3*(gf_(1,0)*cost1 - gf_(0,0)*sint1) + gf_(2,0)*cost2*sint3 + (gf_(0,0)*cost1 + gf_(1,0)*sint1)*sint2*sint3;
+        grhs_local(1,0) = cost3*(gf_local(1,0)*cost1 - gf_local(0,0)*sint1) + gf_local(2,0)*cost2*sint3 + (gf_local(0,0)*cost1 + gf_local(1,0)*sint1)*sint2*sint3;
 
-        grhs_(1,1) = cost3*(gf_(1,1)*cost1 - gf_(0,1)*sint1) + gf_(2,1)*cost2*sint3 + (gf_(0,1)*cost1 + gf_(1,1)*sint1)*sint2*sint3;
+        grhs_local(1,1) = cost3*(gf_local(1,1)*cost1 - gf_local(0,1)*sint1) + gf_local(2,1)*cost2*sint3 + (gf_local(0,1)*cost1 + gf_local(1,1)*sint1)*sint2*sint3;
 
-        grhs_(1,2) = cost3*(gf_(1,2)*cost1 - gf_(0,2)*sint1) + gf_(2,2)*cost2*sint3 + (gf_(0,2)*cost1 + gf_(1,2)*sint1)*sint2*sint3;
+        grhs_local(1,2) = cost3*(gf_local(1,2)*cost1 - gf_local(0,2)*sint1) + gf_local(2,2)*cost2*sint3 + (gf_local(0,2)*cost1 + gf_local(1,2)*sint1)*sint2*sint3;
 
-        grhs_(2,0) = cost4*(gf_(2,0)*cost2*cost3 + cost3*(gf_(0,0)*cost1 + gf_(1,0)*sint1)*sint2 + (-(gf_(1,0)*cost1) + gf_(0,0)*sint1)*sint3) + (gf_(0,0)*cost1*cost2 + gf_(1,0)*cost2*sint1 - gf_(2,0)*sint2)*sint4;
+        grhs_local(2,0) = cost4*(gf_local(2,0)*cost2*cost3 + cost3*(gf_local(0,0)*cost1 + gf_local(1,0)*sint1)*sint2 + (-(gf_local(1,0)*cost1) + gf_local(0,0)*sint1)*sint3) + (gf_local(0,0)*cost1*cost2 + gf_local(1,0)*cost2*sint1 - gf_local(2,0)*sint2)*sint4;
 
-        grhs_(2,1) = cost4*(gf_(2,1)*cost2*cost3 + cost3*(gf_(0,1)*cost1 + gf_(1,1)*sint1)*sint2 + (-(gf_(1,1)*cost1) + gf_(0,1)*sint1)*sint3) + (gf_(0,1)*cost1*cost2 + gf_(1,1)*cost2*sint1 - gf_(2,1)*sint2)*sint4;
+        grhs_local(2,1) = cost4*(gf_local(2,1)*cost2*cost3 + cost3*(gf_local(0,1)*cost1 + gf_local(1,1)*sint1)*sint2 + (-(gf_local(1,1)*cost1) + gf_local(0,1)*sint1)*sint3) + (gf_local(0,1)*cost1*cost2 + gf_local(1,1)*cost2*sint1 - gf_local(2,1)*sint2)*sint4;
 
-        grhs_(2,2) = cost4*(gf_(2,2)*cost2*cost3 + cost3*(gf_(0,2)*cost1 + gf_(1,2)*sint1)*sint2 + (-(gf_(1,2)*cost1) + gf_(0,2)*sint1)*sint3) + (gf_(0,2)*cost1*cost2 + gf_(1,2)*cost2*sint1 - gf_(2,2)*sint2)*sint4;
+        grhs_local(2,2) = cost4*(gf_local(2,2)*cost2*cost3 + cost3*(gf_local(0,2)*cost1 + gf_local(1,2)*sint1)*sint2 + (-(gf_local(1,2)*cost1) + gf_local(0,2)*sint1)*sint3) + (gf_local(0,2)*cost1*cost2 + gf_local(1,2)*cost2*sint1 - gf_local(2,2)*sint2)*sint4;
 
 
-        double val1 = sqrt(grhs_(0,1)*grhs_(0,1)+grhs_(0,2)*grhs_(0,2));
-        double val2 = grhs_(0,0);
+        double val1 = sqrt(grhs_local(0,1)*grhs_local(0,1)+grhs_local(0,2)*grhs_local(0,2));
+        double val2 = grhs_local(0,0);
 
         theta6[0] = atan2(val1,val2);
         theta6[1] = atan2(-val1,val2);
@@ -308,21 +310,21 @@ void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t
 #ifdef DEBUG
           std::cout << "t6 " << t6 << std::endl;
 #endif
-          if(fabs(cos(t6) - grhs_(0,0)) > IK_EPS)
+          if(fabs(cos(t6) - grhs_local(0,0)) > IK_EPS)
             continue;
 
           if(fabs(sin(t6)) < IK_EPS)
           {
             //                std::cout << "Singularity" << std::endl;
-            theta5[0] = acos(grhs_(1,1))/2.0;
+            theta5[0] = acos(grhs_local(1,1))/2.0;
             theta7[0] = theta7[0];
             theta7[1] = M_PI+theta7[0];
             theta5[1] = theta7[1];
           }
           else
           {
-            theta7[0] = atan2(grhs_(0,1),grhs_(0,2));
-            theta5[0] = atan2(grhs_(1,0),-grhs_(2,0));
+            theta7[0] = atan2(grhs_local(0,1),grhs_local(0,2));
+            theta5[0] = atan2(grhs_local(1,0),-grhs_local(2,0));
             theta7[1] = M_PI+theta7[0];
             theta5[1] = M_PI+theta5[0];
           }
@@ -348,20 +350,20 @@ void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t
             std::cout << "t5" << t5 << std::endl;
             std::cout << "t7" << t7 << std::endl;
 #endif      
-            if(fabs(sin(t6)*sin(t7)-grhs_(0,1)) > IK_EPS || fabs(cos(t7)*sin(t6)-grhs_(0,2)) > IK_EPS)
+            if(fabs(sin(t6)*sin(t7)-grhs_local(0,1)) > IK_EPS || fabs(cos(t7)*sin(t6)-grhs_local(0,2)) > IK_EPS)
               continue;
 
-            solution_[0] = normalize_angle(t1)*angle_multipliers_[0];
-            solution_[1] = normalize_angle(t2)*angle_multipliers_[1];
-            solution_[2] = normalize_angle(t3)*angle_multipliers_[2];
-            solution_[3] = normalize_angle(t4)*angle_multipliers_[3];
-            solution_[4] = normalize_angle(t5)*angle_multipliers_[4];
-            solution_[5] = normalize_angle(t6)*angle_multipliers_[5];
-            solution_[6] = normalize_angle(t7)*angle_multipliers_[6];
-            solution.push_back(solution_);
+            solution_ik[0] = normalize_angle(t1)*angle_multipliers_[0];
+            solution_ik[1] = normalize_angle(t2)*angle_multipliers_[1];
+            solution_ik[2] = normalize_angle(t3)*angle_multipliers_[2];
+            solution_ik[3] = normalize_angle(t4)*angle_multipliers_[3];
+            solution_ik[4] = normalize_angle(t5)*angle_multipliers_[4];
+            solution_ik[5] = normalize_angle(t6)*angle_multipliers_[5];
+            solution_ik[6] = normalize_angle(t7)*angle_multipliers_[6];
+            solution.push_back(solution_ik);
 
 #ifdef DEBUG
-            std::cout << "SOLN " << solution_[0] << " " << solution_[1] << " " <<  solution_[2] << " " << solution_[3] <<  " " << solution_[4] << " " << solution_[5] <<  " " << solution_[6] << std::endl << std::endl;
+            std::cout << "SOLN " << solution_ik[0] << " " << solution_ik[1] << " " <<  solution_ik[2] << " " << solution_ik[3] <<  " " << solution_ik[4] << " " << solution_ik[5] <<  " " << solution_ik[6] << std::endl << std::endl;
 #endif
           }
         }
@@ -371,8 +373,9 @@ void PR2ArmIK::computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &t
 }
 
 
-void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &t3, std::vector<std::vector<double> > &solution)
+void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &t3, std::vector<std::vector<double> > &solution) const
 {
+  std::vector<double> solution_ik(NUM_JOINTS_ARM7DOF,0.0);
   //  ROS_INFO(" ");
   // solution_ik_.clear();
   //  ROS_INFO("Solution IK size: %d",solution_ik_.size());
@@ -384,6 +387,8 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
   //    solution_ik_.resize(0);
 //t3 = shoulder/turret roll is specified
   Eigen::Matrix4f g = g_in;
+  Eigen::Matrix4f gf_local = home_inv_;
+  Eigen::Matrix4f grhs_local = home_inv_;
 //First bring everything into the arm frame
   g(0,3) = g_in(0,3) - torso_shoulder_offset_x_;
   g(1,3) = g_in(1,3) - torso_shoulder_offset_y_;
@@ -399,7 +404,7 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
   double cost1, cost2, cost3, cost4;
   double sint1, sint2, sint3, sint4;
 
-  gf_ = g*home_inv_;
+  gf_local = g*home_inv_;
 
   cost3 = cos(t3);
   sint3 = sin(t3);
@@ -513,25 +518,23 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
 #endif
           continue;
         }
-        grhs_(0,0) = cost4*(gf_(0,0)*cost1*cost2+gf_(1,0)*cost2*sint1-gf_(2,0)*sint2)-(gf_(2,0)*cost2*cost3 + cost3*(gf_(0,0)*cost1 + gf_(1,0)*sint1)*sint2 + (-(gf_(1,0)*cost1) + gf_(0,0)*sint1)*sint3)*sint4;
+        grhs_local(0,0) = cost4*(gf_local(0,0)*cost1*cost2+gf_local(1,0)*cost2*sint1-gf_local(2,0)*sint2)-(gf_local(2,0)*cost2*cost3 + cost3*(gf_local(0,0)*cost1 + gf_local(1,0)*sint1)*sint2 + (-(gf_local(1,0)*cost1) + gf_local(0,0)*sint1)*sint3)*sint4;
 
-        grhs_(0,1) = cost4*(gf_(0,1)*cost1*cost2 + gf_(1,1)*cost2*sint1 - gf_(2,1)*sint2) - (gf_(2,1)*cost2*cost3 + cost3*(gf_(0,1)*cost1 + gf_(1,1)*sint1)*sint2 + (-(gf_(1,1)*cost1) + gf_(0,1)*sint1)*sint3)*sint4;
+        grhs_local(0,1) = cost4*(gf_local(0,1)*cost1*cost2 + gf_local(1,1)*cost2*sint1 - gf_local(2,1)*sint2) - (gf_local(2,1)*cost2*cost3 + cost3*(gf_local(0,1)*cost1 + gf_local(1,1)*sint1)*sint2 + (-(gf_local(1,1)*cost1) + gf_local(0,1)*sint1)*sint3)*sint4;
 
-        grhs_(0,2) = cost4*(gf_(0,2)*cost1*cost2 + gf_(1,2)*cost2*sint1 - gf_(2,2)*sint2) - (gf_(2,2)*cost2*cost3 + cost3*(gf_(0,2)*cost1 + gf_(1,2)*sint1)*sint2 + (-(gf_(1,2)*cost1) + gf_(0,2)*sint1)*sint3)*sint4;
+        grhs_local(0,2) = cost4*(gf_local(0,2)*cost1*cost2 + gf_local(1,2)*cost2*sint1 - gf_local(2,2)*sint2) - (gf_local(2,2)*cost2*cost3 + cost3*(gf_local(0,2)*cost1 + gf_local(1,2)*sint1)*sint2 + (-(gf_local(1,2)*cost1) + gf_local(0,2)*sint1)*sint3)*sint4;
 
-        grhs_(1,0) = cost3*(gf_(1,0)*cost1 - gf_(0,0)*sint1) + gf_(2,0)*cost2*sint3 + (gf_(0,0)*cost1 + gf_(1,0)*sint1)*sint2*sint3;
+        grhs_local(1,0) = cost3*(gf_local(1,0)*cost1 - gf_local(0,0)*sint1) + gf_local(2,0)*cost2*sint3 + (gf_local(0,0)*cost1 + gf_local(1,0)*sint1)*sint2*sint3;
 
-        grhs_(1,1) = cost3*(gf_(1,1)*cost1 - gf_(0,1)*sint1) + gf_(2,1)*cost2*sint3 + (gf_(0,1)*cost1 + gf_(1,1)*sint1)*sint2*sint3;
+        grhs_local(1,1) = cost3*(gf_local(1,1)*cost1 - gf_local(0,1)*sint1) + gf_local(2,1)*cost2*sint3 + (gf_local(0,1)*cost1 + gf_local(1,1)*sint1)*sint2*sint3;
 
-        grhs_(1,2) = cost3*(gf_(1,2)*cost1 - gf_(0,2)*sint1) + gf_(2,2)*cost2*sint3 + (gf_(0,2)*cost1 + gf_(1,2)*sint1)*sint2*sint3;
+        grhs_local(1,2) = cost3*(gf_local(1,2)*cost1 - gf_local(0,2)*sint1) + gf_local(2,2)*cost2*sint3 + (gf_local(0,2)*cost1 + gf_local(1,2)*sint1)*sint2*sint3;
 
-        grhs_(2,0) = cost4*(gf_(2,0)*cost2*cost3 + cost3*(gf_(0,0)*cost1 + gf_(1,0)*sint1)*sint2 + (-(gf_(1,0)*cost1) + gf_(0,0)*sint1)*sint3) + (gf_(0,0)*cost1*cost2 + gf_(1,0)*cost2*sint1 - gf_(2,0)*sint2)*sint4;
+        grhs_local(2,0) = cost4*(gf_local(2,0)*cost2*cost3 + cost3*(gf_local(0,0)*cost1 + gf_local(1,0)*sint1)*sint2 + (-(gf_local(1,0)*cost1) + gf_local(0,0)*sint1)*sint3) + (gf_local(0,0)*cost1*cost2 + gf_local(1,0)*cost2*sint1 - gf_local(2,0)*sint2)*sint4;
 
-        grhs_(2,1) = cost4*(gf_(2,1)*cost2*cost3 + cost3*(gf_(0,1)*cost1 + gf_(1,1)*sint1)*sint2 + (-(gf_(1,1)*cost1) + gf_(0,1)*sint1)*sint3) + (gf_(0,1)*cost1*cost2 + gf_(1,1)*cost2*sint1 - gf_(2,1)*sint2)*sint4;
+        grhs_local(2,1) = cost4*(gf_local(2,1)*cost2*cost3 + cost3*(gf_local(0,1)*cost1 + gf_local(1,1)*sint1)*sint2 + (-(gf_local(1,1)*cost1) + gf_local(0,1)*sint1)*sint3) + (gf_local(0,1)*cost1*cost2 + gf_local(1,1)*cost2*sint1 - gf_local(2,1)*sint2)*sint4;
 
-        grhs_(2,2) = cost4*(gf_(2,2)*cost2*cost3 + cost3*(gf_(0,2)*cost1 + gf_(1,2)*sint1)*sint2 + (-(gf_(1,2)*cost1) + gf_(0,2)*sint1)*sint3) + (gf_(0,2)*cost1*cost2 + gf_(1,2)*cost2*sint1 - gf_(2,2)*sint2)*sint4;
-
-
+        grhs_local(2,2) = cost4*(gf_local(2,2)*cost2*cost3 + cost3*(gf_local(0,2)*cost1 + gf_local(1,2)*sint1)*sint2 + (-(gf_local(1,2)*cost1) + gf_local(0,2)*sint1)*sint3) + (gf_local(0,2)*cost1*cost2 + gf_local(1,2)*cost2*sint1 - gf_local(2,2)*sint2)*sint4;
 
 
 
@@ -539,8 +542,10 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
 
 
 
-        double val1 = sqrt(grhs_(0,1)*grhs_(0,1)+grhs_(0,2)*grhs_(0,2));
-        double val2 = grhs_(0,0);
+
+
+        double val1 = sqrt(grhs_local(0,1)*grhs_local(0,1)+grhs_local(0,2)*grhs_local(0,2));
+        double val2 = grhs_local(0,0);
 
         theta6[0] = atan2(val1,val2);
         theta6[1] = atan2(-val1,val2);
@@ -557,21 +562,21 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
           }
 
 
-          if(fabs(cos(t6) - grhs_(0,0)) > IK_EPS)
+          if(fabs(cos(t6) - grhs_local(0,0)) > IK_EPS)
             continue;
 
           if(fabs(sin(t6)) < IK_EPS)
           {
             //                std::cout << "Singularity" << std::endl;
-            theta5[0] = acos(grhs_(1,1))/2.0;
+            theta5[0] = acos(grhs_local(1,1))/2.0;
             theta7[0] = theta5[0];
 //            theta7[1] = M_PI+theta7[0];
 //            theta5[1] = theta7[1];
           }
           else
           {
-            theta7[0] = atan2(grhs_(0,1)/sin(t6),grhs_(0,2)/sin(t6));
-            theta5[0] = atan2(grhs_(1,0)/sin(t6),-grhs_(2,0)/sin(t6));
+            theta7[0] = atan2(grhs_local(0,1)/sin(t6),grhs_local(0,2)/sin(t6));
+            theta5[0] = atan2(grhs_local(1,0)/sin(t6),-grhs_local(2,0)/sin(t6));
 //            theta7[1] = M_PI+theta7[0];
 //            theta5[1] = M_PI+theta5[0];
           }
@@ -594,7 +599,7 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
             std::cout << "t5 " << t5 << std::endl;
             std::cout << "t7 " << t7 << std::endl;
 #endif      
-            //           if(fabs(sin(t6)*sin(t7)-grhs_(0,1)) > IK_EPS || fabs(cos(t7)*sin(t6)-grhs_(0,2)) > IK_EPS)
+            //           if(fabs(sin(t6)*sin(t7)-grhs_local(0,1)) > IK_EPS || fabs(cos(t7)*sin(t6)-grhs_local(0,2)) > IK_EPS)
             //  continue;
 
 #ifdef DEBUG
@@ -608,16 +613,16 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
 #endif
 
 
-            solution_[0] = normalize_angle(t1*angle_multipliers_[0]);
-            solution_[1] = normalize_angle(t2*angle_multipliers_[1]);
-            solution_[2] = t3*angle_multipliers_[2];
-            solution_[3] = normalize_angle(t4*angle_multipliers_[3]);
-            solution_[4] = normalize_angle(t5*angle_multipliers_[4]);
-            solution_[5] = normalize_angle(t6*angle_multipliers_[5]);
-            solution_[6] = normalize_angle(t7*angle_multipliers_[6]);
-            solution.push_back(solution_);
+            solution_ik[0] = normalize_angle(t1*angle_multipliers_[0]);
+            solution_ik[1] = normalize_angle(t2*angle_multipliers_[1]);
+            solution_ik[2] = t3*angle_multipliers_[2];
+            solution_ik[3] = normalize_angle(t4*angle_multipliers_[3]);
+            solution_ik[4] = normalize_angle(t5*angle_multipliers_[4]);
+            solution_ik[5] = normalize_angle(t6*angle_multipliers_[5]);
+            solution_ik[6] = normalize_angle(t7*angle_multipliers_[6]);
+            solution.push_back(solution_ik);
 #ifdef DEBUG
-            std::cout << "SOLN " << solution_[0] << " " << solution_[1] << " " <<  solution_[2] << " " << solution_[3] <<  " " << solution_[4] << " " << solution_[5] <<  " " << solution_[6] << std::endl << std::endl;
+            std::cout << "SOLN " << solution_ik[0] << " " << solution_ik[1] << " " <<  solution_ik[2] << " " << solution_ik[3] <<  " " << solution_ik[4] << " " << solution_ik[5] <<  " " << solution_ik[6] << std::endl << std::endl;
 #endif
           }
         }
@@ -627,7 +632,7 @@ void PR2ArmIK::computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &
 }
 
 
-bool PR2ArmIK::checkJointLimits(const std::vector<double> &joint_values)
+bool PR2ArmIK::checkJointLimits(const std::vector<double> &joint_values) const
 {
   for(int i=0; i<NUM_JOINTS_ARM7DOF; i++)
   {
@@ -639,7 +644,7 @@ bool PR2ArmIK::checkJointLimits(const std::vector<double> &joint_values)
   return true;
 }
 
-bool  PR2ArmIK::checkJointLimits(const double &joint_value, const int &joint_num)
+bool  PR2ArmIK::checkJointLimits(const double &joint_value, const int &joint_num) const
 {
   double jv;
   if(continuous_joint_[joint_num])

@@ -120,7 +120,7 @@ bool PR2ArmKinematicsPlugin::initialize(const std::string& group_name,
 bool PR2ArmKinematicsPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            std::vector<double> &solution,
-                                           moveit_msgs::MoveItErrorCodes &error_code)
+                                           moveit_msgs::MoveItErrorCodes &error_code) const
 {
   if(!active_)
   {
@@ -172,7 +172,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               const std::vector<double> &ik_seed_state,
                                               double timeout,
                                               std::vector<double> &solution,
-                                              moveit_msgs::MoveItErrorCodes &error_code)
+                                              moveit_msgs::MoveItErrorCodes &error_code) const
 {
   if(!active_)
   {
@@ -226,7 +226,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               unsigned int redundancy,
                                               double consistency_limit,
                                               std::vector<double> &solution,
-                                              moveit_msgs::MoveItErrorCodes &error_code)
+                                              moveit_msgs::MoveItErrorCodes &error_code) const
 {
   if(!active_)
   {
@@ -282,7 +282,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
 
 void PR2ArmKinematicsPlugin::desiredPoseCallback(const KDL::JntArray& jnt_array, 
                                                  const KDL::Frame& ik_pose,
-                                                 moveit_msgs::MoveItErrorCodes& error_code)
+                                                 moveit_msgs::MoveItErrorCodes& error_code) const
 {
   std::vector<double> ik_seed_state;
   ik_seed_state.resize(dimension_);
@@ -298,7 +298,7 @@ void PR2ArmKinematicsPlugin::desiredPoseCallback(const KDL::JntArray& jnt_array,
 
 void PR2ArmKinematicsPlugin::jointSolutionCallback(const KDL::JntArray& jnt_array, 
                                                    const KDL::Frame& ik_pose,
-                                                   moveit_msgs::MoveItErrorCodes& error_code)
+                                                   moveit_msgs::MoveItErrorCodes& error_code) const
 {
   std::vector<double> ik_seed_state;
   ik_seed_state.resize(dimension_);
@@ -317,7 +317,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               std::vector<double> &solution,
                                               const IKCallbackFn &desired_pose_callback,
                                               const IKCallbackFn &solution_callback,
-                                              moveit_msgs::MoveItErrorCodes &error_code)  
+                                              moveit_msgs::MoveItErrorCodes &error_code) const
 {
   if(!active_)
   {
@@ -328,8 +328,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   KDL::Frame pose_desired;
   tf::PoseMsgToKDL(ik_pose, pose_desired);
 
-  desiredPoseCallback_ = desired_pose_callback;
-  solutionCallback_    = solution_callback;
+  //  desiredPoseCallback_ = desired_pose_callback;
+  //  solutionCallback_    = solution_callback;
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -345,8 +345,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                                      jnt_pos_out,
                                                      timeout,
                                                      error_code,
-                                                     boost::bind(&PR2ArmKinematicsPlugin::desiredPoseCallback, this, _1, _2, _3),
-                                                     boost::bind(&PR2ArmKinematicsPlugin::jointSolutionCallback, this, _1, _2, _3));
+                                                     boost::bind(desired_pose_callback,_1, _2, _3),
+                                                     boost::bind(solution_callback, _1, _2, _3));
   if(ik_valid >= 0)
   {
     solution.resize(dimension_);
@@ -371,7 +371,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               std::vector<double> &solution,
                                               const IKCallbackFn &desired_pose_callback,
                                               const IKCallbackFn &solution_callback,
-                                              moveit_msgs::MoveItErrorCodes &error_code)  
+                                              moveit_msgs::MoveItErrorCodes &error_code) const
 {
   if(!active_)
   {
@@ -382,8 +382,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   KDL::Frame pose_desired;
   tf::PoseMsgToKDL(ik_pose, pose_desired);
 
-  desiredPoseCallback_ = desired_pose_callback;
-  solutionCallback_    = solution_callback;
+  //  desiredPoseCallback_ = desired_pose_callback;
+  //  solutionCallback_    = solution_callback;
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -402,8 +402,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                                      consistency_limit,
                                                      timeout,
                                                      error_code,
-                                                     boost::bind(&PR2ArmKinematicsPlugin::desiredPoseCallback, this, _1, _2, _3),
-                                                     boost::bind(&PR2ArmKinematicsPlugin::jointSolutionCallback, this, _1, _2, _3));
+                                                     boost::bind(desired_pose_callback, _1, _2, _3),
+                                                     boost::bind(solution_callback, _1, _2, _3));
   pr2_arm_ik_solver_->setFreeAngle(old_free_angle);
   if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)
     return false;
@@ -426,7 +426,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
 
 bool PR2ArmKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_names,
                                            const std::vector<double> &joint_angles,
-                                           std::vector<geometry_msgs::Pose> &poses)
+                                           std::vector<geometry_msgs::Pose> &poses) const
 {
   if(!active_)
   {
@@ -443,6 +443,7 @@ bool PR2ArmKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_
   for(int i=0; i < dimension_; i++)
   {
     jnt_pos_in(i) = joint_angles[i];
+    ROS_DEBUG("Joint angle: %d %f",i,joint_angles[i]);
   }
 
   poses.resize(link_names.size());
