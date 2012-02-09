@@ -26,19 +26,24 @@ right_arm:
   tip_name: r_wrist_roll_link
   root_name: torso_lift_link
   projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
-  longest_valid_segment_fraction: 0.001
+  longest_valid_segment_fraction: 0.05
 
 left_arm: 
   planner_configs:
     - SBLkConfigDefault 
     - LBKPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - ESTkConfigDefault
+    - KPIECEkConfigDefault
+    - BKPIECEkConfigDefault
   kinematics_solver: pr2_arm_kinematics/PR2ArmKinematicsPlugin
   redundancy:
     name: l_upper_arm_roll_joint
   tip_name: l_wrist_roll_link
   root_name: torso_lift_link
   projection_evaluator: link(l_wrist_roll_link)
-  longest_valid_segment_fraction: 0.001
+  longest_valid_segment_fraction: 0.05
 
   
 planner_configs:
