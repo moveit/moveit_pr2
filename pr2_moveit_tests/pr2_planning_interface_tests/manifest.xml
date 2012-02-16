@@ -1,0 +1,19 @@
+<package>
+  <description brief="pr2_planning_interface_tests">
+
+     pr2_planning_interface_tests
+
+  </description>
+  <author>Brian Gerkey</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_planning_interface_tests</url>
+  <depend package="pluginlib"/>
+  <depend package="tf"/>
+  <depend package="planning_scene_monitor"/>
+  <depend package="planning_interface"/>
+
+
+</package>
+
+

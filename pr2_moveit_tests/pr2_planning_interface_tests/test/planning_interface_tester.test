@@ -1,0 +1,7 @@
+<launch>
+  <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
+  <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
+  <test pkg="pr2_planning_interface_tests" 
+        type="planning_interface_tester" 
+        test-name="planning_interface_tester"/>
+</launch>
