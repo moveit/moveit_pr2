@@ -1,4 +1,7 @@
 <launch>
+  <arg name="monitor_robot_state" default="false"/>
+  <arg name="allow_trajectory_execution" default="false"/>
+
   <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
 
@@ -7,11 +10,13 @@
     <rosparam command="load" file="$(find pr2_arm_navigation)/config/joint_limits.yaml"/>
   </group>
   
-  <node pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
-  <node pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
+  <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
+  <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
 
   <node pkg="moveit_visualization_ros" type="planning_components_visualizer_full" name="planning_components_visualizer_full" output="screen">
     <rosparam command="load" file="$(find pr2_arm_planning)/config/ompl_planning.yaml"/>
+    <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
+    <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
   </node>
 
 </launch>
