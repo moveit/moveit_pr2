@@ -1,7 +1,8 @@
-## the list of groups for which motion planning can be performed
+## the list of groups for which additional motion planning parameters are specified
 groups: 
   - right_arm 
   - left_arm
+  - arms
 
 ## the planner configurations; each config must have a type, which specifies
 ## the planner to be used; other parameters can be specified as well, depending 
@@ -21,6 +22,7 @@ right_arm:
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
   kinematics_solver: pr2_arm_kinematics/PR2ArmKinematicsPlugin
+  kinematics_solver_search_resolution: 0.005
   redundancy:
     name: r_upper_arm_roll_joint
   tip_name: r_wrist_roll_link
@@ -38,6 +40,7 @@ left_arm:
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
   kinematics_solver: pr2_arm_kinematics/PR2ArmKinematicsPlugin
+  kinematics_solver_search_resolution: 0.005
   redundancy:
     name: l_upper_arm_roll_joint
   tip_name: l_wrist_roll_link
@@ -45,7 +48,18 @@ left_arm:
   projection_evaluator: link(l_wrist_roll_link)
   longest_valid_segment_fraction: 0.05
 
-  
+arms:
+  planner_configs:
+    - SBLkConfigDefault 
+    - LBKPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - ESTkConfigDefault
+    - KPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+  longest_valid_segment_fraction: 0.05
+  projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
+
 planner_configs:
   SBLkConfigDefault:
     type: geometric::SBL

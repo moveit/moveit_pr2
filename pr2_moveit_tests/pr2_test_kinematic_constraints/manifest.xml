@@ -1,0 +1,18 @@
+<package>
+  <description brief="pr2_test_kinematic_constraints">
+
+     pr2_test_kinematic_constraints
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_test_kinematic_constraints</url>
+  <depend package="roscpp"/>
+  <depend package="kinematic_constraints"/>
+  <depend package="planning_scene_monitor"/>
+  <depend package="kinematics_plugin_loader"/>
+
+</package>
+
+
