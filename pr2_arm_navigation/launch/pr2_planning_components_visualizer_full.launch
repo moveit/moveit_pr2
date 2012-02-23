@@ -5,6 +5,8 @@
   <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
 
+  <rosparam if="$(arg allow_trajectory_execution)" command="load" file="$(find pr2_arm_navigation)/config/pr2_both_arms_controllers.yaml" />
+
   <group ns="robot_description_planning">
     <rosparam command="load" file="$(find pr2_arm_planning)/config/collision_matrix.yaml"/>
     <rosparam command="load" file="$(find pr2_arm_navigation)/config/joint_limits.yaml"/>
@@ -15,6 +17,7 @@
 
   <node pkg="moveit_visualization_ros" type="planning_components_visualizer_full" name="planning_components_visualizer_full" output="screen">
     <rosparam command="load" file="$(find pr2_arm_planning)/config/ompl_planning.yaml"/>
+    <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
     <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
   </node>
