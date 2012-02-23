@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="pr2_trajectory_execution_tests"
+        type="trajectory_execution_tests" 
+        name="trajectory_execution_tests"
+	output="screen">
+    <rosparam command="load" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
+  </node>	
+</launch>
