@@ -6,7 +6,7 @@
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
 
   <group ns="robot_description_planning">
-    <rosparam command="load" file="$(find pr2_arm_planning)/config/collision_matrix.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
     <rosparam command="load" file="$(find pr2_arm_navigation)/config/joint_limits.yaml"/>
   </group>
 
