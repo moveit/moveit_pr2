@@ -1,0 +1,17 @@
+<package>
+  <description brief="pr2_simple_benchmark_test">
+
+     pr2_simple_benchmark_test
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_simple_benchmark_test</url>
+  <depend package="moveit_benchmarks"/>
+  <depend package="planning_scene_monitor"/>
+  <depend package="moveit_msgs"/>
+
+</package>
+
+
