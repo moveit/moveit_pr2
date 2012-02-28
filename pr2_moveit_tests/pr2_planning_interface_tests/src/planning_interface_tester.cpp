@@ -90,7 +90,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
     // A dumb test: require that the planners return true from
     // canServiceRequest
     moveit_msgs::GetMotionPlan::Request req;
-    planning_interface::planner_capability_t capabilities;
+    planning_interface::PlannerCapability capabilities;
     bool can_service = (*it)->canServiceRequest(req, capabilities);
     EXPECT_TRUE(can_service);
    
