@@ -12,19 +12,11 @@ right_arm:
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
-    - RRTConnectkConfigD
-    - RRTConnectkConfigH
-    - RRTConnectkConfigDH
-    - RRTConnectkConfigDD
-    - SBLkConfigDefaultD
-    - SBLkConfigDefaultDD
-    - SBLkConfigDefaultDH
-    - SBLkConfigDefaultH
     - ESTkConfigDefault
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
   projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
-  longest_valid_segment_fraction: 0.1
+  longest_valid_segment_fraction: 0.05
 
 left_arm: 
   planner_configs:
@@ -52,22 +44,6 @@ arms:
 
 planner_configs:
 
-  SBLkConfigDefaultH:
-    type: geometric::SBL
-    range: 3.5
-
-  SBLkConfigDefaultD:
-    type: geometric::SBL
-    range: 14
-
-  SBLkConfigDefaultDD:
-    type: geometric::SBL
-    range: 28
-
-  SBLkConfigDefaultDH:
-    type: geometric::SBL
-    range: 21
-
   SBLkConfigDefault:
     type: geometric::SBL
 
@@ -93,22 +69,6 @@ planner_configs:
     
   RRTkConfigDefault:
     type: geometric::RRT
-
-  RRTConnectkConfigH:
-    type: geometric::RRTConnect
-    range: 3.5
-
-  RRTConnectkConfigD:
-    type: geometric::RRTConnect
-    range: 14
-
-  RRTConnectkConfigDH:
-    type: geometric::RRTConnect
-    range: 21
-
-  RRTConnectkConfigDD:
-    type: geometric::RRTConnect
-    range: 28
 
   RRTConnectkConfigDefault:
     type: geometric::RRTConnect
