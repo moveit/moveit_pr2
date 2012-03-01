@@ -58,7 +58,7 @@ int main(int argc, char **argv)
       psm.getPlanningScene()->getPlanningSceneMsg(req.scene);
 
   // average over 3 runs
-  req.average_count = 3;
+  req.average_count = 10;
   req.filename = "benchmark_results.log";
   
   // fill in a goal
