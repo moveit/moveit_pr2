@@ -3,9 +3,9 @@ locations:
   - name: goal1
     pose: 0.6 -0.4 0.86 1.0 0.26 0.18
   - name: goal2
-    pose: 0.4 1.0 0.25 0 0 0
+    pose: 0.65 0.1 0.6 0 0.45 -0.12
   - name: goal3
-    pose: 0.4 1.6 0.25 0 0 0
+    pose: 0.4 -0.15 0.25 0 0 0
   - name: goal4
-    pose: 0.4 0.4 0.7 0 0 0
+    pose: 0.75 -0.03 0.78 0 0 0
 

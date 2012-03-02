@@ -16,6 +16,22 @@ BenchmarkManipulationTests::BenchmarkManipulationTests() : ph_("~")
   trajectory_folder_path_ = "/tmp";
   use_current_state_as_start_ = false;
 
+  rjoint_names_.push_back("r_shoulder_pan_joint");
+  rjoint_names_.push_back("r_shoulder_lift_joint");
+  rjoint_names_.push_back("r_upper_arm_roll_joint");
+  rjoint_names_.push_back("r_elbow_flex_joint");
+  rjoint_names_.push_back("r_forearm_roll_joint");
+  rjoint_names_.push_back("r_wrist_flex_joint");
+  rjoint_names_.push_back("r_wrist_roll_joint");
+  ljoint_names_.push_back("l_shoulder_pan_joint");
+  ljoint_names_.push_back("l_shoulder_lift_joint");
+  ljoint_names_.push_back("l_upper_arm_roll_joint");
+  ljoint_names_.push_back("l_elbow_flex_joint");
+  ljoint_names_.push_back("l_forearm_roll_joint");
+  ljoint_names_.push_back("l_wrist_flex_joint");
+  ljoint_names_.push_back("l_wrist_roll_joint");
+
+
   benchmark_service_name_="/benchmark_planning_problem";
   world_frame_="map";
   robot_model_root_frame_="odom";
@@ -481,7 +497,6 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   req.scene.robot_state.joint_state.name[0] = "torso_lift_joint";
   req.scene.robot_state.joint_state.position.resize(1);
   req.scene.robot_state.joint_state.position[0] = start_state.body.z;
-ROS_ERROR("torso start: %f", req.scene.robot_state.joint_state.position[0]);
 
   // fill in collision objects
   if(!known_objects_filename_.empty())
@@ -532,9 +547,13 @@ ROS_ERROR("torso start: %f", req.scene.robot_state.joint_state.position[0]);
     return false;
   }
 
-  if(!res.trajectory.empty())
+  for(size_t i = 0; i < res.trajectory.size(); ++i)
   {
-    if(!setRobotPoseFromTrajectory(res.trajectory[0], res.trajectory_start[0], current_pose_))
+    ROS_INFO("[exp] %s returned a path with %d waypoints.", res.planner_interfaces[i].c_str(), int(res.trajectory[i].joint_trajectory.points.size()));
+  }
+  if(!res.trajectory[1].joint_trajectory.points.empty())
+  {
+    if(!setRobotPoseFromTrajectory(res.trajectory[1], res.trajectory_start[1], current_pose_))
     {
       ROS_ERROR("[exp] Failed to set the current robot pose from the trajectory found.");
       return false;
@@ -548,9 +567,10 @@ ROS_ERROR("torso start: %f", req.scene.robot_state.joint_state.position[0]);
 
 bool BenchmarkManipulationTests::runExperiment(std::string name)
 {
-
+  /*
   if(use_current_state_as_start_)
     startCompleteExperimentFile();
+  */
 
   RobotPose start;
   std::vector<std::vector<double> > traj;
@@ -567,6 +587,8 @@ bool BenchmarkManipulationTests::runExperiment(std::string name)
   }
   else
     start = exp_map_[name].start;
+
+  current_pose_ = start;
 
   if(use_current_state_as_start_)
     writeCompleteExperimentFile(exp_map_[name],start);
@@ -708,6 +730,11 @@ void BenchmarkManipulationTests::printExperiments()
 
 void BenchmarkManipulationTests::printRobotPose(RobotPose &pose, std::string name)
 {
+  if(pose.rangles.size() < 7 || pose.langles.size() < 7)
+  {
+    ROS_ERROR("[exp] Trying to print RobotPose but size of rangles = %d and size of langles = %d.", int(pose.rangles.size()), int(pose.langles.size()));
+    return;
+  }
   ROS_INFO("[%s] right: % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f", name.c_str(), pose.rangles[0], pose.rangles[1], pose.rangles[2], pose.rangles[3], pose.rangles[4], pose.rangles[5], pose.rangles[6]);
   ROS_INFO("[%s]  left: % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f", name.c_str(), pose.langles[0], pose.langles[1], pose.langles[2], pose.langles[3], pose.langles[4], pose.langles[5], pose.langles[6]);
   ROS_INFO("[%s]  base: % 0.3f % 0.3f % 0.3f", name.c_str(), pose.body.x, pose.body.y, pose.body.theta);
@@ -754,7 +781,6 @@ void BenchmarkManipulationTests::fillSingleArmPlanningRequest(RobotPose &start_s
 
   req.start_state.joint_state.position.push_back(start_state.body.z);
   req.start_state.joint_state.name.push_back("torso_lift_joint");
-  ROS_ERROR("[exp] Setting torso_lift_link to %0.3f in the start state.", start_state.body.z);
 
   // goal pose
   req.goal_constraints.resize(1);
@@ -820,7 +846,7 @@ void BenchmarkManipulationTests::fillDualArmPlanningRequest(RobotPose &start_sta
   req.start_state.joint_state.name.push_back("l_wrist_roll_joint");
 
   req.start_state.joint_state.position.push_back(start_state.body.z);
-  req.start_state.joint_state.name.push_back("torso_lift_link");
+  req.start_state.joint_state.name.push_back("torso_lift_joint");
 
 
   ROS_INFO("[exp] Start state %d angles %d joint names", int(req.start_state.joint_state.position.size()), int(req.start_state.joint_state.name.size()));
@@ -881,11 +907,17 @@ bool BenchmarkManipulationTests::setRobotPoseFromTrajectory(moveit_msgs::RobotTr
   // update the current pose with the previous start state of the robot
   getRobotPoseFromRobotState(trajectory_start, pose);
 
+  if(trajectory.joint_trajectory.points.empty())
+  {
+    ROS_INFO("[exp] Trajectory is empty....unable to set robot pose.");
+    return true;
+  }
+
   if(experiment_type_ == 1)
   {
-    if(!getJointPositionsFromTrajectory(trajectory.joint_trajectory, rjoint_names_, trajectory.joint_trajectory.points.size()-1, pose.rangles))
+    if(!getJointPositionsFromTrajectory(trajectory.joint_trajectory, rjoint_names_, int(trajectory.joint_trajectory.points.size())-1, pose.rangles))
     {
-      ROS_ERROR("[exp] Failed to get the joint positions for the right arm from waypoint %d", trajectory.joint_trajectory.points.size()-1);
+      ROS_ERROR("[exp] Failed to get the joint positions for the right arm from waypoint %d", int(trajectory.joint_trajectory.points.size())-1);
       return false;
     }
   }
@@ -910,6 +942,7 @@ bool BenchmarkManipulationTests::getJointPositionsFromTrajectory(const trajector
     {
       angles[ind] = traj.points[waypoint].positions[i];
       ind++;
+      ROS_DEBUG("[exp] Found %s in trajectory, ind = %d", traj.joint_names[i].c_str(), ind);
     }
     if(ind == names.size())
       break;
@@ -954,7 +987,7 @@ bool BenchmarkManipulationTests::getRobotPoseFromRobotState(const moveit_msgs::R
   }
   if(rind != rjoint_names_.size() || lind != ljoint_names_.size())
   {
-    ROS_WARN("[exp] Not all of the expected joints were assigned a starting position.");
+    ROS_DEBUG("[exp] Not all of the expected joints were found in the RobotState.");
     return false;
   }
 

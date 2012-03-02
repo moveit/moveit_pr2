@@ -13,6 +13,6 @@
   <depend stack="robot_model" /> <!-- urdf, kdl_parser, srdf -->
   <depend stack="ros" />
   <depend stack="ros_comm" /> <!-- roscpp -->
-  <depend stack="moveit_manipulation" /> <! -- grasp_place_evaluation -->
+  <depend stack="moveit_manipulation" />
 
 </stack>

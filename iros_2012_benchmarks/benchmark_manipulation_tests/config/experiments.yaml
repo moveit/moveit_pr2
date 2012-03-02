@@ -1,56 +1,14 @@
-# for now expects either "arms" or "right_arm"
-group_name: right_arm
-
-benchmark_service: /benchmark_planning_problem
-world_frame: map
-robot_model_root_frame: odom
-spine_frame: torso_lift_link
-
-# list the planner_interfaces you want to benchmark with
-planner_interfaces:
-  SBLkConfigDefault
-  SBPLPlanner
-
-goal_tolerance:
-  xyz: 0.02 0.02 0.02
-  rpy: 0.05 0.05 0.05
-
-# only used for both_arms experiments
-# pose of {r,l}_wrist_roll_links in the object frame
-object_pose_in_gripper:
-  right:
-    xyz: -0.20 -0.1 0.0
-    rpy: 0.0 0.0 0.0
-  left:
-    xyz: -0.20 0.1 0.0
-    rpy: 0.0 0.0 0.0
-
-start_state:
-  right: 0 0.017997624551430391 -0.005238188295824564 -0.43192349103359273 -0.00041708680445573521 -0.74471175505726084 -0.0010002085575777642
-  left: 0 0.018023182385653591 0.005683010665493704 -0.43150111655319634 0.00079943310185193195 -0.7439117804053561 0.00049889278955195238
-  base: 0 0 0 
-  spine: 0.08
-
 experiments:
 
   - name: exp1
     goal: goal1
     pre_action: nothing
-    post_action: detach
+    post_action: nothing
     sound_bite: "how ya doin buddy?"
-    start:
-      right: 0 0.017997624551430391 -0.005238188295824564 -0.43192349103359273 -0.00041708680445573521 -0.74471175505726084 -0.0010002085575777642
-      left: 0 0.018023182385653591 0.005683010665493704 -0.43150111655319634 0.00079943310185193195 -0.7439117804053561 0.00049889278955195238
-      base: 0 0 0
-      spine: 0.05
   - name: exp2
     goal: goal2
-    pre_action: attach
-    post_action: detach
+    pre_action: nothing
+    post_action: nothing
     sound_bite: "testing is fun!"
-    start:
-      right: 0.0 0.018 0.00 -0.43 0.00 -0.00 0.0
-      left: 0.0 0.018 0.00 -0.43 0.00 -0.00 0.0
-      base: 0 0 0
-      spine: 0.15
+
 

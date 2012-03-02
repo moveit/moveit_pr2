@@ -1,6 +1,7 @@
 <launch>
 
-  <node  pkg="benchmark_manipulation_tests" name="benchmark_manipulation_tests" type="runTest" output="screen" >
+  <node pkg="benchmark_manipulation_tests" name="benchmark_manipulation_tests" type="runTest" output="screen" >
+    <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/single_arm.yaml" />
     <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/locations.yaml" />
     <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/experiments.yaml" />
     <!-- <param name="known_objects_filename" value="$(find sbpl_full_body_tests)/env/raised_shelves.env" /> -->

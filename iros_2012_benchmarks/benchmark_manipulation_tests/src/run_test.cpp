@@ -15,10 +15,14 @@ int main (int argc, char **argv)
   exp.visualizeStartPose();
   ros::spinOnce();
   sleep(2);
-  if(!exp.runExperiment("exp1"))
+  if(!exp.performAllExperiments())
     ROS_ERROR("Experiments failed.");
 
-  ros::spin();
+  ros::spinOnce();
+  sleep(2);
+  ros::spinOnce();
+
+  ROS_INFO("Party is over! Go home, people!");
   return 0;
 }
 
