@@ -41,6 +41,7 @@
 #include <geometric_shapes/shape_operations.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <planning_models/conversions.h>
+#include <visualization_msgs/MarkerArray.h>
 
 #include <ros/ros.h>
 #include <gtest/gtest.h>
@@ -385,7 +386,61 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   }
 }
 
-TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples)
+TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples1)
+{
+  moveit_msgs::Constraints c;
+
+  moveit_msgs::OrientationConstraint ocm;
+  ocm.link_name = "r_wrist_roll_link";
+  ocm.orientation.header.frame_id = kmodel_->getModelFrame();
+  ocm.orientation.quaternion.x = 0;
+  ocm.orientation.quaternion.y = 0;
+  ocm.orientation.quaternion.z = 0;
+  ocm.orientation.quaternion.w = 1.0;
+  ocm.absolute_x_axis_tolerance = 0.01;
+  ocm.absolute_y_axis_tolerance = 0.01;
+  ocm.absolute_z_axis_tolerance = M_PI;
+  ocm.weight = 1.0;
+  c.orientation_constraints.push_back(ocm);
+  
+  kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
+  kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
+
+  ros::NodeHandle nh;
+  ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);
+  
+  planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
+  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
+    (kmodel_->getJointModelGroup("right_arm"), c, kmodel_, tf, kinematics_allocator);
+  
+  EXPECT_TRUE(s.get() != NULL);
+  
+  kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
+  kset.add(c);
+  
+  planning_models::KinematicState ks(kmodel_);
+  ks.setToDefaultValues();
+
+  ros::WallTime start = ros::WallTime::now();
+  unsigned int ns = 0;
+  for (int t = 0 ; t < 500 ; ++t)
+  {
+    std::vector<double> values;
+    if ((s->sample(values, ks, 2)))
+    {
+      ks.getJointStateGroup("right_arm")->setStateValues(values);
+      ns++;
+    }
+  }
+  ROS_INFO("%lf samples per second", ns / (ros::WallTime::now() - start).toSec());
+  ros::Publisher pub_markers = nh.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array", 5); 
+  visualization_msgs::MarkerArray arr;  
+  s->visualizeDistribution(ks, "r_wrist_roll_link", 2000, 10, arr);
+  pub_markers.publish(arr);
+  ros::Duration(1.0).sleep();  
+}
+
+TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
 {
   moveit_msgs::Constraints c;
 
@@ -504,14 +559,14 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples)
       {
         moveit_msgs::DisplayTrajectory d;
         d.model_id = kmodel_->getName();
-        planning_models::kinematicStateToRobotState(ks, d.robot_state);
+        planning_models::kinematicStateToRobotState(ks, d.trajectory_start);
         pub_state.publish(d);
         ros::WallDuration(1.0).sleep();
       }
     }
   }
 }
-
+/*
 TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
 {
   ros::NodeHandle nh;
@@ -571,7 +626,7 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   pub.publish(mk);
   ros::WallDuration(1.0).sleep();
 }
-
+*/
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
