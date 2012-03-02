@@ -72,6 +72,7 @@ bool BenchmarkManipulationTests::getParams()
   ph_.param<std::string>("world_frame", world_frame_, "map");
   ph_.param<std::string>("robot_model_root_frame", robot_model_root_frame_, "odom");
   ph_.param<std::string>("spine_frame", spine_frame_, "torso_lift_link");
+  ph_.param("average_count", average_count_, 2);
   
   if(ph_.hasParam("object_pose_in_gripper"))
   {
@@ -470,14 +471,14 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   moveit_msgs::ComputePlanningBenchmark::Request req;
   moveit_msgs::ComputePlanningBenchmark::Response res;
 
-  req.average_count = 10;
+  req.average_count = average_count_;
   req.filename = "/u/bcohen/Desktop/bens_res.log";
   psm_->getPlanningScene()->getAllowedCollisionMatrix().getMessage(req.scene.allowed_collision_matrix);
 
   req.scene.robot_state.joint_state.header.frame_id = robot_model_root_frame_;
   req.scene.robot_state.joint_state.header.stamp = ros::Time::now();
   req.scene.robot_state.joint_state.name.resize(1);
-  req.scene.robot_state.joint_state.name[0] = spine_frame_;
+  req.scene.robot_state.joint_state.name[0] = "torso_lift_joint";
   req.scene.robot_state.joint_state.position.resize(1);
   req.scene.robot_state.joint_state.position[0] = start_state.body.z;
 ROS_ERROR("torso start: %f", req.scene.robot_state.joint_state.position[0]);
@@ -539,35 +540,37 @@ ROS_ERROR("torso start: %f", req.scene.robot_state.joint_state.position[0]);
       return false;
     }
   }
-
+  for(size_t i = 0; i < res.planner_interfaces.size(); ++i)
+    ROS_INFO("[exp] Received a trajectory by %s", res.planner_interfaces[i].c_str());
   printRobotPose(current_pose_, "pose_after_trajectory");  
   return true;
 }
 
 bool BenchmarkManipulationTests::runExperiment(std::string name)
 {
-/*
+
   if(use_current_state_as_start_)
     startCompleteExperimentFile();
-*/
+
   RobotPose start;
   std::vector<std::vector<double> > traj;
   
   ROS_INFO("[exp] Trying to plan: %s", name.c_str());
-/*
+
   if(use_current_state_as_start_)
   {
-    if(std::distance(exp_map_.begin(), exp_map_[name]) == 0)
+    std::map<std::string, Experiment>::iterator name_iter = exp_map_.find(name);
+    if(std::distance(exp_map_.begin(), name_iter) == 0)
       start = start_pose_;
     else
       start = current_pose_;
   }
   else
-    start = iter->second.start;
+    start = exp_map_[name].start;
 
   if(use_current_state_as_start_)
-    writeCompleteExperimentFile(iter->second,start);
-*/
+    writeCompleteExperimentFile(exp_map_[name],start);
+
 
   start = start_pose_;
   printRobotPose(start, "start");
@@ -589,35 +592,10 @@ bool BenchmarkManipulationTests::performAllExperiments()
   if(use_current_state_as_start_)
     startCompleteExperimentFile();
 
-  RobotPose start;
-  std::vector<std::vector<double> > traj;
   for(std::map<std::string,Experiment>::iterator iter = exp_map_.begin(); iter != exp_map_.end(); ++iter)
   {
-    ROS_INFO("[exp] Trying to plan: %s (%d)", iter->second.name.c_str(), int(std::distance(exp_map_.begin(), iter))+1);
-    if(use_current_state_as_start_)
-    {
-      if(std::distance(exp_map_.begin(), iter) == 0)
-        start = start_pose_;
-      else
-        start = current_pose_;
-    }
-    else
-      start = iter->second.start;
-
-    if(use_current_state_as_start_)
-      writeCompleteExperimentFile(iter->second,start);
-
-    printRobotPose(start, "start");
-    ROS_INFO("[exp]  goal: %s", iter->second.goal.c_str());
-    if(!requestPlan(start, iter->second.name))
-    {
-      ROS_ERROR("[exp] %s failed to plan.", iter->second.name.c_str());
-      return false; 
-    }
-    else
-      ROS_INFO("[exp] It's a planning miracle!");
-
-    visualizeLocations();
+    if(!runExperiment(iter->first))
+      return false;
   }
   return true;
 }
@@ -651,17 +629,19 @@ void BenchmarkManipulationTests::visualizeLocations()
 }
 
 void BenchmarkManipulationTests::startCompleteExperimentFile(){
-  FILE* fout = fopen("complete_experiments_with_starts.yaml","w");
+  FILE* fout = fopen("/tmp/completeExperiment.yaml","w");
+  /*
   fprintf(fout,"goal_tolerance:\n  xyz: 0.02 0.02 0.02\n rpy: 0.05 0.05 0.05\n\n");
   fprintf(fout,"object_pose_in_gripper:\n  right:\n    xyz: -0.20 -0.1 0.0\n    rpy: 0.0 0.0 0.0\n  left:\n    xyz: -0.20 0.1 0.0\n    rpy: 0.0 0.0 0.0\n\n");
   fprintf(fout,"use_current_pose_as_start_state: false\n");
   fprintf(fout,"start_state:\n  right: 0.0 0.018 0.00 -0.43 0.00 -0.00 0.0\n  left: 0.0 0.018 0.00 -0.43 0.00 -0.00 0.0\n  base: 1.9 0.6 1.57\n  spine: 0.0\n\n");
+  */
   fprintf(fout,"experiments:\n\n");
   fclose(fout);
 }
 
 void BenchmarkManipulationTests::writeCompleteExperimentFile(Experiment e, RobotPose start){
-  FILE* fout = fopen("completeExperiment.yaml","a");
+  FILE* fout = fopen("/tmp/completeExperiment.yaml","a");
   fprintf(fout,"  - name: %s\n",e.name.c_str());
   fprintf(fout,"    goal: %s\n",e.goal.c_str());
   if(e.pre_action==0)
@@ -681,7 +661,7 @@ void BenchmarkManipulationTests::writeCompleteExperimentFile(Experiment e, Robot
   fprintf(fout,"      right: %f %f %f %f %f %f %f\n",start.rangles[0],start.rangles[1],start.rangles[2],start.rangles[3],start.rangles[4],start.rangles[5],start.rangles[6]);
   fprintf(fout,"      left: %f %f %f %f %f %f %f\n",start.langles[0],start.langles[1],start.langles[2],start.langles[3],start.langles[4],start.langles[5],start.langles[6]);
   fprintf(fout,"      base: %f %f %f\n",start.body.x,start.body.y,start.body.theta);
-  fprintf(fout,"      torso: %f\n",start.body.z);
+  fprintf(fout,"      spine: %f\n",start.body.z);
   fclose(fout);
 }
 
@@ -773,7 +753,7 @@ void BenchmarkManipulationTests::fillSingleArmPlanningRequest(RobotPose &start_s
 
 
   req.start_state.joint_state.position.push_back(start_state.body.z);
-  req.start_state.joint_state.name.push_back("torso_lift_link");
+  req.start_state.joint_state.name.push_back("torso_lift_joint");
   ROS_ERROR("[exp] Setting torso_lift_link to %0.3f in the start state.", start_state.body.z);
 
   // goal pose
@@ -904,7 +884,10 @@ bool BenchmarkManipulationTests::setRobotPoseFromTrajectory(moveit_msgs::RobotTr
   if(experiment_type_ == 1)
   {
     if(!getJointPositionsFromTrajectory(trajectory.joint_trajectory, rjoint_names_, trajectory.joint_trajectory.points.size()-1, pose.rangles))
+    {
+      ROS_ERROR("[exp] Failed to get the joint positions for the right arm from waypoint %d", trajectory.joint_trajectory.points.size()-1);
       return false;
+    }
   }
   else
   {
@@ -913,7 +896,7 @@ bool BenchmarkManipulationTests::setRobotPoseFromTrajectory(moveit_msgs::RobotTr
     if(!getJointPositionsFromTrajectory(trajectory.joint_trajectory, ljoint_names_, trajectory.joint_trajectory.points.size()-1, pose.langles))
       return false;
   }
-  return false;
+  return true;
 }
 
 bool BenchmarkManipulationTests::getJointPositionsFromTrajectory(const trajectory_msgs::JointTrajectory &traj, std::vector<std::string> &names, int waypoint, std::vector<double> &angles)

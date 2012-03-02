@@ -104,6 +104,7 @@ class BenchmarkManipulationTests
 
     bool use_current_state_as_start_;
     int experiment_type_; // 1: one arm, 2: two arm
+    int average_count_;
     std::string group_name_;
     std::string planner_id_;
     std::string benchmark_service_name_;
