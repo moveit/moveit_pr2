@@ -1,0 +1,27 @@
+<package>
+  <description brief="pviz">
+
+    The PR2 Visualization Library
+
+  </description>
+  <author>Benjamin Cohen/bcohen@seas.upenn.edu</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes="" />
+  <url>http://www.ros.org/wiki/pviz</url>
+
+	<depend package="kdl" />
+  <depend package="kdl_parser" />
+	<depend package="pr2_arm_kinematics"/>
+	<depend package="kinematics_msgs"/>
+	<depend package="roscpp"/>
+	<depend package="tf" />
+  <depend package="visualization_msgs" />
+  <depend package="pr2_controllers_msgs"/>
+  <depend package="geometry_msgs"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include  -O3 -g"  lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib  -lpviz"/>
+  </export>
+
+
+</package>

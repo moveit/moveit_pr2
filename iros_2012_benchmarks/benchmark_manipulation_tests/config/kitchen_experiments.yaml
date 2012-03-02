@@ -1,0 +1,122 @@
+goal_tolerance:
+  xyz: 0.02 0.02 0.02
+  yaw: 0.1
+
+object_pose_in_gripper:
+  right:
+    xyz: -0.20 -0.1 0.0
+    rpy: 0.0 0.0 0.0
+  left:
+    xyz: -0.20 0.1 0.0
+    rpy: 0.0 0.0 0.0
+
+use_current_pose_as_start_state: true
+start_state:
+  right: 0.0 0.018 0.00 -0.43 0.00 -0.00 0.0
+  left: 0.0 0.018 0.00 -0.43 0.00 -0.00 0.0
+  base: 2.02 2.02 3.14
+  spine: 0.0
+
+experiments:
+
+  - name: exp00
+    goal: cabinet1_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "how ya doin buddy?"
+  - name: exp01
+    goal: fridge1_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "how ya doin buddy?"
+  - name: exp02
+    goal: table_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "how ya doin buddy?"
+  - name: exp03
+    goal: counter1_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp04
+    goal: cabinet1_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp05
+    goal: fridge2_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp06
+    goal: dishwasher_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp07
+    goal: counter1_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp08
+    goal: lower_cabinet2_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp09
+    goal: fridge3_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp10
+    goal: lower_cabinet2_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp11
+    goal: counter2_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp12
+    goal: fridge1_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp13
+    goal: cabinet2_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp14
+    goal: dishwasher_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp15
+    goal: sink_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp16
+    goal: fridge2_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp17
+    goal: sink_1
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp18
+    goal: fridge3_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+  - name: exp19
+    goal: table_2
+    pre_action: attach
+    post_action: detach
+    sound_bite: "something about a pickle..."
+

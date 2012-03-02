@@ -1,0 +1,18 @@
+<launch>
+  <include file="$(find pr2_machine)/$(env ROBOT).machine" />
+
+  <!-- Kinematics -->
+  <include file="$(find pr2_arm_navigation_kinematics)/launch/pr2_ik_rarm_node.launch"/>
+  <include file="$(find pr2_arm_navigation_kinematics)/launch/pr2_ik_larm_node.launch"/>
+
+  <!-- Map Server, Localization -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find sbpl_lattice_planner)/worlds/willow.pgm 0.025" />
+  <include file="$(find pr2_navigation_global)/amcl_node.xml" />
+
+  <!-- Run Simple Example -->
+  <node name="pviz_example" pkg="pviz" type="pvizExample" output="screen">
+    <param name="trajectory_filename" type="string" value="$(find pviz)/trajectory.csv" />
+  </node>
+ 
+</launch>
+

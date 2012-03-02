@@ -1,0 +1,116 @@
+locations:
+
+  # fridge
+  - name: fridge1_1
+    pose: 0.5 0.225 0.77 3.14
+  - name: fridge1_2
+    pose: 0.5 0.45 0.77 3.14
+  - name: fridge2_1
+    pose: 0.5 0.225 1.11 3.14
+  - name: fridge2_2
+    pose: 0.5 0.45 1.11 3.14
+  - name: fridge3_1
+    pose: 0.5 0.25 1.36 3.14
+  - name: fridge3_2
+    pose: 0.48 0.45 1.36 3.14
+  - name: fridge1_3
+    pose: 0.6 0.3 0.74 2.86
+  - name: fridge1_4
+    pose: 0.52 0.38 0.75 3.34
+  - name: fridge2_3
+    pose: 0.58 0.28 1.13 2.94
+  - name: fridge2_4
+    pose: 0.61 0.42 1.109 3.20
+  - name: fridge3_3
+    pose: 0.48 0.34 1.36 3.31
+  - name: fridge3_4
+    pose: 0.62 0.47 1.34 2.98
+
+  # countertop 
+  - name: counter1_1
+    pose: 0.53 1.08 0.92 3.14
+  - name: counter1_2
+    pose: 0.38 1.1 0.92 3.14
+  - name: counter2_1
+    pose: 0.54 1.94 0.98 2.20
+  - name: counter1_3
+    pose: 0.5 1.02 0.95 3.08
+  - name: counter1_4
+    pose: 0.48 1.18 0.94 3.35
+  - name: counter2_2
+    pose: 0.49 1.98 0.92  2.8
+  - name: counter1_5
+    pose: 0.5 1.07 0.9 2.92
+  - name: counter1_6
+    pose: 0.44 1.06 0.98 3.2
+  - name: counter2_3
+    pose: 0.53 1.94 0.88  2.9 
+
+  # sink
+  - name: sink_1
+    pose: 0.34 1.48 0.92 2.95
+  - name: sink_2
+    pose: 0.38 1.6 0.92 3.14
+  - name: sink_3
+    pose: 0.41 1.74 0.92 3.3
+  - name: sink_4
+    pose: 0.41 1.66 0.88 3.4
+
+  # lower cabinet
+  - name: lower_cabinet2_1
+    pose: 0.44 1.06 0.55 3.14
+  - name: lower_cabinet2_2
+    pose: 0.4 0.95 0.61 3.14
+  - name: lower_cabinet2_3
+    pose: 0.52 1.02 0.57 3.18
+  - name: lower_cabinet2_4
+    pose: 0.46 0.98 0.53 3.24
+
+  # cabinet
+  - name: cabinet1_1
+    pose: 0.25 1.0 1.4 3.14 
+  - name: cabinet1_2
+    pose: 0.3 1.3 1.35 3.0 
+  - name: cabinet2_1
+    pose: 0.39 1.88 1.35 3.14 
+  - name: cabinet1_3
+    pose: 0.25 1.1 1.38 3.52
+  - name: cabinet1_4
+    pose: 0.3 1.21 1.42 2.8
+  - name: cabinet1_5
+    pose: 0.34 0.97 1.35 3.36
+  - name: cabinet1_6
+    pose: 0.32 1.38 1.36 2.9
+  - name: cabinet2_2
+    pose: 0.42 1.92 1.41 2.8 
+
+  # dishwasher
+  - name: dishwasher_1
+    pose: 0.95 2.1 0.4 1.70
+  - name: dishwasher_2
+    pose: 0.9 2.14 0.52 1.7
+  - name: dishwasher_3
+    pose: 0.98 2.13 0.45 1.9
+  - name: dishwasher_4
+    pose: 1.0 2.12 0.51 1.6
+  - name: dishwasher_5
+    pose: 1.05 2.08 0.36 1.8
+  - name: dishwasher_6
+    pose: 0.89 2.0 0.47 2.2
+
+  # table
+  - name: table_1
+    pose: 1.9 0.5 0.85 0.4
+  - name: table_2
+    pose: 1.9 0.95 0.9 0.15
+  - name: table_3
+    pose: 1.9 0.64 0.88 -0.32
+  - name: table_4
+    pose: 1.85 0.73 0.98 -0.09
+  - name: table_5
+    pose: 1.88 0.8 0.92 0.34
+  - name: table_6
+    pose: 1.92 0.88 0.88 -0.34
+  - name: table_7
+    pose: 1.94 1.10 0.94 0.20
+
