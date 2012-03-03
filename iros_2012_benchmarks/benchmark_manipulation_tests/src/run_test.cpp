@@ -6,7 +6,10 @@ int main (int argc, char **argv)
   BenchmarkManipulationTests exp;
 
   if(!exp.getParams())
+  {
+    ROS_ERROR("Failed to get all required params from param server.");
     return false;
+  }
   exp.printParams();
 
   sleep(3);

@@ -75,6 +75,7 @@ class BenchmarkManipulationTests
     ros::NodeHandle ph_;
     ros::Publisher attached_object_pub_;
     ros::Publisher collision_object_pub_;
+    ros::Publisher pscene_pub_;
     ros::ServiceClient benchmark_client_;
     planning_scene_monitor::PlanningSceneMonitor* psm_;
 
@@ -98,6 +99,7 @@ class BenchmarkManipulationTests
 
     std::string known_objects_filename_;
     std::string attached_object_filename_;
+    std::string benchmark_results_folder_;
     std::string trajectory_folder_name_;
     std::string trajectory_folder_path_;
     std::string trajectory_files_path_;
