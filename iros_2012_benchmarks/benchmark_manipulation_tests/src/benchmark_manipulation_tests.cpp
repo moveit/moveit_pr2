@@ -43,6 +43,7 @@ BenchmarkManipulationTests::BenchmarkManipulationTests() : ph_("~")
   benchmark_client_ = nh_.serviceClient<moveit_msgs::ComputePlanningBenchmark>(benchmark_service_name_, true);
   ROS_INFO("[exp] Connected to the benchmark service.");
 
+  pscene_pub_ = nh_.advertise<moveit_msgs::PlanningScene>("planning_scene", 500, true);
 
   psm_ = new planning_scene_monitor::PlanningSceneMonitor("robot_description");
 }
@@ -88,6 +89,7 @@ bool BenchmarkManipulationTests::getParams()
   ph_.param<std::string>("world_frame", world_frame_, "map");
   ph_.param<std::string>("robot_model_root_frame", robot_model_root_frame_, "odom");
   ph_.param<std::string>("spine_frame", spine_frame_, "torso_lift_link");
+  ph_.param<std::string>("benchmark_results_folder", benchmark_results_folder_, "/tmp");
   ph_.param("average_count", average_count_, 2);
   
   if(ph_.hasParam("object_pose_in_gripper"))
@@ -149,21 +151,21 @@ bool BenchmarkManipulationTests::getParams()
     experiment_type_ = 1;
   }
   
-  if(ph_.hasParam("start_state"))
+  if(ph_.hasParam("initial_start_state"))
   {
     start_pose_.rangles.clear();
     start_pose_.langles.clear();
     std::vector<double> bpose;
-    ph_.getParam("start_state/right", plist);
+    ph_.getParam("initial_start_state/right", plist);
     std::stringstream ss(plist);
     while(ss >> p)
       start_pose_.rangles.push_back(atof(p.c_str()));
-    ph_.getParam("start_state/left", plist);
+    ph_.getParam("initial_start_state/left", plist);
     std::stringstream ss1(plist);
     ss.str(plist);
     while(ss1 >> p)
       start_pose_.langles.push_back(atof(p.c_str()));
-    ph_.getParam("start_state/base", plist);
+    ph_.getParam("initial_start_state/base", plist);
     std::stringstream ss2(plist);
     while(ss2 >> p)
       bpose.push_back(atof(p.c_str()));
@@ -173,7 +175,7 @@ bool BenchmarkManipulationTests::getParams()
       start_pose_.body.y = bpose[1];
       start_pose_.body.theta = bpose[2];
     }
-    ph_.getParam("start_state/spine", start_pose_.body.z);  
+    ph_.getParam("initial_start_state/spine", start_pose_.body.z);  
   }
 
   if(ph_.hasParam("planner_interfaces"))
@@ -187,10 +189,15 @@ bool BenchmarkManipulationTests::getParams()
 
   if(goal_tolerance_.size() < 6 || 
       start_pose_.rangles.size() < 7 ||
-      start_pose_.langles.size() < 7 ||
-      rarm_object_offset_.size() < 6 ||
-      larm_object_offset_.size() < 6)
+      start_pose_.langles.size() < 7)
+  {
+    ROS_ERROR("[exp] Missing some params. Either start angles for the arms or the goal tolerance.");
     return false;
+  }
+
+  if((rarm_object_offset_.size() < 6 || larm_object_offset_.size() < 6) && experiment_type_ == 2)
+    return false;
+
 
   if(!getLocations() || !getExperiments())
     return false;
@@ -365,7 +372,7 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
   ROS_INFO("[exp] Parsing collision object file with %i objects.",num_obs);
 
   //get {x y z dimx dimy dimz} for each object
-  objects.resize(num_obs, std::vector<double>(10,0.0));
+  objects.resize(num_obs, std::vector<double>(6,0.0));
   object_ids.clear();
   for (int i=0; i < num_obs; ++i)
   {
@@ -373,7 +380,7 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
       ROS_INFO("[exp] Parsed string has length < 1.\n");
     object_ids.push_back(sTemp);
 
-    for(int j=0; j < 10; ++j)
+    for(int j=0; j < 6; ++j)
     {
       if(fscanf(fCfg,"%s",sTemp) < 1)
         ROS_INFO("[exp] Parsed string has length < 1. (object parameters for %s)\n", object_ids.back().c_str());
@@ -397,7 +404,7 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     object.id = object_ids[i];
     object.operation = moveit_msgs::CollisionObject::ADD;
     object.shapes[0].type = moveit_msgs::Shape::BOX;
-    object.header.frame_id = "odom";
+    object.header.frame_id = "base_footprint";
     object.header.stamp = ros::Time::now();
 
     object.poses[0].position.x = objects[i][0];
@@ -411,14 +418,14 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     object.shapes[0].dimensions[0] = objects[i][3];
     object.shapes[0].dimensions[1] = objects[i][4];
     object.shapes[0].dimensions[2] = objects[i][5];
-
+    /*
     object.shapes[0].triangles[0] = objects[i][6];
     object.shapes[0].triangles[1] = objects[i][7];
     object.shapes[0].triangles[2] = objects[i][8];
     object.shapes[0].triangles[3] = objects[i][9];
-
+    */
     collision_objects.push_back(object);
-    ROS_INFO("[exp] [%d] id: %s xyz: %0.3f %0.3f %0.3f dims: %0.3f %0.3f %0.3f colors: %0.3f %0.3f %0.3f %0.3f",int(i),object_ids[i].c_str(),objects[i][0],objects[i][1],objects[i][2],objects[i][3],objects[i][4],objects[i][5],objects[i][6],objects[i][7],objects[i][8],objects[i][9]);
+    ROS_INFO("[exp] [%d] id: %s xyz: %0.3f %0.3f %0.3f dims: %0.3f %0.3f %0.3f",int(i),object_ids[i].c_str(),objects[i][0],objects[i][1],objects[i][2],objects[i][3],objects[i][4],objects[i][5]);
   }
   return true;
 }
@@ -488,7 +495,7 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   moveit_msgs::ComputePlanningBenchmark::Response res;
 
   req.average_count = average_count_;
-  req.filename = "/u/bcohen/Desktop/bens_res.log";
+  req.filename = benchmark_results_folder_ + name + ".log";
   psm_->getPlanningScene()->getAllowedCollisionMatrix().getMessage(req.scene.allowed_collision_matrix);
 
   req.scene.robot_state.joint_state.header.frame_id = robot_model_root_frame_;
@@ -536,6 +543,17 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   else
     fillDualArmPlanningRequest(start_state,name,req.motion_plan_request);
 
+  // filling planning scene with start state of joints so the rviz plugin can display them
+  for(size_t i = 0; i < req.motion_plan_request.start_state.joint_state.name.size(); ++i)
+  {
+    req.scene.robot_state.joint_state.name.push_back(req.motion_plan_request.start_state.joint_state.name[i]);
+    req.scene.robot_state.joint_state.position.push_back(req.motion_plan_request.start_state.joint_state.position[i]);
+  }
+  ROS_INFO("[exp] Publishing the planning scene for visualization using the motion_planning_rviz_plugin.");
+  pscene_pub_.publish(req.scene);
+  visualizeRobotPose(start_state, "start", 0);
+  usleep(1000);
+
   if(benchmark_client_.call(req, res))
   {
     ROS_INFO("[exp] Planner returned status code: %d.", res.error_code.val); 
@@ -567,11 +585,6 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
 
 bool BenchmarkManipulationTests::runExperiment(std::string name)
 {
-  /*
-  if(use_current_state_as_start_)
-    startCompleteExperimentFile();
-  */
-
   RobotPose start;
   std::vector<std::vector<double> > traj;
   
@@ -593,8 +606,6 @@ bool BenchmarkManipulationTests::runExperiment(std::string name)
   if(use_current_state_as_start_)
     writeCompleteExperimentFile(exp_map_[name],start);
 
-
-  start = start_pose_;
   printRobotPose(start, "start");
   ROS_INFO("[exp]  goal: %s", exp_map_[name].goal.c_str());
   if(!requestPlan(start, name))
@@ -619,6 +630,8 @@ bool BenchmarkManipulationTests::performAllExperiments()
     if(!runExperiment(iter->first))
       return false;
   }
+  visualizeRobotPose(current_pose_, "start", 0);
+
   return true;
 }
 
@@ -744,15 +757,15 @@ void BenchmarkManipulationTests::printRobotPose(RobotPose &pose, std::string nam
 void BenchmarkManipulationTests::printParams()
 {
   for(size_t i = 0; i < planner_interfaces_.size(); ++i)
-    ROS_INFO("   [planner_interface] %d/%d %s", int(i+1), int(planner_interfaces_.size()), planner_interfaces_[i].c_str());
+    ROS_INFO("[planner_interface] %d/%d %s", int(i+1), int(planner_interfaces_.size()), planner_interfaces_[i].c_str());
 
-  ROS_INFO("   [goal tolerance] x: % 0.3f  y: % 0.3f  z: % 0.3f  roll: % 0.3f  pitch: %0.3f  yaw: %0.3f", goal_tolerance_[0], goal_tolerance_[1], goal_tolerance_[2], goal_tolerance_[3], goal_tolerance_[4], goal_tolerance_[5]);
-  ROS_INFO("[right object pose] x: % 0.3f  y: % 0.3f  z: % 0.3f  r: % 0.3f  p: % 0.3f  y: % 0.3f", rarm_object_offset_[0], rarm_object_offset_[1], rarm_object_offset_[2], rarm_object_offset_[3], rarm_object_offset_[4], rarm_object_offset_[5]);
-  ROS_INFO(" [left object pose] x: % 0.3f  y: % 0.3f  z: % 0.3f  r: % 0.3f  p: % 0.3f  y: % 0.3f", larm_object_offset_[0], larm_object_offset_[1], larm_object_offset_[2], larm_object_offset_[3], larm_object_offset_[4], larm_object_offset_[5]);
-  ROS_INFO("      [start state] right: % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f", start_pose_.rangles[0], start_pose_.rangles[1], start_pose_.rangles[2], start_pose_.rangles[3], start_pose_.rangles[4], start_pose_.rangles[5], start_pose_.rangles[6]);
-  ROS_INFO("      [start state]  left: % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f", start_pose_.langles[0], start_pose_.langles[1], start_pose_.langles[2], start_pose_.langles[3], start_pose_.langles[4], start_pose_.langles[5], start_pose_.langles[6]);
-  ROS_INFO("      [start state]  base: % 0.3f % 0.3f % 0.3f", start_pose_.body.x, start_pose_.body.y, start_pose_.body.theta);
-  ROS_INFO("      [start state] torso: % 0.3f", start_pose_.body.z);
+  ROS_INFO("     [goal tolerance] x: % 0.3f  y: % 0.3f  z: % 0.3f  roll: % 0.3f  pitch: %0.3f  yaw: %0.3f", goal_tolerance_[0], goal_tolerance_[1], goal_tolerance_[2], goal_tolerance_[3], goal_tolerance_[4], goal_tolerance_[5]);
+  ROS_INFO("  [right object pose] x: % 0.3f  y: % 0.3f  z: % 0.3f  r: % 0.3f  p: % 0.3f  y: % 0.3f", rarm_object_offset_[0], rarm_object_offset_[1], rarm_object_offset_[2], rarm_object_offset_[3], rarm_object_offset_[4], rarm_object_offset_[5]);
+  ROS_INFO("   [left object pose] x: % 0.3f  y: % 0.3f  z: % 0.3f  r: % 0.3f  p: % 0.3f  y: % 0.3f", larm_object_offset_[0], larm_object_offset_[1], larm_object_offset_[2], larm_object_offset_[3], larm_object_offset_[4], larm_object_offset_[5]);
+  ROS_INFO("[initial start state] right: % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f", start_pose_.rangles[0], start_pose_.rangles[1], start_pose_.rangles[2], start_pose_.rangles[3], start_pose_.rangles[4], start_pose_.rangles[5], start_pose_.rangles[6]);
+  ROS_INFO("[initial start state]  left: % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f % 0.3f", start_pose_.langles[0], start_pose_.langles[1], start_pose_.langles[2], start_pose_.langles[3], start_pose_.langles[4], start_pose_.langles[5], start_pose_.langles[6]);
+  ROS_INFO("[initial start state]  base: % 0.3f % 0.3f % 0.3f", start_pose_.body.x, start_pose_.body.y, start_pose_.body.theta);
+  ROS_INFO("[initial start state] torso: % 0.3f", start_pose_.body.z);
 
   printLocations();
   printExperiments();
@@ -769,6 +782,8 @@ void BenchmarkManipulationTests::fillSingleArmPlanningRequest(RobotPose &start_s
   // start state
   for(size_t i = 0; i < start_state.rangles.size(); ++i)
     req.start_state.joint_state.position.push_back(start_state.rangles[i]);
+  for(size_t i = 0; i < start_state.langles.size(); ++i)
+    req.start_state.joint_state.position.push_back(start_state.langles[i]);
 
   req.start_state.joint_state.name.push_back("r_shoulder_pan_joint");
   req.start_state.joint_state.name.push_back("r_shoulder_lift_joint");
@@ -777,8 +792,13 @@ void BenchmarkManipulationTests::fillSingleArmPlanningRequest(RobotPose &start_s
   req.start_state.joint_state.name.push_back("r_forearm_roll_joint");
   req.start_state.joint_state.name.push_back("r_wrist_flex_joint");
   req.start_state.joint_state.name.push_back("r_wrist_roll_joint");
-
-
+  req.start_state.joint_state.name.push_back("l_shoulder_pan_joint");
+  req.start_state.joint_state.name.push_back("l_shoulder_lift_joint");
+  req.start_state.joint_state.name.push_back("l_upper_arm_roll_joint");
+  req.start_state.joint_state.name.push_back("l_elbow_flex_joint");
+  req.start_state.joint_state.name.push_back("l_forearm_roll_joint");
+  req.start_state.joint_state.name.push_back("l_wrist_flex_joint");
+  req.start_state.joint_state.name.push_back("l_wrist_roll_joint");
   req.start_state.joint_state.position.push_back(start_state.body.z);
   req.start_state.joint_state.name.push_back("torso_lift_joint");
 
@@ -844,7 +864,6 @@ void BenchmarkManipulationTests::fillDualArmPlanningRequest(RobotPose &start_sta
   req.start_state.joint_state.name.push_back("l_forearm_roll_joint");
   req.start_state.joint_state.name.push_back("l_wrist_flex_joint");
   req.start_state.joint_state.name.push_back("l_wrist_roll_joint");
-
   req.start_state.joint_state.position.push_back(start_state.body.z);
   req.start_state.joint_state.name.push_back("torso_lift_joint");
 
