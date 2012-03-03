@@ -9,6 +9,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/pr2_grasping</url>
   <depend package="moveit_manipulation_visualization"/>
+  <depend package="pr2_arm_navigation"/>
 
 </package>
 
