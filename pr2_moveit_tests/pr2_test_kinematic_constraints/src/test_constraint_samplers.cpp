@@ -69,7 +69,7 @@ protected:
   planning_models::KinematicModelConstPtr kmodel_;
 };
 
-
+/*
 TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
 {
   planning_models::KinematicState ks(kmodel_);
@@ -566,30 +566,53 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
     }
   }
 }
-/*
+*/
+
 TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
 {
+  moveit_msgs::AttachedCollisionObject aco;
+  aco.link_name = "r_wrist_roll_link";
+  aco.touch_links.push_back("r_wrist_roll_link");
+  
+  random_numbers::RandomNumberGenerator rng;
+  moveit_msgs::CollisionObject &co = aco.object;
+  co.id = "attached";
+  co.header.stamp = ros::Time::now();
+  co.header.frame_id = aco.link_name;
+  co.operation = moveit_msgs::CollisionObject::ADD;
+  co.shapes.resize(1);
+  co.shapes[0].type = moveit_msgs::Shape::BOX;
+  co.shapes[0].dimensions.push_back(0.3);
+  co.shapes[0].dimensions.push_back(0.01);
+  co.shapes[0].dimensions.push_back(0.3);
+  co.poses.resize(1);
+  co.poses[0].position.x = 0.28;
+  co.poses[0].position.y = 0;
+  co.poses[0].position.z = 0;
+  co.poses[0].orientation.w = 1.0;
+  psm_->getPlanningScene()->processAttachedCollisionObjectMsg(aco);
+
   ros::NodeHandle nh;
-  planning_models::KinematicState ks(kmodel_);
-  ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
   
   kinematic_constraints::VisibilityConstraint vc(kmodel_, tf);
   moveit_msgs::VisibilityConstraint vcm;
   vcm.target_radius = 0.1;
-  vcm.cone_sides = 24;
-  
-  vcm.target_pose.header.frame_id = "r_wrist_roll_link";
+  vcm.cone_sides = 12;
+  vcm.max_view_angle = 0.35;
+  vcm.max_range_angle = 0.35;
+
+  vcm.target_pose.header.frame_id = aco.object.id;
   vcm.target_pose.pose.position.x = 0;
-  vcm.target_pose.pose.position.y = 0;
+  vcm.target_pose.pose.position.y = 0.05;
   vcm.target_pose.pose.position.z = 0;
-  vcm.target_pose.pose.orientation.x = 0;
-  vcm.target_pose.pose.orientation.y = 0;
-  vcm.target_pose.pose.orientation.z = 0;
-  vcm.target_pose.pose.orientation.w = 1;
+  vcm.target_pose.pose.orientation.x = sqrt(2.0)/2.0;
+  vcm.target_pose.pose.orientation.y = 0.0;
+  vcm.target_pose.pose.orientation.z = 0.0;
+  vcm.target_pose.pose.orientation.w = sqrt(2.0)/2.0;
   
-  vcm.sensor_pose.header.frame_id = "head_pan_link";
-  vcm.sensor_pose.pose.position.x = 0;
+  vcm.sensor_pose.header.frame_id = "double_stereo_link";
+  vcm.sensor_pose.pose.position.x = 0.1;
   vcm.sensor_pose.pose.position.y = 0;
   vcm.sensor_pose.pose.position.z = 0;
   vcm.sensor_pose.pose.orientation.x = 0;
@@ -598,35 +621,34 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   vcm.sensor_pose.pose.orientation.w = 1;
   vcm.weight = 1.0;
   
+  planning_models::KinematicState &ks = psm_->getPlanningScene()->getCurrentState();
+  
+  double distance;
   EXPECT_TRUE(vc.configure(vcm));
-  
-  shapes::Mesh *m = vc.getVisibilityCone(ks);
-  visualization_msgs::Marker mk;
-  shapes::constructMarkerFromShape(m, mk);
-  delete m;
-  mk.header.frame_id = kmodel_->getModelFrame();
-  mk.header.stamp = ros::Time::now();
-  mk.ns = "constraints";
-  mk.id = 1;
-  mk.action = visualization_msgs::Marker::ADD;
-  mk.pose.position.x = 0;
-  mk.pose.position.y = 0;
-  mk.pose.position.z = 0;
-  mk.pose.orientation.x = 0;
-  mk.pose.orientation.y = 0;
-  mk.pose.orientation.z = 0;
-  mk.pose.orientation.w = 1;
-  mk.lifetime = ros::Duration(60);
-  mk.color.a = 0.5;
-  mk.color.r = 1.0;
-  mk.color.g = 0.0;
-  mk.color.b = 0.0;
-  
-  ros::Publisher pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 10);
-  pub.publish(mk);
-  ros::WallDuration(1.0).sleep();
+  EXPECT_TRUE(vc.decide(ks, distance, true));
+  ros::Publisher pub = nh.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array", 10);
+  ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("/planning_scene", 20);
+  ros::WallDuration(0.5).sleep();
+
+  for (int i = 0 ; i < 100 ; ++i)
+  {   
+      do
+      {
+	  ks.setToRandomValues();
+      }
+      while (!vc.decide(ks, distance));
+      ROS_INFO("Found");
+      visualization_msgs::MarkerArray markers;
+      vc.getMarkers(ks, markers);
+      pub.publish(markers);
+      moveit_msgs::PlanningScene ps;
+      psm_->getPlanningScene()->getPlanningSceneMsg(ps);
+      pub_scene.publish(ps);
+      
+      ros::WallDuration(.01).sleep();
+  }  
 }
-*/
+
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
