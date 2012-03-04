@@ -34,6 +34,109 @@
 
 #include <moveit_msgs/Constraints.h>
 
-moveit_msgs::Constraints getDualArmConstraints(double offset = 0.7);
-moveit_msgs::Constraints getSingleArmConstraints(void);
-moveit_msgs::Constraints getVisibilityConstraints(void);
+static const std::string PFRAME = "odom";
+
+inline moveit_msgs::Constraints getDualArmConstraints(double offset)
+{    
+  moveit_msgs::Constraints c;
+
+  moveit_msgs::PositionConstraint pcm2;
+  pcm2.link_name = "r_wrist_roll_link";
+  pcm2.target_point_offset.x = offset;
+  pcm2.target_point_offset.y = 0;
+  pcm2.target_point_offset.z = 0;
+  pcm2.constraint_region_shape.type = moveit_msgs::Shape::BOX;
+  pcm2.constraint_region_shape.dimensions.push_back(0.01);
+  pcm2.constraint_region_shape.dimensions.push_back(0.01);
+  pcm2.constraint_region_shape.dimensions.push_back(0.01);
+  
+  pcm2.constraint_region_pose.header.frame_id = "l_wrist_roll_link";
+  pcm2.constraint_region_pose.pose.position.x = 0.0;
+  pcm2.constraint_region_pose.pose.position.y = 0.0;
+  pcm2.constraint_region_pose.pose.position.z = 0.0;
+  pcm2.constraint_region_pose.pose.orientation.x = 0.0;
+  pcm2.constraint_region_pose.pose.orientation.y = 0.0;
+  pcm2.constraint_region_pose.pose.orientation.z = 0.0;
+  pcm2.constraint_region_pose.pose.orientation.w = 1.0;
+  pcm2.weight = 1.0;
+  c.position_constraints.push_back(pcm2);
+
+
+  moveit_msgs::OrientationConstraint ocm;
+  ocm.link_name = "l_wrist_roll_link";
+  ocm.orientation.header.frame_id = PFRAME;
+  ocm.orientation.quaternion.x = 0.5;
+  ocm.orientation.quaternion.y = 0.5;
+  ocm.orientation.quaternion.z = 0.5;
+  ocm.orientation.quaternion.w = 0.5;
+  ocm.absolute_x_axis_tolerance = 0.01;
+  ocm.absolute_y_axis_tolerance = M_PI;
+  ocm.absolute_z_axis_tolerance = 0.01;
+  ocm.weight = 1.0;
+  c.orientation_constraints.push_back(ocm);
+
+  ocm.link_name = "r_wrist_roll_link";
+  ocm.orientation.header.frame_id = "l_wrist_roll_link";
+  ocm.orientation.quaternion.x = 0.0;
+  ocm.orientation.quaternion.y = 0.0;
+  ocm.orientation.quaternion.z = 1.0;
+  ocm.orientation.quaternion.w = 0.0;
+  ocm.absolute_x_axis_tolerance = 0.01;
+  ocm.absolute_y_axis_tolerance = 0.01;
+  ocm.absolute_z_axis_tolerance = 0.01;
+  ocm.weight = 1.0;
+  c.orientation_constraints.push_back(ocm);
+  return c;
+}
+
+inline moveit_msgs::Constraints getSingleArmConstraints(void)
+{
+  moveit_msgs::Constraints constr1;
+  constr1.orientation_constraints.resize(1);
+  moveit_msgs::OrientationConstraint &ocm1 = constr1.orientation_constraints[0];
+  ocm1.link_name = "r_wrist_roll_link";
+  ocm1.orientation.header.frame_id = PFRAME;
+  ocm1.orientation.quaternion.x = 0.0;
+  ocm1.orientation.quaternion.y = 0.0;
+  ocm1.orientation.quaternion.z = 0.0;
+  ocm1.orientation.quaternion.w = 1.0;
+  ocm1.absolute_x_axis_tolerance = 0.1;
+  ocm1.absolute_y_axis_tolerance = 0.1;
+  ocm1.absolute_z_axis_tolerance = M_PI;
+  ocm1.weight = 1.0;
+  return constr1;
+}
+
+inline moveit_msgs::Constraints getVisibilityConstraints(const std::string &id)
+{ 
+    moveit_msgs::Constraints c;  
+    c.visibility_constraints.resize(1);
+    moveit_msgs::VisibilityConstraint &vcm = c.visibility_constraints[0];
+    
+    vcm.target_radius = 0.1;
+    vcm.cone_sides = 12;
+    vcm.max_view_angle = 0.35;
+    vcm.max_range_angle = 0.35;
+    
+    vcm.target_pose.header.frame_id = id;
+    vcm.target_pose.pose.position.x = 0;
+    vcm.target_pose.pose.position.y = 0.05;
+    vcm.target_pose.pose.position.z = 0;
+    vcm.target_pose.pose.orientation.x = sqrt(2.0)/2.0;
+    vcm.target_pose.pose.orientation.y = 0.0;
+    vcm.target_pose.pose.orientation.z = 0.0;
+    vcm.target_pose.pose.orientation.w = sqrt(2.0)/2.0;
+    
+    vcm.sensor_pose.header.frame_id = "double_stereo_link";
+    vcm.sensor_pose.pose.position.x = 0.1;
+    vcm.sensor_pose.pose.position.y = 0;
+    vcm.sensor_pose.pose.position.z = 0;
+    vcm.sensor_pose.pose.orientation.x = 0;
+    vcm.sensor_pose.pose.orientation.y = 0;
+    vcm.sensor_pose.pose.orientation.z = 0;
+    vcm.sensor_pose.pose.orientation.w = 1;
+    vcm.weight = 1.0;
+
+    return c;
+}
+

@@ -2,6 +2,8 @@
 ## the planner to be used; other parameters can be specified as well, depending 
 ## on the planner
 
+constraint_approximations: /home/isucan/c
+
 right_arm:
   planner_configs:
     - SBLkConfigDefault

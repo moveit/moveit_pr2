@@ -574,7 +574,6 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   aco.link_name = "r_wrist_roll_link";
   aco.touch_links.push_back("r_wrist_roll_link");
   
-  random_numbers::RandomNumberGenerator rng;
   moveit_msgs::CollisionObject &co = aco.object;
   co.id = "attached";
   co.header.stamp = ros::Time::now();
