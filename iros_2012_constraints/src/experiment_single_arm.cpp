@@ -35,24 +35,47 @@
 #include "constraints.h"
 #include "sampler.h"
 #include <moveit_msgs/ComputePlanningBenchmark.h>
+#include <moveit_msgs/GetMotionPlan.h>
+#include <moveit_msgs/DisplayTrajectory.h>
+#include <ompl_interface_ros/ompl_interface_ros.h>
 
 static const std::string BENCHMARK_SERVICE_NAME="/ompl_planning/benchmark_planning_problem";
+static const std::string PLANNING_SERVICE_NAME="/ompl_planning/plan_kinematic_path";
+
+planning_scene_monitor::PlanningSceneMonitor *psm = NULL;
 
 void setupEnv(void)
-{
+{  
+    psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION);
     ros::NodeHandle nh;
     tf::TransformListener tf;
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, &tf);
     ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
-    planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
+    planning_scene::PlanningScenePtr scene = psm->getPlanningScene();
     scene->setName("experiment1");
     Eigen::Affine3d t;
-    t = Eigen::Translation3d(0.45, -0.45, 0.7);
-    scene->getCollisionWorld()->addToObject("pole", new shapes::Box(0.1, 0.1, 1.4), t);
+    t = Eigen::Translation3d(0.48, -0.45, 0.7);
+    scene->getCollisionWorld()->addToObject("pole1", new shapes::Box(0.1, 0.1, 1.4), t);
+    t = Eigen::Translation3d(0.48, 0.45, 0.7);
+    scene->getCollisionWorld()->addToObject("pole2", new shapes::Box(0.1, 0.3, 1.4), t);
+    t = Eigen::Translation3d(0.38, -0.57, 1.0);
+    scene->getCollisionWorld()->addToObject("pole3", new shapes::Box(0.3, 0.1, 0.8), t);
+
+
+
+    std::vector<double> tuck(7);
+    tuck[0] = 0.06024;
+    tuck[1] = 1.248526;
+    tuck[2] =  1.789070;
+    tuck[3] = -1.683386;
+    tuck[4] = -1.7343417;
+    tuck[5] = -0.0962141;
+    tuck[6] = -0.0864407;
+    psm->getPlanningScene()->getCurrentState().getJointStateGroup("left_arm")->setStateValues(tuck);
+    
     ros::Duration(0.5).sleep();
     
     moveit_msgs::PlanningScene psmsg;
-    psm.getPlanningScene()->getPlanningSceneMsg(psmsg);
+    psm->getPlanningScene()->getPlanningSceneMsg(psmsg);
     pub_scene.publish(psmsg);
     ROS_INFO("Scene published.");
     
@@ -68,8 +91,7 @@ void benchmarkPathConstrained(const std::string &config)
     moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
     moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
     
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
-    planning_scene::PlanningScene &scene = *psm.getPlanningScene();
+    planning_scene::PlanningScene &scene = *psm->getPlanningScene();
     
     mplan_req.average_count = 50;
     mplan_req.motion_plan_request.planner_id = config;
@@ -124,6 +146,75 @@ void runExp(void)
     benchmarkPathConstrained("RRTConnectkConfigDefault");
 }
 
+void testPlan(void)
+{
+    ros::NodeHandle nh;
+    ros::service::waitForService(PLANNING_SERVICE_NAME);
+    ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
+    
+    ros::ServiceClient service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNING_SERVICE_NAME);
+    
+    moveit_msgs::GetMotionPlan::Request mplan_req;
+    moveit_msgs::GetMotionPlan::Response mplan_res;
+    
+    planning_scene::PlanningScene &scene = *psm->getPlanningScene();
+    
+    mplan_req.motion_plan_request.group_name = "right_arm";
+    mplan_req.motion_plan_request.num_planning_attempts = 1;
+    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
+    const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+    mplan_req.motion_plan_request.goal_constraints.resize(1);
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
+    for(unsigned int i = 0; i < joint_names.size(); i++)
+    {
+        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
+        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
+        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 0.001;
+        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 0.001;
+        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
+    }
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -0.20826385287398406;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[1].position = 0.61185361475247468;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[2].position = -0.67790861269459102;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -1.0372591097007691;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[4].position = -0.89601966543848288; 
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.9776217463278662; 
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[6].position = 1.8552611548679128;
+    
+    
+
+    mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.21044517893021499);
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(0.038959594993384528);
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-0.81412902362644646);
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.0989597173881371);
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(2.3582101183671629);
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.993988668449755);
+    mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-2.2779628049776051);
+    
+    mplan_req.motion_plan_request.path_constraints = getSingleArmConstraints(); 
+
+    if (service_client.call(mplan_req, mplan_res))
+    {
+	moveit_msgs::DisplayTrajectory d;
+	d.model_id = scene.getKinematicModel()->getName();
+	d.trajectory_start = mplan_res.trajectory_start;
+	d.trajectory = mplan_res.trajectory;
+	pub.publish(d);
+	ros::Duration(0.5).sleep();
+    }
+    
+}
+
+void computeDB(void)
+{
+    ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
+    moveit_msgs::Constraints c = getSingleArmConstraints(); 
+    ompl_interface.addConstraintApproximation(c, c, "arms", "PoseModel", psm->getPlanningScene()->getCurrentState(), 10000);
+    ompl_interface.saveConstraintApproximations("/home/isucan/c/");
+    ROS_INFO("Done");
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "iros_2012_exp", ros::init_options::AnonymousName);
@@ -132,7 +223,9 @@ int main(int argc, char **argv)
     spinner.start();
     
     setupEnv();
-    runExp();
+    //    runExp();
+    //    testPlan();
+    computeDB();
     
     return 0;
 }

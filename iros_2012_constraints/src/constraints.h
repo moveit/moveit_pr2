@@ -115,8 +115,8 @@ inline moveit_msgs::Constraints getVisibilityConstraints(const std::string &id)
     
     vcm.target_radius = 0.1;
     vcm.cone_sides = 12;
-    vcm.max_view_angle = 0.35;
-    vcm.max_range_angle = 0.35;
+    vcm.max_view_angle = M_PI/6.0;
+    vcm.max_range_angle = M_PI/6.0;
     
     vcm.target_pose.header.frame_id = id;
     vcm.target_pose.pose.position.x = 0;
