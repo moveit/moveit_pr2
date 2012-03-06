@@ -549,7 +549,6 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     return false;
   }
 
-  ROS_INFO("[exp] This experiment is of type %d, for group: %s", experiment_type_, group_name_.c_str());
   // fill in goal
   if(experiment_type_ == 1)
     fillSingleArmPlanningRequest(start_state,name,req.motion_plan_request);
@@ -565,7 +564,6 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   ROS_INFO("[exp] Publishing the planning scene for visualization using the motion_planning_rviz_plugin.");
   pscene_pub_.publish(req.scene);
   visualizeRobotPose(start_state, "start", 0);
-  usleep(1000);
 
   if(benchmark_client_.call(req, res))
   {
@@ -1246,6 +1244,7 @@ bool BenchmarkManipulationTests::createTrajectoryFile(std::string exp_name, std:
 
 bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
 {
+  struct stat st;
   time_t clock;
   time(&clock);
   std::string time(ctime(&clock));;
@@ -1255,8 +1254,13 @@ bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
     ROS_INFO("[exp] Successfully created the trajectory folder: %s", folder.c_str());
   else
   {
-    ROS_WARN("[exp] Failed to create the trajectory folder: %s", folder.c_str());
-    return false;
+    if(stat(folder.c_str(), &st) == 0)
+      ROS_INFO("[exp] folder is present. Not creating.");
+    else
+    {
+      ROS_WARN("[exp] Failed to create the trajectory folder: %s. Maybe it exists already?", folder.c_str());
+      return false;
+    }
   }
   trajectory_files_path_ = folder;
   return true;
