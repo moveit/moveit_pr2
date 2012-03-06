@@ -17,6 +17,7 @@ right_arm:
     - ESTkConfigDefault
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
+    - RRTStarkConfigDefault
   projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
   longest_valid_segment_fraction: 0.05
 
@@ -29,6 +30,7 @@ left_arm:
     - ESTkConfigDefault
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
+    - RRTStarkConfigDefault
   projection_evaluator: link(l_wrist_roll_link)
   longest_valid_segment_fraction: 0.05
 
@@ -41,6 +43,7 @@ arms:
     - ESTkConfigDefault
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
+    - RRTStarkConfigDefault
   longest_valid_segment_fraction: 0.05
   projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
 
