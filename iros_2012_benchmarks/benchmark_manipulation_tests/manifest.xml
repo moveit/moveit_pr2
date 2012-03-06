@@ -13,6 +13,7 @@
   <depend package="moveit_msgs" />
   <depend package="pviz" />
   <depend package="planning_scene_monitor" />
+  <depend package="kinematics_plugin_loader" />
 </package>
 
 

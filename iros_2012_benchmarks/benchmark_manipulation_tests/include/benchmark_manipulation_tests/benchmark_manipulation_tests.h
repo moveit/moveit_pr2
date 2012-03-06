@@ -9,8 +9,13 @@
 #include <tf/LinearMath/Quaternion.h>
 #include <moveit_msgs/AttachedCollisionObject.h>
 #include <moveit_msgs/ComputePlanningBenchmark.h>
+#include <moveit_msgs/DisplayTrajectory.h>
 #include <pviz/pviz.h>
 #include <planning_scene_monitor/planning_scene_monitor.h>
+#include <planning_models/transforms.h>
+#include <kinematics_plugin_loader/kinematics_plugin_loader.h>
+#include <kinematics_base/kinematics_base.h>
+#include <planning_models/kinematic_model.h>
 
 typedef struct
 {
@@ -68,6 +73,14 @@ class BenchmarkManipulationTests
     bool getJointPositionsFromTrajectory(const trajectory_msgs::JointTrajectory &traj, std::vector<std::string> &names, int waypoint, std::vector<double> &angles);
 
     void printPoseMsg(const geometry_msgs::Pose &p, std::string text);
+    void publishDisplayTrajectoryMsg(moveit_msgs::RobotTrajectory &traj, moveit_msgs::RobotState &state, std::string id);
+
+    bool initKinematicSolver(const planning_models::KinematicModelConstPtr &kmodel);
+    bool computeFK(std::vector<double> &angles, geometry_msgs::Pose &pose);
+    bool printPathToFile(FILE** file, const trajectory_msgs::JointTrajectory &traj);
+    bool createTrajectoryFile(std::string exp_name, std::string planner, std::string planner_id, std::string description, FILE** file);
+    bool createTrajectoryFolder(std::string exp_name);
+    bool writeTrajectoriesToFile(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string exp_name);
 
   private:
 
@@ -76,8 +89,10 @@ class BenchmarkManipulationTests
     ros::Publisher attached_object_pub_;
     ros::Publisher collision_object_pub_;
     ros::Publisher pscene_pub_;
+    ros::Publisher display_path_pub_;
     ros::ServiceClient benchmark_client_;
     planning_scene_monitor::PlanningSceneMonitor* psm_;
+    planning_scene::PlanningScene pscene_;
 
     PViz pviz_;
 
@@ -113,5 +128,14 @@ class BenchmarkManipulationTests
     std::string spine_frame_;
     std::string world_frame_;
     std::string robot_model_root_frame_;
+
+    // for computeFK
+    boost::shared_ptr<kinematics::KinematicsBase> kb_;
+    const planning_models::KinematicModel::JointModelGroup *jmg_;
+    std::vector<unsigned int> kb_joint_bijection_;
+    std::vector<std::string> fk_link_;
+    planning_models::TransformsConstPtr tf_;
+    planning_models::KinematicModelConstPtr kmodel_;
+
 };
 

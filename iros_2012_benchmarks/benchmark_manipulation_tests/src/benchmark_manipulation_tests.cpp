@@ -44,8 +44,11 @@ BenchmarkManipulationTests::BenchmarkManipulationTests() : ph_("~")
   ROS_INFO("[exp] Connected to the benchmark service.");
 
   pscene_pub_ = nh_.advertise<moveit_msgs::PlanningScene>("planning_scene", 500, true);
+  display_path_pub_ = nh_.advertise<moveit_msgs::DisplayTrajectory>("planned_path", 2, true);
 
   psm_ = new planning_scene_monitor::PlanningSceneMonitor("robot_description");
+  pscene_.configure(psm_->getPlanningScene()->getUrdfModel(),psm_->getPlanningScene()->getSrdfModel());
+
 }
 
 bool BenchmarkManipulationTests::getParams()
@@ -395,6 +398,8 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     return false;
   }
 
+  pviz_.visualizeObstacles(objects);
+
   object.shapes.resize(1);
   object.poses.resize(1);
   object.shapes[0].dimensions.resize(3);
@@ -535,6 +540,14 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     }
     req.scene.attached_collision_objects[0].object.operation = moveit_msgs::CollisionObject::REMOVE;
   }
+  ROS_INFO("set planning scene");
+  pscene_.setPlanningSceneMsg(req.scene);
+  ROS_INFO("get kinematic model");
+  if(!initKinematicSolver(pscene_.getKinematicModel()))
+  {
+    ROS_ERROR("[exp] Failed to initialize the kinematic solver.");
+    return false;
+  }
 
   ROS_INFO("[exp] This experiment is of type %d, for group: %s", experiment_type_, group_name_.c_str());
   // fill in goal
@@ -565,35 +578,52 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     return false;
   }
 
-  for(size_t i = 0; i < res.trajectory.size(); ++i)
+  for(size_t i = 0; i < res.responses.size(); ++i)
   {
-    ROS_INFO("[exp] %s returned a path with %d waypoints.", res.planner_interfaces[i].c_str(), int(res.trajectory[i].joint_trajectory.points.size()));
+    for(size_t j = 0; j < res.responses[i].trajectory.size(); ++j)
+      ROS_INFO("[exp] %s returned a path with %d waypoints with description, '%s'.", res.planner_interfaces[i].c_str(), int(res.responses[i].trajectory[j].joint_trajectory.points.size()), res.responses[i].description[j].c_str());
   }
-  if(!res.trajectory[1].joint_trajectory.points.empty())
+  if(!res.responses[1].trajectory[1].joint_trajectory.points.empty())
   {
-    if(!setRobotPoseFromTrajectory(res.trajectory[1], res.trajectory_start[1], current_pose_))
+    if(!setRobotPoseFromTrajectory(res.responses[1].trajectory[1], res.responses[1].trajectory_start, current_pose_))
     {
       ROS_ERROR("[exp] Failed to set the current robot pose from the trajectory found.");
       return false;
     }
   }
-  for(size_t i = 0; i < res.planner_interfaces.size(); ++i)
-    ROS_INFO("[exp] Received a trajectory by %s", res.planner_interfaces[i].c_str());
-  printRobotPose(current_pose_, "pose_after_trajectory");  
+  publishDisplayTrajectoryMsg(res.responses[1].trajectory[0], req.scene.robot_state, "sbpl");
+
+  if(!writeTrajectoriesToFile(res,name))
+  {
+    ROS_ERROR("[exp] Failed to write the trajectories to file.");
+    return false;
+  }
+
   return true;
 }
 
 bool BenchmarkManipulationTests::runExperiment(std::string name)
 {
+  bool is_first_exp_ = false;
   RobotPose start;
   std::vector<std::vector<double> > traj;
   
   ROS_INFO("[exp] Trying to plan: %s", name.c_str());
 
-  if(use_current_state_as_start_)
+  std::map<std::string, Experiment>::iterator name_iter = exp_map_.find(name);
+  if(std::distance(exp_map_.begin(), name_iter) == 0)
+    is_first_exp_ = true;
+
+  if(!use_current_state_as_start_ && is_first_exp_)
   {
-    std::map<std::string, Experiment>::iterator name_iter = exp_map_.find(name);
-    if(std::distance(exp_map_.begin(), name_iter) == 0)
+    if(exp_map_[name].start.rangles.empty())
+      start = start_pose_;
+    else
+      start = exp_map_[name].start;
+  }
+  else if(use_current_state_as_start_)
+  {
+    if(is_first_exp_)
       start = start_pose_;
     else
       start = current_pose_;
@@ -1048,4 +1078,224 @@ void BenchmarkManipulationTests::printPoseMsg(const geometry_msgs::Pose &p, std:
 {
   ROS_INFO("[%s] xyz: %0.3f %0.3f %0.3f  quat: %0.3f %0.3f %0.3f %0.3f", text.c_str(), p.position.x, p.position.y, p.position.z, p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w);
 }
+
+void BenchmarkManipulationTests::publishDisplayTrajectoryMsg(moveit_msgs::RobotTrajectory &traj, moveit_msgs::RobotState &state, std::string id)
+{
+  moveit_msgs::DisplayTrajectory disp;
+
+  disp.model_id = "pr2";
+  disp.trajectory = traj;
+  disp.trajectory_start = state;
+
+  display_path_pub_.publish(disp);
+}
+
+bool BenchmarkManipulationTests::printPathToFile(FILE** file, const trajectory_msgs::JointTrajectory &traj)
+{
+  if(*file == NULL)
+  {
+    ROS_ERROR("[exp] File pointer is null.");
+    return false;
+  }
+
+  double roll,pitch,yaw;
+  tf::Pose tf_pose;
+  geometry_msgs::Pose pose;
+  std::vector<double> jnt_pos(7,0);
+
+  for(size_t i = 0; i < traj.points.size(); ++i)
+  {
+    for(size_t j = 0; j < traj.points[i].positions.size(); ++j)
+      jnt_pos[j] = traj.points[i].positions[j];
+
+    if(!computeFK(jnt_pos, pose))
+    {
+      ROS_ERROR("[node] IK failed when printing path to file.");
+      return false;
+    }
+    tf::poseMsgToTF(pose, tf_pose);
+    tf_pose.getBasis().getRPY(roll,pitch,yaw);
+
+    fprintf(*file, "%1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %2.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f\n", traj.points[i].positions[0],traj.points[i].positions[1],traj.points[i].positions[2],traj.points[i].positions[3],traj.points[i].positions[4],traj.points[i].positions[5],traj.points[i].positions[6],pose.position.x, pose.position.y, pose.position.z, roll, pitch, yaw, pose.orientation.x,pose.orientation.y, pose.orientation.z, pose.orientation.w);
+  }
+  fflush(*file);
+
+  return true;
+}
+
+bool BenchmarkManipulationTests::initKinematicSolver(const planning_models::KinematicModelConstPtr &kmodel)
+{
+  kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
+  kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
+  
+  kmodel_ = kmodel;
+  tf_ = pscene_.getTransforms();
+
+  if(!pscene_.isConfigured())
+  {
+    ROS_ERROR("[exp] Planning scene is not yet configured.");
+    return false;
+  }
+
+  if(!kinematics_allocator)
+  {
+    ROS_ERROR("[exp] Failed to get the kinematics loader function.");
+    return false;
+  }
+  ROS_INFO("[exp] Successfully got the kinematics loader function.");
+
+  if(!kmodel_->hasJointModelGroup("right_arm"))
+  {
+    ROS_ERROR("[exp] right_arm group is not found in the kinematic model (%s).", kmodel_->getName().c_str());
+    return false;
+  }
+  ROS_DEBUG("[exp] right_arm group is found in the kinematic model (%s).", kmodel_->getName().c_str());
+
+  jmg_ = kmodel_->getJointModelGroup("right_arm");
+  for(size_t i = 0; i < jmg_->getJointModelNames().size(); ++i)
+    ROS_INFO("[exp] [%d] %s", int(i), jmg_->getJointModelNames()[i].c_str());
+
+  kb_ = kinematics_allocator(jmg_);
+
+  if (!kb_)
+  {
+    ROS_ERROR("[exp] Failed to allocate IK solver for right_arm group.");
+    return false;
+  }
+  else
+    ROS_INFO("[exp] BenchmarkManipulationTests successfully loaded the kinematics solvers.");
+
+  /*
+  // the ik solver must cover the same joints as the group
+  const std::vector<std::string> &kb_jnames = kb_->getJointNames();
+  const std::map<std::string, unsigned int> &g_map = jmg_->getJointVariablesIndexMap();
+
+  ROS_DEBUG("KB joint names:");
+  for(size_t i = 0; i < kb_jnames.size(); ++i)
+    ROS_DEBUG("[node] [%d] %s", int(i), kb_jnames[i].c_str());
+
+  ROS_DEBUG("JMG joint names:");
+  for(std::map<std::string, unsigned int>::const_iterator iter = g_map.begin(); iter != g_map.end(); ++iter)
+    ROS_DEBUG("[node] %s -> %d", iter->first.c_str(), iter->second);
+
+  if (kb_jnames.size() != g_map.size())
+  {
+    ROS_ERROR_STREAM("[node] Group '" << jmg_->getName() << "' does not have the same set of joints as the employed IK solver");
+    return false;
+  }
+
+  // compute a mapping between the group state and the IK solution
+  kb_joint_bijection_.clear();
+  for (std::size_t i = 0 ; i < kb_jnames.size() ; ++i)
+  {
+    std::map<std::string, unsigned int>::const_iterator it = g_map.find(kb_jnames[i]);
+    if (it == g_map.end())
+    {
+      ROS_ERROR_STREAM("[node] IK solver computes joint values for joint '" << kb_jnames[i] << "' but group '" << jmg_->getName() << "' does not contain such a joint.");
+      return false;
+    }
+    const planning_models::KinematicModel::JointModel *jm = jmg_->getJointModel(kb_jnames[i]);
+    for (unsigned int k = 0 ; k < jm->getVariableCount() ; ++k)
+      kb_joint_bijection_.push_back(it->second + k);
+  }
+
+  ROS_DEBUG("KB <-> JMG Mapping:");
+  for(size_t i = 0; i < kb_joint_bijection_.size(); ++i)
+    ROS_DEBUG("[node] [KB %d] -> [JMG %d]", int(i), int(kb_joint_bijection_[i]));
+ */
+ 
+  fk_link_.resize(1);
+  fk_link_[0] = kb_->getTipFrame();
+  return true;
+}
+
+bool BenchmarkManipulationTests::computeFK(std::vector<double> &angles, geometry_msgs::Pose &pose)
+{
+  Eigen::Affine3d t;
+  std::vector<geometry_msgs::Pose> poses;
+  if(!kb_->getPositionFK(fk_link_, angles, poses))
+    return false;
+
+  // transform into planning frame
+  planning_models::poseFromMsg(poses[0],t);
+  t = tf_->getTransform(pscene_.getCurrentState(), kb_->getBaseFrame()) * t;
+  planning_models::msgFromPose(t,pose);
+  return true;
+}
+
+bool BenchmarkManipulationTests::createTrajectoryFile(std::string exp_name, std::string planner, std::string planner_id, std::string description, FILE** file)
+{
+  std::string filename;
+
+  size_t slash = planner.find("/");
+  planner = planner.substr(slash+1);
+  if(planner_id.empty())
+    filename  = exp_name + "-" + planner + "_" + description + ".csv";
+  else
+    filename  = exp_name + "-" + planner + "_" + planner_id + "_" + description + ".csv";
+
+  filename = trajectory_files_path_ + "/" +  filename;
+  if((*file = fopen(filename.c_str(), "w")) == NULL)
+  {
+    ROS_ERROR("[node] Failed to create trajectory file. (%s)", filename.c_str());
+    return false;
+  }
+  ROS_INFO("[exp] Successfully created trajectory file: %s", filename.c_str());
+  return true;
+}
+
+bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
+{
+  time_t clock;
+  time(&clock);
+  std::string time(ctime(&clock));;
+  time.erase(time.size()-1, 1);
+  std::string folder = benchmark_results_folder_ + exp_name; // + "_" + time;
+  if(mkdir(folder.c_str(),  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0)
+    ROS_INFO("[exp] Successfully created the trajectory folder: %s", folder.c_str());
+  else
+  {
+    ROS_WARN("[exp] Failed to create the trajectory folder: %s", folder.c_str());
+    return false;
+  }
+  trajectory_files_path_ = folder;
+  return true;
+}
+
+bool BenchmarkManipulationTests::writeTrajectoriesToFile(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string exp_name)
+{
+  FILE* fptr = NULL;
+
+  if(res.planner_interfaces.size() != res.responses.size())
+    return false;
+  if(res.planner_interfaces.empty())
+    return false;
+
+  if(!createTrajectoryFolder(exp_name))
+  {
+    ROS_ERROR("[exp] Failed to create a trajectory folder for %s", exp_name.c_str());
+    return false;
+  }
+
+  for(size_t i = 0; i < res.planner_interfaces.size(); ++i)
+  {
+    for(size_t j = 0; j < res.responses[i].trajectory.size(); ++j)
+    {
+      if(!createTrajectoryFile(exp_name, res.planner_interfaces[i], "", res.responses[i].description[j], &fptr))
+      {
+        ROS_ERROR("[exp] Failed to create a trajectory file for %s + %s", res.planner_interfaces[i].c_str(), res.responses[i].description[j].c_str());
+        return false;
+      }
+  
+      if(!printPathToFile(&fptr, res.responses[i].trajectory[j].joint_trajectory))
+      {
+        ROS_ERROR("[exp] Failed to print the trajectory to file.");
+        return false;
+      }
+      fclose(fptr);
+    }
+  }
+  return true;
+}
+
 
