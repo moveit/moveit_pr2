@@ -93,14 +93,14 @@ void setupEnv(void)
     tuck[6] = -0.0864407;
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("left_arm")->setStateValues(tuck);
     
-    ros::Duration(0.5).sleep();
+    ros::WallDuration(1.0).sleep();
     
     moveit_msgs::PlanningScene psmsg;
     psm->getPlanningScene()->getPlanningSceneMsg(psmsg);
     pub_scene.publish(psmsg);
     ROS_INFO("Scene published.");
     
-    ros::Duration(0.5).sleep();
+    ros::WallDuration(1.0).sleep();
 }
 
 void benchmarkPathConstrained(const std::string &config)
@@ -204,7 +204,7 @@ void computeDB(void)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c =  getVisibilityConstraints("attached");
-    ompl_interface.addConstraintApproximation(c, c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), 100000);
+    ompl_interface.addConstraintApproximation(c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), 100000, 20);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
