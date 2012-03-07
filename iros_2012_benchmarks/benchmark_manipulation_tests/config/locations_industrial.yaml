@@ -1,0 +1,11 @@
+locations:
+
+  - name: oven_01
+    pose: 0.75 -0.05 0.98 0 1.57 0 
+  - name: top_bin_left_01
+    pose: 0.45 -0.55 1.25 0 1.57 0.0   #0.45 -0.55 1.25 0 1.57 0
+  - name: top_bin_right_01
+    pose: 0.32 -0.68 1.25 1.57 1.57 0
+  - name: top_bin_right_02
+    pose: 0.26 -0.72 1.26 1.90 1.57 0.1
+

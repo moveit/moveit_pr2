@@ -1,0 +1,53 @@
+experiments:
+
+  - name: tabletop_01
+    goal: above_table_01
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: tabletop_02
+    goal: below_table_01
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "testing is fun!"
+  - name: tabletop_03
+    goal: above_table_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "I'm havin a grand ol' time"
+  - name: tabletop_04
+    goal: below_table_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+  - name: tabletop_05
+    goal: above_table_03
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+  - name: tabletop_06
+    goal: below_table_03
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+  - name: tabletop_07
+    goal: above_table_04
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+  - name: tabletop_08
+    goal: below_table_04
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+  - name: tabletop_09
+    goal: above_table_05
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+  - name: tabletop_10
+    goal: below_table_05
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "Can't stop now!"
+

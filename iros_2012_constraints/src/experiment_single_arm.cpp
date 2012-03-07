@@ -49,18 +49,16 @@ void setupEnv(void)
     psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION);
     ros::NodeHandle nh;
     tf::TransformListener tf;
-    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("/planning_scene", 1);
+    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
     planning_scene::PlanningScenePtr scene = psm->getPlanningScene();
     scene->setName("experiment1");
     Eigen::Affine3d t;
-    t = Eigen::Translation3d(0.48, -0.47, 0.7);
+    t = Eigen::Translation3d(0.48, -0.45, 0.7);
     scene->getCollisionWorld()->addToObject("pole1", new shapes::Box(0.1, 0.1, 1.4), t);
     t = Eigen::Translation3d(0.48, 0.45, 0.7);
     scene->getCollisionWorld()->addToObject("pole2", new shapes::Box(0.1, 0.3, 1.4), t);
-    t = Eigen::Translation3d(0.38, -0.57, 0.7);
-    scene->getCollisionWorld()->addToObject("pole3", new shapes::Box(0.3, 0.1, 1.4), t);
-    t = Eigen::Translation3d(0.6, 0., 0.35);
-    scene->getCollisionWorld()->addToObject("table", new shapes::Box(0.3, 0.3, t.translation().z()*2.0), t);
+    t = Eigen::Translation3d(0.38, -0.57, 1.0);
+    scene->getCollisionWorld()->addToObject("pole3", new shapes::Box(0.3, 0.1, 0.8), t);
 
 
 
@@ -74,13 +72,14 @@ void setupEnv(void)
     tuck[6] = -0.0864407;
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("left_arm")->setStateValues(tuck);
     
+    ros::Duration(0.5).sleep();
     
     moveit_msgs::PlanningScene psmsg;
     psm->getPlanningScene()->getPlanningSceneMsg(psmsg);
-    ros::WallDuration(1.0).sleep();
     pub_scene.publish(psmsg);
-    ros::WallDuration(1.0).sleep();
     ROS_INFO("Scene published.");
+    
+    ros::Duration(0.5).sleep();
 }
 
 void benchmarkPathConstrained(const std::string &config)
@@ -94,7 +93,7 @@ void benchmarkPathConstrained(const std::string &config)
     
     planning_scene::PlanningScene &scene = *psm->getPlanningScene();
     
-    mplan_req.average_count = 100;
+    mplan_req.average_count = 50;
     mplan_req.motion_plan_request.planner_id = config;
     mplan_req.motion_plan_request.group_name = "right_arm"; 
     
@@ -116,7 +115,7 @@ void benchmarkPathConstrained(const std::string &config)
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[2].position = -0.67790861269459102;
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -1.0372591097007691;
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[4].position = -0.89601966543848288; 
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.7;//-1.9776217463278662; 
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.9776217463278662; 
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[6].position = 1.8552611548679128;
     
     
@@ -138,13 +137,13 @@ void benchmarkPathConstrained(const std::string &config)
 
 void runExp(void)
 {
-  benchmarkPathConstrained("SBLkConfigDefault");
-  //  benchmarkPathConstrained("ESTkConfigDefault");
-  //  benchmarkPathConstrained("BKPIECEkConfigDefault");
-  benchmarkPathConstrained("LBKPIECEkConfigDefault");
-  benchmarkPathConstrained("KPIECEkConfigDefault");
-  benchmarkPathConstrained("RRTkConfigDefault");
-  benchmarkPathConstrained("RRTConnectkConfigDefault");
+    //    benchmarkPathConstrained("SBLkConfigDefault");
+    //    benchmarkPathConstrained("ESTkConfigDefault");
+    //    benchmarkPathConstrained("BKPIECEkConfigDefault");
+    benchmarkPathConstrained("LBKPIECEkConfigDefault");
+    benchmarkPathConstrained("KPIECEkConfigDefault");
+    benchmarkPathConstrained("RRTkConfigDefault");
+    benchmarkPathConstrained("RRTConnectkConfigDefault");
 }
 
 void testPlan(void)
@@ -162,7 +161,7 @@ void testPlan(void)
     
     mplan_req.motion_plan_request.group_name = "right_arm";
     mplan_req.motion_plan_request.num_planning_attempts = 1;
-    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
+    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
     const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
@@ -179,7 +178,7 @@ void testPlan(void)
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[2].position = -0.67790861269459102;
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -1.0372591097007691;
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[4].position = -0.89601966543848288; 
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.7;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.9776217463278662; 
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[6].position = 1.8552611548679128;
     
     
@@ -202,7 +201,7 @@ void testPlan(void)
 	d.trajectory_start = mplan_res.trajectory_start;
 	d.trajectory = mplan_res.trajectory;
 	pub.publish(d);
-	ros::WallDuration(0.5).sleep();
+	ros::Duration(0.5).sleep();
     }
     
 }
@@ -211,7 +210,7 @@ void computeDB(void)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c = getSingleArmConstraints(); 
-    ompl_interface.addConstraintApproximation(c, "right_arm", "PoseModel", psm->getPlanningScene()->getCurrentState(), 10000, 100);
+    ompl_interface.addConstraintApproximation(c, c, "arms", "PoseModel", psm->getPlanningScene()->getCurrentState(), 10000);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
@@ -224,9 +223,8 @@ int main(int argc, char **argv)
     spinner.start();
     
     setupEnv();
-
-    //    testPlan(); runExp();
-    
+    //    runExp();
+    //    testPlan();
     computeDB();
     
     return 0;

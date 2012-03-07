@@ -119,6 +119,27 @@ bool BenchmarkManipulationTests::getParams()
     while(ss3 >> p)
       larm_object_offset_.push_back(atof(p.c_str()));
   }
+ 
+  if(ph_.hasParam("collision_object_offset"))
+  {
+    collision_object_offset_.clear();
+    ph_.getParam("collision_object_offset/xyz", plist);
+    std::stringstream ss(plist);
+    while(ss >> p)
+      collision_object_offset_.push_back(atof(p.c_str()));
+
+    ph_.getParam("collision_object_offset/rpy", plist);
+    std::stringstream ss1(plist);
+    while(ss1 >> p)
+      collision_object_offset_.push_back(atof(p.c_str()));
+
+    tf::Quaternion btoffset;
+    collision_object_offset_pose_.position.x = collision_object_offset_[0];
+    collision_object_offset_pose_.position.y = collision_object_offset_[1];
+    collision_object_offset_pose_.position.z = collision_object_offset_[2];
+    btoffset.setRPY(collision_object_offset_[3],collision_object_offset_[4],collision_object_offset_[5]);
+    tf::quaternionTFToMsg(btoffset,collision_object_offset_pose_.orientation);
+  }
   
   tf::Quaternion btoffset;
   rarm_object_pose_.position.x = rarm_object_offset_[0];
@@ -359,7 +380,9 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
 {
   int num_obs;
   char sTemp[1024];
-  std::vector<std::vector<double> > objects;
+  visualization_msgs::Marker marker;
+  visualization_msgs::MarkerArray marker_array;
+  std::vector<std::vector<double> > objects, object_colors;
   std::vector<std::string> object_ids;
   moveit_msgs::CollisionObject object;
   collision_objects.clear();
@@ -376,6 +399,7 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
 
   //get {x y z dimx dimy dimz} for each object
   objects.resize(num_obs, std::vector<double>(6,0.0));
+  object_colors.resize(num_obs, std::vector<double>(4,0.0));
   object_ids.clear();
   for (int i=0; i < num_obs; ++i)
   {
@@ -386,9 +410,16 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     for(int j=0; j < 6; ++j)
     {
       if(fscanf(fCfg,"%s",sTemp) < 1)
-        ROS_INFO("[exp] Parsed string has length < 1. (object parameters for %s)\n", object_ids.back().c_str());
+        ROS_INFO("[exp] Parsed string has length < 1. (object parameters for %s)", object_ids.back().c_str());
       if(!feof(fCfg) && strlen(sTemp) != 0)
         objects[i][j] = atof(sTemp);
+    }
+    for(int j=0; j < 4; ++j)
+    {
+      if(fscanf(fCfg,"%s",sTemp) < 1)
+        ROS_INFO("[exp] Parsed string has length < 1. (object colors for %s)", object_ids.back().c_str());
+      if(!feof(fCfg) && strlen(sTemp) != 0)
+        object_colors[i][j] = atof(sTemp);
     }
   }
 
@@ -398,12 +429,11 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     return false;
   }
 
-  pviz_.visualizeObstacles(objects);
-
+  //pviz_.visualizeObstacles(objects);
   object.shapes.resize(1);
   object.poses.resize(1);
   object.shapes[0].dimensions.resize(3);
-  object.shapes[0].triangles.resize(4);
+  //object.shapes[0].triangles.resize(4);
   for(size_t i = 0; i < objects.size(); i++)
   {
     object.id = object_ids[i];
@@ -423,15 +453,39 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     object.shapes[0].dimensions[0] = objects[i][3];
     object.shapes[0].dimensions[1] = objects[i][4];
     object.shapes[0].dimensions[2] = objects[i][5];
-    /*
-    object.shapes[0].triangles[0] = objects[i][6];
-    object.shapes[0].triangles[1] = objects[i][7];
-    object.shapes[0].triangles[2] = objects[i][8];
-    object.shapes[0].triangles[3] = objects[i][9];
-    */
+
+    // apply collision object offset
+    // right now just translates and rotates about z
+    if(!collision_object_offset_.empty()) 
+    {
+      geometry_msgs::Pose p, p2;
+      Eigen::Affine3d a;
+      a(0,0) = cos(collision_object_offset_[5]);
+      a(1,0) = sin(collision_object_offset_[5]);
+      a(0,1) = -sin(collision_object_offset_[5]);
+      a(1,1) = cos(collision_object_offset_[5]);
+      planning_models::msgFromPose(a, p2);
+      multiplyPoses(p2, object.poses[0], p);
+      p.position.x += collision_object_offset_pose_.position.x; 
+      p.position.y += collision_object_offset_pose_.position.y; 
+      p.position.z += collision_object_offset_pose_.position.z; 
+      object.poses[0] = p;
+    }
+
     collision_objects.push_back(object);
-    ROS_INFO("[exp] [%d] id: %s xyz: %0.3f %0.3f %0.3f dims: %0.3f %0.3f %0.3f",int(i),object_ids[i].c_str(),objects[i][0],objects[i][1],objects[i][2],objects[i][3],objects[i][4],objects[i][5]);
+    ROS_DEBUG("[exp] [%d] id: %s xyz: %0.3f %0.3f %0.3f dims: %0.3f %0.3f %0.3f colors: %2.0f %2.0f %2.0f %2.0f",int(i),object_ids[i].c_str(),objects[i][0],objects[i][1],objects[i][2],objects[i][3],objects[i][4],objects[i][5], object_colors[i][0], object_colors[i][1], object_colors[i][2], object_colors[i][3]);
+
+    std::vector<double> dim(3,0);
+    dim[0] = objects[i][3];
+    dim[1] = objects[i][4];
+    dim[2] = objects[i][5];
+    pviz_.getCubeMsg(object.poses[0], dim, object_colors[i], "collision_objects", int(i), marker);
+    marker_array.markers.push_back(marker);
   }
+
+  ROS_INFO("[exp] I gathered %d collision cubes", int(marker_array.markers.size()));
+  pviz_.publishMarkerArray(marker_array);
+  usleep(500);
   return true;
 }
 
@@ -492,6 +546,50 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
     att_object.object.poses[0].position.z = temp[2];
   }
   return true;
+}
+
+void BenchmarkManipulationTests::visualizeEnvironment()
+{
+  moveit_msgs::ComputePlanningBenchmark::Request req;
+  moveit_msgs::ComputePlanningBenchmark::Response res;
+
+  req.average_count = average_count_;
+  psm_->getPlanningScene()->getAllowedCollisionMatrix().getMessage(req.scene.allowed_collision_matrix);
+
+  req.scene.robot_state.joint_state.header.frame_id = robot_model_root_frame_;
+  req.scene.robot_state.joint_state.header.stamp = ros::Time::now();
+  req.scene.robot_state.joint_state.name.resize(1);
+  req.scene.robot_state.joint_state.name[0] = "torso_lift_joint";
+  req.scene.robot_state.joint_state.position.resize(1);
+  req.scene.robot_state.joint_state.position[0] = start_pose_.body.z;
+
+  // fill in collision objects
+  if(!known_objects_filename_.empty())
+  {
+    if(!getCollisionObjects(known_objects_filename_, req.scene.world.collision_objects))
+    {
+      ROS_ERROR("[exp] Failed to get the collision objects from the file.");
+      return;
+    }
+  }
+
+  ROS_INFO("set planning scene");
+  pscene_.setPlanningSceneMsg(req.scene);
+  ROS_INFO("get kinematic model");
+  if(!initKinematicSolver(pscene_.getKinematicModel()))
+  {
+    ROS_ERROR("[exp] Failed to initialize the kinematic solver.");
+    return;
+  }
+  // filling planning scene with start state of joints so the rviz plugin 
+  // can display them
+  for(size_t i = 0; i < req.motion_plan_request.start_state.joint_state.name.size(); ++i)
+  {
+    req.scene.robot_state.joint_state.name.push_back(req.motion_plan_request.start_state.joint_state.name[i]);
+    req.scene.robot_state.joint_state.position.push_back(req.motion_plan_request.start_state.joint_state.position[i]);
+  }
+  ROS_INFO("[exp] Publishing the planning scene for visualization using the motion_planning_rviz_plugin.");
+  pscene_pub_.publish(req.scene);
 }
 
 bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string name)
@@ -564,11 +662,10 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   ROS_INFO("[exp] Publishing the planning scene for visualization using the motion_planning_rviz_plugin.");
   pscene_pub_.publish(req.scene);
   visualizeRobotPose(start_state, "start", 0);
-
+  sleep(0.5);
   if(benchmark_client_.call(req, res))
   {
     ROS_INFO("[exp] Planner returned status code: %d.", res.error_code.val); 
-
   }
   else
   {
@@ -581,22 +678,31 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     for(size_t j = 0; j < res.responses[i].trajectory.size(); ++j)
       ROS_INFO("[exp] %s returned a path with %d waypoints with description, '%s'.", res.planner_interfaces[i].c_str(), int(res.responses[i].trajectory[j].joint_trajectory.points.size()), res.responses[i].description[j].c_str());
   }
-  if(!res.responses[1].trajectory[1].joint_trajectory.points.empty())
+  
+  if(res.responses.size() > 1)
   {
-    if(!setRobotPoseFromTrajectory(res.responses[1].trajectory[1], res.responses[1].trajectory_start, current_pose_))
+    if(res.responses[1].trajectory.size() > 1)
     {
-      ROS_ERROR("[exp] Failed to set the current robot pose from the trajectory found.");
-      return false;
+      if(!res.responses[1].trajectory[1].joint_trajectory.points.empty())
+      {
+        if(!setRobotPoseFromTrajectory(res.responses[1].trajectory[1], res.responses[1].trajectory_start, current_pose_))
+        {
+          ROS_ERROR("[exp] Failed to set the current robot pose from the trajectory found.");
+          return false;
+        }
+      }
     }
+    publishDisplayTrajectoryMsg(res.responses[1].trajectory[1], req.scene.robot_state, "sbpl");
+    sleep(2);
   }
-  publishDisplayTrajectoryMsg(res.responses[1].trajectory[0], req.scene.robot_state, "sbpl");
 
+  ROS_INFO("[exp] Recording trajectories to file...");
   if(!writeTrajectoriesToFile(res,name))
   {
     ROS_ERROR("[exp] Failed to write the trajectories to file.");
     return false;
   }
-
+  ROS_INFO("[exp] Planning request was a success.");
   return true;
 }
 
@@ -605,8 +711,8 @@ bool BenchmarkManipulationTests::runExperiment(std::string name)
   bool is_first_exp_ = false;
   RobotPose start;
   std::vector<std::vector<double> > traj;
-  
-  ROS_INFO("[exp] Trying to plan: %s", name.c_str());
+ 
+  printf("************** %s **************\n", name.c_str()); 
 
   std::map<std::string, Experiment>::iterator name_iter = exp_map_.find(name);
   if(std::distance(exp_map_.begin(), name_iter) == 0)
@@ -676,15 +782,17 @@ void BenchmarkManipulationTests::visualizeRobotPose(RobotPose &pose, std::string
 void BenchmarkManipulationTests::visualizeLocations()
 {
   std::vector<std::vector<double> > poses;
-  poses.resize(std::distance(loc_map_.begin(),loc_map_.end()));
-  for(std::map<std::string,std::vector<double> >::iterator iter = loc_map_.begin(); iter != loc_map_.end(); ++iter)
+  poses.resize(std::distance(exp_map_.begin(),exp_map_.end()));
+  for(std::map<std::string,Experiment >::iterator iter = exp_map_.begin(); iter != exp_map_.end(); ++iter)
   {
-    int i = std::distance(loc_map_.begin(), iter);
+    int i = std::distance(exp_map_.begin(), iter);
     poses[i].resize(6,0.0);
-    poses[i][0] = iter->second.at(0);
-    poses[i][1] = iter->second.at(1);
-    poses[i][2] = iter->second.at(2);
-    poses[i][5] = iter->second.at(3);
+    poses[i][0] = loc_map_[iter->second.goal].at(0);
+    poses[i][1] = loc_map_[iter->second.goal].at(1);
+    poses[i][2] = loc_map_[iter->second.goal].at(2);
+    poses[i][3] = loc_map_[iter->second.goal].at(3);
+    poses[i][4] = loc_map_[iter->second.goal].at(4);
+    poses[i][5] = loc_map_[iter->second.goal].at(5);
   }
 
   ROS_INFO("[exp] Visualizing %d locations.", int(poses.size()));
@@ -738,7 +846,7 @@ void BenchmarkManipulationTests::printLocations()
   for(std::map<std::string,std::vector<double> >::const_iterator iter = loc_map_.begin(); iter != loc_map_.end(); ++iter)
   {
     ROS_INFO("name: %s", iter->first.c_str());
-    ROS_INFO("  x: % 0.3f  y: % 0.3f  z: % 0.3f theta: % 0.3f", iter->second.at(0), iter->second.at(1), iter->second.at(2), iter->second.at(3));
+    ROS_INFO("  x: % 0.3f  y: % 0.3f  z: % 0.3f  roll: %0.3f  pitch: %0.3f  yaw: %0.3f", iter->second.at(0), iter->second.at(1), iter->second.at(2), iter->second.at(3), iter->second.at(4), iter->second.at(5));
   }
 }
 
@@ -861,7 +969,7 @@ void BenchmarkManipulationTests::fillSingleArmPlanningRequest(RobotPose &start_s
   req.goal_constraints[0].orientation_constraints[0].absolute_z_axis_tolerance = goal_tolerance_[5];
   req.goal_constraints[0].orientation_constraints[0].weight = 1.0;
 
-
+  ROS_INFO("[exp] [goal] rpy: %0.3f %0.3f %0.3f  quat: %0.3f %0.3f %0.3f %0.3f", loc_map_[exp_map_[name].goal].at(3), loc_map_[exp_map_[name].goal].at(4), loc_map_[exp_map_[name].goal].at(5), req.goal_constraints[0].orientation_constraints[0].orientation.quaternion.x, req.goal_constraints[0].orientation_constraints[0].orientation.quaternion.y, req.goal_constraints[0].orientation_constraints[0].orientation.quaternion.z, req.goal_constraints[0].orientation_constraints[0].orientation.quaternion.w);
 }
 
 void BenchmarkManipulationTests::fillDualArmPlanningRequest(RobotPose &start_state, std::string name, moveit_msgs::MotionPlanRequest &req)
@@ -1302,4 +1410,12 @@ bool BenchmarkManipulationTests::writeTrajectoriesToFile(const moveit_msgs::Comp
   return true;
 }
 
+void BenchmarkManipulationTests::multiplyPoses(geometry_msgs::Pose &p1, geometry_msgs::Pose &p2, geometry_msgs::Pose &p)
+{
+  Eigen::Affine3d p_e, p1_e, p2_e;
+  planning_models::poseFromMsg(p1, p1_e);
+  planning_models::poseFromMsg(p2, p2_e);
+  p_e = p1_e * p2_e;
+  planning_models::msgFromPose(p_e, p);
+}
 

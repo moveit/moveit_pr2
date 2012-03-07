@@ -39,8 +39,7 @@ static const std::string PFRAME = "odom";
 inline moveit_msgs::Constraints getDualArmConstraints(double offset)
 {    
   moveit_msgs::Constraints c;
-  c.name = "dual_arm";
-  
+
   moveit_msgs::PositionConstraint pcm2;
   pcm2.link_name = "r_wrist_roll_link";
   pcm2.target_point_offset.x = offset;
@@ -92,8 +91,7 @@ inline moveit_msgs::Constraints getDualArmConstraints(double offset)
 
 inline moveit_msgs::Constraints getSingleArmConstraints(void)
 {
-  moveit_msgs::Constraints constr1; 
-  constr1.name = "single_arm";
+  moveit_msgs::Constraints constr1;
   constr1.orientation_constraints.resize(1);
   moveit_msgs::OrientationConstraint &ocm1 = constr1.orientation_constraints[0];
   ocm1.link_name = "r_wrist_roll_link";
@@ -112,7 +110,6 @@ inline moveit_msgs::Constraints getSingleArmConstraints(void)
 inline moveit_msgs::Constraints getVisibilityConstraints(const std::string &id)
 { 
     moveit_msgs::Constraints c;  
-    c.name = "vis";
     c.visibility_constraints.resize(1);
     moveit_msgs::VisibilityConstraint &vcm = c.visibility_constraints[0];
     
