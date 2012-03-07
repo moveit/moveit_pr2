@@ -296,6 +296,92 @@ void PViz::visualizeObstacles(const std::vector<std::vector<double> > &obstacles
   marker_array_publisher_.publish(marker_array_);
 }
 
+void PViz::getCubeMsg(std::vector<double> &cube, std::vector<double> &color, std::string ns, int id, visualization_msgs::Marker& marker)
+{
+  if(cube.size() < 6)
+  {
+    ROS_INFO("[pviz] Three dimensions are needed to visualize a cube.");
+    return;
+  }
+  if(color.size() < 4)
+  {
+    ROS_ERROR("[pviz] No color specified.");
+    return;
+  }
+
+  for(size_t i = 0; i < color.size(); ++i)
+  {
+    if(color[i] > 1)
+      color[i] = color[i] / 255.0;
+  }
+
+  marker.header.stamp = ros::Time::now();
+  marker.header.frame_id = "base_footprint";
+  marker.ns = ns;
+  marker.id = id;
+  marker.type = visualization_msgs::Marker::CUBE;
+  marker.action = visualization_msgs::Marker::ADD;
+  marker.pose.position.x = cube[0];
+  marker.pose.position.y= cube[1];
+  marker.pose.position.z = cube[2];
+  marker.pose.orientation.w = 1;
+  marker.scale.x = cube[3];
+  marker.scale.y = cube[4];
+  marker.scale.z = cube[5];
+  marker.color.r = color[0];
+  marker.color.g = color[1];
+  marker.color.b = color[2];
+  marker.color.a = color[3];
+  marker.lifetime = ros::Duration(1000.0);
+}
+
+void PViz::getCubeMsg(geometry_msgs::Pose &pose, std::vector<double> &dim, std::vector<double> &color, std::string ns, int id, visualization_msgs::Marker& marker)
+{
+  if(dim.size() < 3)
+  {
+    ROS_INFO("[pviz] Three dimensions are needed to visualize a cube.");
+    return;
+  }
+  if(color.size() < 4)
+  {
+    ROS_ERROR("[pviz] No color specified.");
+    return;
+  }
+
+  for(size_t i = 0; i < color.size(); ++i)
+  {
+    if(color[i] > 1)
+      color[i] = color[i] / 255.0;
+  }
+
+  marker.header.stamp = ros::Time::now();
+  marker.header.frame_id = "base_footprint";
+  marker.ns = ns;
+  marker.id = id;
+  marker.type = visualization_msgs::Marker::CUBE;
+  marker.action = visualization_msgs::Marker::ADD;
+  marker.pose = pose;
+  marker.scale.x = dim[0];
+  marker.scale.y = dim[1];
+  marker.scale.z = dim[2];
+  marker.color.r = color[0];
+  marker.color.g = color[1];
+  marker.color.b = color[2];
+  marker.color.a = color[3];
+  marker.lifetime = ros::Duration(1000.0);
+}
+
+void PViz::publishMarker(visualization_msgs::Marker& marker)
+{
+  marker_publisher_.publish(marker);
+}
+
+void PViz::publishMarkerArray(visualization_msgs::MarkerArray &marker_array)
+{
+  marker_array_publisher_.publish(marker_array);
+  usleep(1000);
+}
+
 /*
 void PViz::visualizeArmConfigurations(const std::vector<std::vector<double> > &traj, int arm, int throttle)
 {

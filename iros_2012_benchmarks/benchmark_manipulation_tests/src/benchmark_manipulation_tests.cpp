@@ -547,22 +547,6 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
   }
   return true;
 }
-/*
-void BenchmarkManipulationTests::visualizeEnvironment()
-{
-  if(!known_objects_filename_.empty())
-  {
-    std::vector<moveit_msgs::CollisionObject> collision_objects;
-    if(!getCollisionObjects(known_objects_filename_, collision_objects))
-      ROS_ERROR("[exp] Failed to get the collision objects from the file.");
-  }
-  moveit_msgs::AttachedCollisionObject attached_object;
-  if(!getAttachedObject(attached_object_filename_, rarm_object_pose_, attached_object))
-  {
-    ROS_ERROR("[exp] Didn't attach an object.");
-  }
-}
-*/
 
 void BenchmarkManipulationTests::visualizeEnvironment()
 {

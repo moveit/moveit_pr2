@@ -121,6 +121,13 @@ class PViz
   
     bool visualizeTrajectoryFromFile(std::string filename);
 
+    void getCubeMsg(std::vector<double> &cube, std::vector<double> &color, std::string ns, int id, visualization_msgs::Marker& marker);
+    void getCubeMsg(geometry_msgs::Pose &pose, std::vector<double> &dim, std::vector<double> &color, std::string ns, int id, visualization_msgs::Marker& marker);
+
+    void publishMarker(visualization_msgs::Marker& marker);
+
+    void publishMarkerArray(visualization_msgs::MarkerArray &marker_array);
+
   private:
 
     ros::NodeHandle nh_;
