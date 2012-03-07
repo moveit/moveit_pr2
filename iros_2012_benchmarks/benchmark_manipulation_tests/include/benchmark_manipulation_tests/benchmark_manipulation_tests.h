@@ -83,6 +83,9 @@ class BenchmarkManipulationTests
     bool createTrajectoryFolder(std::string exp_name);
     bool writeTrajectoriesToFile(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string exp_name);
     void multiplyPoses(geometry_msgs::Pose &p1, geometry_msgs::Pose &p2, geometry_msgs::Pose &p);
+    bool createFolder(std::string name);
+    bool createExperimentGroupFolder(std::string exp_group_name);
+
 
   private:
 
@@ -133,6 +136,7 @@ class BenchmarkManipulationTests
     std::string spine_frame_;
     std::string world_frame_;
     std::string robot_model_root_frame_;
+    std::string experiment_group_name_;
 
     // for computeFK
     boost::shared_ptr<kinematics::KinematicsBase> kb_;

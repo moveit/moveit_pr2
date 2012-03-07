@@ -93,6 +93,7 @@ bool BenchmarkManipulationTests::getParams()
   ph_.param<std::string>("robot_model_root_frame", robot_model_root_frame_, "odom");
   ph_.param<std::string>("spine_frame", spine_frame_, "torso_lift_link");
   ph_.param<std::string>("benchmark_results_folder", benchmark_results_folder_, "/tmp");
+  ph_.param<std::string>("experiment_group_name", experiment_group_name_, "no_group_name");
   ph_.param("average_count", average_count_, 2);
   
   if(ph_.hasParam("object_pose_in_gripper"))
@@ -624,7 +625,7 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   moveit_msgs::ComputePlanningBenchmark::Response res;
 
   req.average_count = average_count_;
-  req.filename = benchmark_results_folder_ + name + ".log";
+  req.filename = benchmark_results_folder_ + "/" + experiment_group_name_ + "/" + name + ".log";
   psm_->getPlanningScene()->getAllowedCollisionMatrix().getMessage(req.scene.allowed_collision_matrix);
 
   req.scene.robot_state.joint_state.header.frame_id = robot_model_root_frame_;
@@ -784,6 +785,12 @@ bool BenchmarkManipulationTests::performAllExperiments()
 {
   if(use_current_state_as_start_)
     startCompleteExperimentFile();
+
+  if(!createExperimentGroupFolder(experiment_group_name_))
+  {
+    ROS_ERROR("[exp] Failed to create experiment group folder for %s", experiment_group_name_.c_str());
+    return false;
+  }
 
   for(std::map<std::string,Experiment>::iterator iter = exp_map_.begin(); iter != exp_map_.end(); ++iter)
   {
@@ -1376,6 +1383,19 @@ bool BenchmarkManipulationTests::createTrajectoryFile(std::string exp_name, std:
   return true;
 }
 
+bool BenchmarkManipulationTests::createExperimentGroupFolder(std::string exp_group_name)
+{
+  std::string folder = benchmark_results_folder_ + exp_group_name;
+  if(!createFolder(folder))
+    return false;
+  
+  folder = folder + "/" + "trajectories/";
+  if(!createFolder(folder))
+    return false;
+   
+  return true;
+}
+
 bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
 {
   struct stat st;
@@ -1383,7 +1403,8 @@ bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
   time(&clock);
   std::string time(ctime(&clock));;
   time.erase(time.size()-1, 1);
-  std::string folder = benchmark_results_folder_ + exp_name; // + "_" + time;
+
+  std::string folder = benchmark_results_folder_ + experiment_group_name_ + "/trajectories/" + exp_name; // + "_" + time;
   if(mkdir(folder.c_str(),  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0)
     ROS_INFO("[exp] Successfully created the trajectory folder: %s", folder.c_str());
   else
@@ -1397,6 +1418,24 @@ bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
     }
   }
   trajectory_files_path_ = folder;
+  return true;
+}
+
+bool BenchmarkManipulationTests::createFolder(std::string name)
+{
+  struct stat st;
+  if(mkdir(name.c_str(),  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0)
+    ROS_INFO("[exp] Successfully created the trajectory folder: %s", name.c_str());
+  else
+  {
+    if(stat(name.c_str(), &st) == 0)
+      ROS_INFO("[exp] folder is present. Not creating.");
+    else
+    {
+      ROS_WARN("[exp] Failed to create the trajectory folder: %s. Maybe it exists already?", name.c_str());
+      return false;
+    }
+  }
   return true;
 }
 

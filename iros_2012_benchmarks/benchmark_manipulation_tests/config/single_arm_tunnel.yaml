@@ -5,6 +5,7 @@ benchmark_service: /benchmark_planning_problem
 world_frame: map
 robot_model_root_frame: odom
 spine_frame: torso_lift_link
+experiment_group_name: tunnel
 
 # of calls to the planner per experiment
 average_count: 4
