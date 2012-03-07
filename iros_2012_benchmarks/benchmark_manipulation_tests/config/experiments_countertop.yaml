@@ -1,0 +1,53 @@
+experiments:
+
+  - name: countertop_01
+    goal: right_shelf_01
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_02
+    goal: sink_01
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_03
+    goal: right_counter_03
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_04
+    goal: dishwasher_01 #left_shelf_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_05
+    goal: left_shelf_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_06
+    goal: sink_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_07
+    goal: dishwasher_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_08
+    goal: right_shelf_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_10
+    goal: dishwasher_03
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: countertop_09
+    goal: right_counter_04
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+
