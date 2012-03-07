@@ -208,13 +208,6 @@ def plot_statistics(dbname, fname):
     experiments = []
     # merge possible attributes from all planners
     for p in planner_names:
-        print p
-        c.execute("select avg(solved) from `%s`" % p)
-        print "solved = " + str(c.fetchone()[0])
-        c.execute("select avg(time), avg(solution_length) from `%s` where solved = 1" %p)
-        x = c.fetchone()
-        print "time = " + str(x[0])
-        print "length = " + str(x[1])
 
         c.execute('SELECT * FROM `%s` LIMIT 1' % p)
         atr = [ t[0] for t in c.description]

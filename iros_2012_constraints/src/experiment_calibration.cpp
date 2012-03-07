@@ -48,7 +48,7 @@ void setupEnv(void)
 {
     psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION);
     ros::NodeHandle nh;
-    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
+    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("/planning_scene", 1);
     planning_scene::PlanningScenePtr scene = psm->getPlanningScene();
     scene->setName("experiment2");
 
@@ -204,7 +204,7 @@ void computeDB(void)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c =  getVisibilityConstraints("attached");
-    ompl_interface.addConstraintApproximation(c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), 10000, 100);
+    ompl_interface.addConstraintApproximation(c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), 100000, 200);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
@@ -220,7 +220,7 @@ int main(int argc, char **argv)
     setupEnv();    
     //    computeDB();
     
-    testPlan(); runExp();
+    //    testPlan(); runExp();
     
     return 0;
 }

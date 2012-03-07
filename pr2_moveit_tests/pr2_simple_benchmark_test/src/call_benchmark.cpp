@@ -36,6 +36,7 @@
 
 #include <planning_scene_monitor/planning_scene_monitor.h>
 #include <moveit_msgs/ComputePlanningBenchmark.h>
+#include <kinematic_constraints/utils.h>
 
 static const std::string ROBOT_DESCRIPTION="robot_description";
 static const std::string BENCHMARK_SERVICE_NAME="benchmark_planning_problem"; // name of the advertised service (within the ~ namespace)
@@ -66,6 +67,8 @@ int main(int argc, char **argv)
   req.motion_plan_request.group_name = "right_arm";
   req.motion_plan_request.num_planning_attempts = 1;
   req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
+
+  /*
   const std::vector<std::string>& joint_names = psm.getPlanningScene()->getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
   req.motion_plan_request.goal_constraints.resize(1);
   req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
@@ -80,7 +83,21 @@ int main(int argc, char **argv)
   req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
   req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
   req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
+  */  
+
+  geometry_msgs::PoseStamped pose;
+  pose.header.frame_id = psm.getPlanningScene()->getKinematicModel()->getModelFrame();
+  pose.pose.position.x = 0.55;
+  pose.pose.position.y = 0.2;
+  pose.pose.position.z = 1.25;
+  pose.pose.orientation.x = 0.0;
+  pose.pose.orientation.y = 0.0;
+  pose.pose.orientation.z = 0.0;
+  pose.pose.orientation.w = 1.0;
+  moveit_msgs::Constraints goal = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
+  req.motion_plan_request.goal_constraints.push_back(goal);
   
+
   ros::NodeHandle nh;
   ros::service::waitForService(BENCHMARK_SERVICE_NAME);
   ros::ServiceClient benchmark_service_client = nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(BENCHMARK_SERVICE_NAME);
