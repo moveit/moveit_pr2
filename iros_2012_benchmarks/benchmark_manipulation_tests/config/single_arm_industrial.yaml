@@ -20,7 +20,7 @@ goal_tolerance:
   rpy: 0.05 0.05 0.05
 
 collision_object_offset:
-  xyz: 0.0 -0.05 0.0
+  xyz: 0.06 -0.05 0.0
   rpy: 0 0 0
 
 # true: use the last waypoint in the previous experiment's trajectory as the start state for the next experiment 
@@ -39,9 +39,10 @@ object_pose_in_gripper:
     rpy: 0.0 0.0 0.0
 
 initial_start_state:
-  right: -0.2 0.9223 -1.0472 -0.8 0.0 0.0 0.0
+  #right: -0.2 0.9223 -1.0472 -0.8 0.0 0.0 0.0
+  right: -1.75 0.017997624551430391 -0.005238188295824564 -1.4 -0.00041708680445573521 -1.1 -0.0010002085575777642
   left: 1.5 1.0 0.005683010665493704 -1.4 0.00079943310185193195 -0.7439117804053561 0.00049889278955195238
   base: 0 0 0 
-  spine: 0.1
+  spine: 0.2
 
 

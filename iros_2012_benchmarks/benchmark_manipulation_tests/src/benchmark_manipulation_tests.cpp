@@ -547,6 +547,66 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
   }
   return true;
 }
+/*
+void BenchmarkManipulationTests::visualizeEnvironment()
+{
+  if(!known_objects_filename_.empty())
+  {
+    std::vector<moveit_msgs::CollisionObject> collision_objects;
+    if(!getCollisionObjects(known_objects_filename_, collision_objects))
+      ROS_ERROR("[exp] Failed to get the collision objects from the file.");
+  }
+  moveit_msgs::AttachedCollisionObject attached_object;
+  if(!getAttachedObject(attached_object_filename_, rarm_object_pose_, attached_object))
+  {
+    ROS_ERROR("[exp] Didn't attach an object.");
+  }
+}
+*/
+
+void BenchmarkManipulationTests::visualizeEnvironment()
+{
+  moveit_msgs::ComputePlanningBenchmark::Request req;
+  moveit_msgs::ComputePlanningBenchmark::Response res;
+
+  req.average_count = average_count_;
+  psm_->getPlanningScene()->getAllowedCollisionMatrix().getMessage(req.scene.allowed_collision_matrix);
+
+  req.scene.robot_state.joint_state.header.frame_id = robot_model_root_frame_;
+  req.scene.robot_state.joint_state.header.stamp = ros::Time::now();
+  req.scene.robot_state.joint_state.name.resize(1);
+  req.scene.robot_state.joint_state.name[0] = "torso_lift_joint";
+  req.scene.robot_state.joint_state.position.resize(1);
+  req.scene.robot_state.joint_state.position[0] = start_pose_.body.z;
+
+  // fill in collision objects
+  if(!known_objects_filename_.empty())
+  {
+    if(!getCollisionObjects(known_objects_filename_, req.scene.world.collision_objects))
+    {
+      ROS_ERROR("[exp] Failed to get the collision objects from the file.");
+      return;
+    }
+  }
+
+  ROS_INFO("set planning scene");
+  pscene_.setPlanningSceneMsg(req.scene);
+  ROS_INFO("get kinematic model");
+  if(!initKinematicSolver(pscene_.getKinematicModel()))
+  {
+    ROS_ERROR("[exp] Failed to initialize the kinematic solver.");
+    return;
+  }
+  // filling planning scene with start state of joints so the rviz plugin 
+  // can display them
+  for(size_t i = 0; i < req.motion_plan_request.start_state.joint_state.name.size(); ++i)
+  {
+    req.scene.robot_state.joint_state.name.push_back(req.motion_plan_request.start_state.joint_state.name[i]);
+    req.scene.robot_state.joint_state.position.push_back(req.motion_plan_request.start_state.joint_state.position[i]);
+  }
+  ROS_INFO("[exp] Publishing the planning scene for visualization using the motion_planning_rviz_plugin.");
+  pscene_pub_.publish(req.scene);
+}
 
 bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string name)
 {

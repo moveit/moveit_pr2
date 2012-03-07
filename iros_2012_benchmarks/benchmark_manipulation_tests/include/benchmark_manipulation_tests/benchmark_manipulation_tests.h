@@ -63,6 +63,7 @@ class BenchmarkManipulationTests
     void visualizeLocations();
     void visualizeRobotPose(RobotPose &pose, std::string name, int id);
     void visualizeStartPose();
+    void visualizeEnvironment();
 
     void fillSingleArmPlanningRequest(RobotPose &start_state, std::string name, moveit_msgs::MotionPlanRequest &req);
     void fillDualArmPlanningRequest(RobotPose &start_state, std::string name, moveit_msgs::MotionPlanRequest &req);

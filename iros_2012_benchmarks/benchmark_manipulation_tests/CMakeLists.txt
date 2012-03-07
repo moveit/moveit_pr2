@@ -28,3 +28,6 @@ rosbuild_add_library(benchmark_manipulation_tests src/benchmark_manipulation_tes
 
 rosbuild_add_executable(runTest src/run_test.cpp)
 target_link_libraries(runTest benchmark_manipulation_tests)
+
+rosbuild_add_executable(envViz src/visualize_environment.cpp)
+target_link_libraries(envViz benchmark_manipulation_tests)
