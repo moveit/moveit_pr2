@@ -55,8 +55,9 @@ int main(int argc, char **argv)
   tf::TransformListener tf;
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, &tf);
   if (psm.getPlanningScene()->isConfigured())
-      psm.getPlanningScene()->getPlanningSceneMsg(req.scene);
-
+    psm.getPlanningScene()->getPlanningSceneMsg(req.scene);
+  req.motion_plan_request.start_state = req.scene.robot_state;
+  
   // average over 3 runs
   req.average_count = 10;
   req.filename = "benchmark_results.log";
