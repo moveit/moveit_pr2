@@ -1,0 +1,28 @@
+experiments:
+
+  - name: tunnel_01
+    goal: left_01
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+  - name: tunnel_02
+    goal: right_01
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "testing is fun!"
+  - name: tunnel_03
+    goal: left_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "testing is fun!"
+  - name: tunnel_04
+    goal: right_02
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "testing is fun!"
+  - name: tunnel_05
+    goal: left_03
+    pre_action: nothing
+    post_action: nothing
+    sound_bite: "testing is fun!"
+
