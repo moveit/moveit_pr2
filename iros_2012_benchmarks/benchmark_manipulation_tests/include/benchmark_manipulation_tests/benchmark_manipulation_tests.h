@@ -81,6 +81,7 @@ class BenchmarkManipulationTests
     bool createTrajectoryFile(std::string exp_name, std::string planner, std::string planner_id, std::string description, FILE** file);
     bool createTrajectoryFolder(std::string exp_name);
     bool writeTrajectoriesToFile(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string exp_name);
+    void multiplyPoses(geometry_msgs::Pose &p1, geometry_msgs::Pose &p2, geometry_msgs::Pose &p);
 
   private:
 
@@ -109,8 +110,11 @@ class BenchmarkManipulationTests
     std::vector<double> goal_tolerance_;
     std::vector<double> rarm_object_offset_;
     std::vector<double> larm_object_offset_;
+    std::vector<double> collision_object_offset_;
     geometry_msgs::Pose rarm_object_pose_;
     geometry_msgs::Pose larm_object_pose_;
+    geometry_msgs::Pose collision_object_offset_pose_;
+    
 
     std::string known_objects_filename_;
     std::string attached_object_filename_;
