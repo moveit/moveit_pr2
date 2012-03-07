@@ -581,6 +581,31 @@ void BenchmarkManipulationTests::visualizeEnvironment()
     ROS_ERROR("[exp] Failed to initialize the kinematic solver.");
     return;
   }
+
+  // start state
+  for(size_t i = 0; i < start_pose_.rangles.size(); ++i)
+    req.motion_plan_request.start_state.joint_state.position.push_back(start_pose_.rangles[i]);
+  for(size_t i = 0; i < start_pose_.langles.size(); ++i)
+    req.motion_plan_request.start_state.joint_state.position.push_back(start_pose_.langles[i]);
+
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_shoulder_pan_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_shoulder_lift_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_upper_arm_roll_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_elbow_flex_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_forearm_roll_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_wrist_flex_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("r_wrist_roll_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_shoulder_pan_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_shoulder_lift_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_upper_arm_roll_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_elbow_flex_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_forearm_roll_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_wrist_flex_joint");
+  req.motion_plan_request.start_state.joint_state.name.push_back("l_wrist_roll_joint");
+  req.motion_plan_request.start_state.joint_state.position.push_back(start_pose_.body.z);
+  req.motion_plan_request.start_state.joint_state.name.push_back("torso_lift_joint");
+
+
   // filling planning scene with start state of joints so the rviz plugin 
   // can display them
   for(size_t i = 0; i < req.motion_plan_request.start_state.joint_state.name.size(); ++i)
@@ -590,6 +615,7 @@ void BenchmarkManipulationTests::visualizeEnvironment()
   }
   ROS_INFO("[exp] Publishing the planning scene for visualization using the motion_planning_rviz_plugin.");
   pscene_pub_.publish(req.scene);
+  visualizeRobotPose(start_pose_, "start", 0);
 }
 
 bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string name)
