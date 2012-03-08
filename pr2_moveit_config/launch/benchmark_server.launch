@@ -7,10 +7,17 @@
     <!-- any parameter needed by plugins needs to be loaded somehow as well;
 	 I suggest loading all params for all possible plugins here -->
 
+
    <rosparam command="load" file="$(find sbpl_arm_planner)/config/pr2_right_arm.yaml" />
    <param name="planner/arm_description_file" value="$(find sbpl_arm_planner)/config/pr2_right_arm.cfg" />
    <param name="planner/motion_primitive_file" value="$(find sbpl_arm_planner)/config/pr2.mprim" />
    <rosparam command="load" file="$(find sbpl_collision_checking)/config/pr2_right_arm_model.yaml" />
+
+   <rosparam command="load" file="$(find sbpl_two_arm_planner)/config/pr2_both_arms.yaml" ns="dual_arm" />
+   <param name="dual_arm/planner/motion_primitive_file" value="$(find sbpl_two_arm_planner)/config/pr2-32.mprim" />
+   <param name="dual_arm/planner/left_arm_description_file" value="$(find sbpl_arm_planner)/config/pr2_left_arm.cfg" />
+   <param name="dual_arm/planner/right_arm_description_file" value="$(find sbpl_arm_planner)/config/pr2_right_arm.cfg" />
+
 
   </node>
  
