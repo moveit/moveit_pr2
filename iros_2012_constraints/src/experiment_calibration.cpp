@@ -63,7 +63,13 @@ void setupEnv(void)
     aco.touch_links.push_back("r_wrist_roll_link");
     aco.touch_links.push_back("r_gripper_l_finger_tip_link");
     aco.touch_links.push_back("r_gripper_r_finger_tip_link");
-    
+
+    std_msgs::ColorRGBA c;
+    c.r = 0.9f;
+    c.g = 0.2f;
+    c.b = 0.1f;
+    scene->setColor("attached", c);
+
     moveit_msgs::CollisionObject &co = aco.object;
     co.id = "attached";
     co.header.stamp = ros::Time::now();
@@ -93,6 +99,26 @@ void setupEnv(void)
     tuck[6] = -0.0864407;
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("left_arm")->setStateValues(tuck);
     
+    std::vector<double> ssa;
+    ssa.push_back(0.371285);
+    ssa.push_back(0.452859);
+    ssa.push_back(-1.33889);
+    ssa.push_back(-0.690347);
+    ssa.push_back(1.61033);
+    ssa.push_back(-0.958497);
+    ssa.push_back(0.652208);
+
+    std::vector<double> ssb(7);
+    ssb[0] = -0.284597;
+    ssb[1] = 0.5359;
+    ssb[2] = 0.359428;
+    ssb[3] = -0.164032;
+    ssb[4] = -0.640892; 
+    ssb[5] = -1.71483;    
+    ssb[6] = 1.73173;
+    psm->getPlanningScene()->getCurrentState().getJointStateGroup("right_arm")->setStateValues(ssb);
+
+
     ros::WallDuration(1.0).sleep();
     
     moveit_msgs::PlanningScene psmsg;
@@ -227,7 +253,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      testPlan(); runExp();
+      testPlan();  runExp();
     }
     
     return 0;

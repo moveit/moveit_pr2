@@ -63,6 +63,9 @@ void setupEnv(void)
     t = Eigen::Translation3d(0.9, -0.2, 0.65);
     scene->getCollisionWorld()->addToObject("table", new shapes::Box(0.7, 1.5, 0.04), t);
 
+    t = Eigen::Translation3d(0.3, -0.65, 0.65);
+    scene->getCollisionWorld()->addToObject("tablex", new shapes::Box(0.7, 0.6, 0.04), t);
+
     t = Eigen::Translation3d(0.9, -0.2, 0.31);
     scene->getCollisionWorld()->addToObject("support", new shapes::Box(0.08, 0.08, 0.61), t);
 
@@ -72,17 +75,22 @@ void setupEnv(void)
     t = Eigen::Translation3d(0.75, 0.3, 0.72);
     scene->getCollisionWorld()->addToObject("object2", new shapes::Box(0.04, 0.04, 0.14), t);
 
+    t = Eigen::Translation3d(0.4, -0.4, 0.8);
+    scene->getCollisionWorld()->addToObject("object3", new shapes::Box(0.05, 0.05, 0.25), t);
+
     std_msgs::ColorRGBA c;
     c.r = 0.9f;
     c.g = 0.0f;
     c.b = 0.0f;
     scene->setColor("object1", c);
     scene->setColor("object2", c);
+    scene->setColor("object3", c);
 
     c.r = 0.1f;
     c.g = 0.8f;
     c.b = 0.3f;
-    scene->setColor("table", c);
+    scene->setColor("table", c);  
+    scene->setColor("tablex", c);
     scene->setColor("support", c);
 
     c.r = 0.1f;
@@ -94,10 +102,21 @@ void setupEnv(void)
     moveit_msgs::AttachedCollisionObject aco;
     aco.link_name = "r_wrist_roll_link";
     aco.touch_links.push_back("r_wrist_roll_link");
+    aco.touch_links.push_back("r_wrist_flex_link");
+    aco.touch_links.push_back("l_wrist_roll_link");
+    aco.touch_links.push_back("l_wrist_flex_link");
     aco.touch_links.push_back("r_gripper_l_finger_tip_link");
     aco.touch_links.push_back("r_gripper_r_finger_tip_link");
     aco.touch_links.push_back("l_gripper_l_finger_tip_link");
     aco.touch_links.push_back("l_gripper_r_finger_tip_link");
+    aco.touch_links.push_back("r_gripper_l_finger_link");
+    aco.touch_links.push_back("r_gripper_r_finger_link");
+    aco.touch_links.push_back("l_gripper_l_finger_link");
+    aco.touch_links.push_back("l_gripper_r_finger_link");
+    aco.touch_links.push_back("l_gripper_palm_link");
+    aco.touch_links.push_back("r_gripper_palm_link");
+    aco.touch_links.push_back("r_motor_accelerometer_link");
+    aco.touch_links.push_back("l_motor_accelerometer_link");
     
     moveit_msgs::CollisionObject &co = aco.object;
     co.id = "attached";
@@ -147,7 +166,7 @@ void setupEnv(void)
     offer_tray[11] =  -0.0152482;
     offer_tray[12] =  -1.39915;
     offer_tray[13] =  -0.321267;
-    psm->getPlanningScene()->getCurrentState().getJointStateGroup("arms")->setStateValues(offer_tray);
+
 
     left_side[0] =  2.13008;
     left_side[1] =  0.893423;
@@ -163,7 +182,9 @@ void setupEnv(void)
     left_side[11] =  1.26707;
     left_side[12] =  -1.48356;
     left_side[13] =  -1.12132;
-    
+
+    psm->getPlanningScene()->getCurrentState().getJointStateGroup("arms")->setStateValues(offer_tray);
+
     ros::WallDuration(2.0).sleep();
     
     moveit_msgs::PlanningScene psmsg;
@@ -239,7 +260,7 @@ void testPlan(double offset)
     mplan_req.motion_plan_request.planner_id = "RRTConnectkConfigDefault";
     mplan_req.motion_plan_request.group_name = "arms";     
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
-    mplan_req.motion_plan_request.random_valid_start_goal = true;
+    //    mplan_req.motion_plan_request.random_valid_start_goal = true;
         
     const std::vector<std::string>& joint_names = psm->getPlanningScene()->getKinematicModel()->getJointModelGroup("arms")->getJointModelNames();
     mplan_req.motion_plan_request.goal_constraints.resize(1);
@@ -258,7 +279,7 @@ void testPlan(double offset)
     mplan_req.motion_plan_request.start_state.joint_state.position = left_side;
     
     
-    // add path constraintsx
+    // add path constraints
     mplan_req.motion_plan_request.path_constraints = getDualArmConstraints(offset);
     
     if (service_client.call(mplan_req, mplan_res))
@@ -297,8 +318,10 @@ void computeDB(double offset, int ns, int ne)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c = getDualArmConstraints(offset);
+    //    ompl_interface.addConstraintApproximation(c, "arms", "PoseModel", psm->getPlanningScene()->getCurrentState(), 
+    //                                              boost::bind(&orderFn, _1, _2), ns, ne);
     ompl_interface.addConstraintApproximation(c, "arms", "PoseModel", psm->getPlanningScene()->getCurrentState(), 
-                                              boost::bind(&orderFn, _1, _2), ns, ne);
+                                              ns, ne);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
@@ -322,7 +345,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      testPlan(offset); //runExp(offset);
+      testPlan(offset); runExp(offset);
     }
     
     return 0;

@@ -37,7 +37,7 @@ foreach my $d(@dirs)
     }
 }
 my @alg = qw/RRTConnect LBKPIECE SBL RRT KPIECE/;#sort keys %res;
-my @contexts = qw/N\/A 10000\/0 10000\/20 10000\/100/;
+my @contexts = qw/N\/A 1000\/0 1000\/20 1000\/100 5000\/0 5000\/20 5000\/100 10000\/0 10000\/20 10000\/100/;
 print '\\begin{tabular}{l|', 'c' x @alg, '}', "\n";
 print "\\toprule\n";
 foreach my $a(@alg) {

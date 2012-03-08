@@ -63,6 +63,38 @@ void setupEnv(void)
     scene->getCollisionWorld()->addToObject("table", new shapes::Box(0.3, 0.3, t.translation().z()*2.0), t);
 
 
+    // add an attached object
+    moveit_msgs::AttachedCollisionObject aco;
+    aco.link_name = "r_wrist_roll_link";
+    aco.touch_links.push_back("r_wrist_roll_link");
+    aco.touch_links.push_back("r_gripper_l_finger_tip_link");
+    aco.touch_links.push_back("r_gripper_r_finger_tip_link");
+    aco.touch_links.push_back("r_gripper_l_finger_link");
+    aco.touch_links.push_back("r_gripper_r_finger_link");
+    aco.touch_links.push_back("r_gripper_palm_link");
+
+    std_msgs::ColorRGBA c;
+    c.r = 0.9f;
+    c.g = 0.2f;
+    c.b = 0.1f;
+    scene->setColor("attached", c);
+
+    moveit_msgs::CollisionObject &co = aco.object;
+    co.id = "attached";
+    co.header.stamp = ros::Time::now();
+    co.header.frame_id = aco.link_name;
+    co.operation = moveit_msgs::CollisionObject::ADD;
+    co.shapes.resize(1);
+    co.shapes[0].type = moveit_msgs::Shape::BOX;
+    co.shapes[0].dimensions.push_back(0.03);
+    co.shapes[0].dimensions.push_back(0.03);
+    co.shapes[0].dimensions.push_back(0.2);
+    co.poses.resize(1);
+    co.poses[0].position.x = 0.18;
+    co.poses[0].position.y = 0;
+    co.poses[0].position.z = 0;
+    co.poses[0].orientation.w = 1.0;
+    psm->getPlanningScene()->processAttachedCollisionObjectMsg(aco);
 
     std::vector<double> tuck(7);
     tuck[0] = 0.06024;
@@ -74,6 +106,26 @@ void setupEnv(void)
     tuck[6] = -0.0864407;
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("left_arm")->setStateValues(tuck);
     
+    std::vector<double> ssb(7);
+    ssb[0] = -0.30826385287398406;
+    ssb[1] = 0.61185361475247468;
+    ssb[2] = -0.67790861269459102;
+    ssb[3] = -1.0372591097007691;
+    ssb[4] = -0.89601966543848288; 
+    ssb[5] = -1.7;//-1.9776217463278662; 
+    ssb[6] = 1.8552611548679128;
+
+    std::vector<double> ssa;
+    ssa.push_back(-1.21044517893021499);
+    ssa.push_back(0.038959594993384528);
+    ssa.push_back(-0.81412902362644646);
+    ssa.push_back(-1.0989597173881371);
+    ssa.push_back(2.3582101183671629);
+    ssa.push_back(-1.993988668449755);
+    ssa.push_back(-2.2779628049776051);
+
+    psm->getPlanningScene()->getCurrentState().getJointStateGroup("right_arm")->setStateValues(ssb);
+
     
     moveit_msgs::PlanningScene psmsg;
     psm->getPlanningScene()->getPlanningSceneMsg(psmsg);
@@ -233,7 +285,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      testPlan(); runExp();
+      testPlan();  runExp();
     }
     
     return 0;

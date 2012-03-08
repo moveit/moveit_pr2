@@ -1,5 +1,6 @@
 T: 10000/20
-DB with 10000 states, 100863 edges, 20 per sample
-3.933774 seconds to generate
-99.6% sampling success rate
-2893966 bytes in size
+3.7
+2.8
+99
+10000
+100506
