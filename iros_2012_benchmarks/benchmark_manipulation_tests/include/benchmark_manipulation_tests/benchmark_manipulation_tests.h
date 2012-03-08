@@ -86,6 +86,8 @@ class BenchmarkManipulationTests
     bool createFolder(std::string name);
     bool createExperimentGroupFolder(std::string exp_group_name);
 
+    void visualizeTrajectories(const moveit_msgs::ComputePlanningBenchmark::Response &res);
+    bool getTrajectoryDisplayMsg(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string planner_interface, std::string description, moveit_msgs::DisplayTrajectory &disp);
 
   private:
 
@@ -95,6 +97,8 @@ class BenchmarkManipulationTests
     ros::Publisher collision_object_pub_;
     ros::Publisher pscene_pub_;
     ros::Publisher display_path_pub_;
+    ros::Publisher sbpl_display_path_pub_;
+    ros::Publisher ompl_display_path_pub_;
     ros::ServiceClient benchmark_client_;
     planning_scene_monitor::PlanningSceneMonitor* psm_;
     planning_scene::PlanningScene pscene_;
@@ -137,6 +141,7 @@ class BenchmarkManipulationTests
     std::string world_frame_;
     std::string robot_model_root_frame_;
     std::string experiment_group_name_;
+    std::string display_trajectory_description_;
 
     // for computeFK
     boost::shared_ptr<kinematics::KinematicsBase> kb_;

@@ -43,8 +43,9 @@ BenchmarkManipulationTests::BenchmarkManipulationTests() : ph_("~")
   benchmark_client_ = nh_.serviceClient<moveit_msgs::ComputePlanningBenchmark>(benchmark_service_name_, true);
   ROS_INFO("[exp] Connected to the benchmark service.");
 
-  pscene_pub_ = nh_.advertise<moveit_msgs::PlanningScene>("planning_scene", 500, true);
-  display_path_pub_ = nh_.advertise<moveit_msgs::DisplayTrajectory>("planned_path", 2, true);
+  pscene_pub_ = nh_.advertise<moveit_msgs::PlanningScene>("planning_scene", 1, true);
+  sbpl_display_path_pub_ = nh_.advertise<moveit_msgs::DisplayTrajectory>("sbpl_path", true);
+  ompl_display_path_pub_ = nh_.advertise<moveit_msgs::DisplayTrajectory>("ompl_path", true);
 
   psm_ = new planning_scene_monitor::PlanningSceneMonitor("robot_description");
   pscene_.configure(psm_->getPlanningScene()->getUrdfModel(),psm_->getPlanningScene()->getSrdfModel());
@@ -94,6 +95,7 @@ bool BenchmarkManipulationTests::getParams()
   ph_.param<std::string>("spine_frame", spine_frame_, "torso_lift_link");
   ph_.param<std::string>("benchmark_results_folder", benchmark_results_folder_, "/tmp");
   ph_.param<std::string>("experiment_group_name", experiment_group_name_, "no_group_name");
+  ph_.param<std::string>("trajectory_description_for_display", display_trajectory_description_, "plan");
   ph_.param("average_count", average_count_, 2);
   
   if(ph_.hasParam("object_pose_in_gripper"))
@@ -705,7 +707,11 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     for(size_t j = 0; j < res.responses[i].trajectory.size(); ++j)
       ROS_INFO("[exp] %s returned a path with %d waypoints with description, '%s'.", res.planner_interfaces[i].c_str(), int(res.responses[i].trajectory[j].joint_trajectory.points.size()), res.responses[i].description[j].c_str());
   }
-  
+
+  ROS_INFO("[exp] Visualizing trajectories using motion planning rviz plugin."); 
+  visualizeTrajectories(res);
+  sleep(2);
+  /* 
   if(res.responses.size() > 1)
   {
     if(res.responses[1].trajectory.size() > 1)
@@ -722,6 +728,7 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     publishDisplayTrajectoryMsg(res.responses[1].trajectory[1], req.scene.robot_state, "sbpl");
     sleep(2);
   }
+  */
 
   ROS_INFO("[exp] Recording trajectories to file...");
   if(!writeTrajectoriesToFile(res,name))
@@ -1226,7 +1233,7 @@ void BenchmarkManipulationTests::publishDisplayTrajectoryMsg(moveit_msgs::RobotT
   disp.trajectory = traj;
   disp.trajectory_start = state;
 
-  display_path_pub_.publish(disp);
+  //display_path_pub_.publish(disp);
 }
 
 bool BenchmarkManipulationTests::printPathToFile(FILE** file, const trajectory_msgs::JointTrajectory &traj)
@@ -1482,5 +1489,48 @@ void BenchmarkManipulationTests::multiplyPoses(geometry_msgs::Pose &p1, geometry
   planning_models::poseFromMsg(p2, p2_e);
   p_e = p1_e * p2_e;
   planning_models::msgFromPose(p_e, p);
+}
+
+bool BenchmarkManipulationTests::getTrajectoryDisplayMsg(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string planner_interface, std::string description, moveit_msgs::DisplayTrajectory &disp)
+{
+  for(size_t i = 0; i < res.planner_interfaces.size(); ++i)
+  {
+    if(res.planner_interfaces[i].compare(planner_interface) == 0)
+    {
+      for(size_t j = 0; j < res.responses[i].description.size(); ++j)
+      {
+        if(res.responses[i].description[j].compare(description) == 0)
+        {
+          if(!res.responses[i].trajectory[j].joint_trajectory.points.empty())
+          {
+            disp.model_id = "pr2";
+            disp.trajectory = res.responses[i].trajectory[j];
+            disp.trajectory_start = res.responses[i].trajectory_start;
+            return true;
+          }
+          else
+            ROS_ERROR("[exp] Not displaying %s path with description, %s because it's empty.", planner_interface.c_str(), description.c_str());
+        }
+      }
+    }
+  }
+  ROS_WARN("[exp] Got to the end of getTrajectoryDisplayMsg(). The desired path must not have been found. Display failed.");
+  return false;
+}
+
+void BenchmarkManipulationTests::visualizeTrajectories(const moveit_msgs::ComputePlanningBenchmark::Response &res)
+{
+  moveit_msgs::DisplayTrajectory disp;
+
+  // display OMPL path
+  if(getTrajectoryDisplayMsg(res, "ompl_interface_ros/OMPLPlanner", display_trajectory_description_, disp))
+    ompl_display_path_pub_.publish(disp);
+  usleep(1000);
+  // display SBPL path
+  if(getTrajectoryDisplayMsg(res, "sbpl_arm_planner_interface_ros/SBPLPlanner", display_trajectory_description_, disp))
+    sbpl_display_path_pub_.publish(disp);
+  usleep(1000);
+
+  ROS_INFO("[exp] Finished publishing trajectories.");
 }
 

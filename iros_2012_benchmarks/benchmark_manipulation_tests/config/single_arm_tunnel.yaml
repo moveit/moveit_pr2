@@ -11,10 +11,10 @@ experiment_group_name: tunnel
 average_count: 4
 
 # list the planner_interfaces you want to benchmark with
-# the benchmark server includes the ompl by default
+# NOTE:the benchmark server uses all planners by default
 planner_interfaces: 
-  SBPLPlanner
-#  SBLkConfigDefault
+  ompl_interface_ros/OMPLPlanner
+  sbpl_arm_planner_interface_ros/SBPLPlanner
 
 goal_tolerance:
   xyz: 0.02 0.02 0.02
