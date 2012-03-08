@@ -12,6 +12,7 @@ my %res2;
 
 foreach my $d(@dirs)
 {
+    print "$d\n";
     my @contextL = grep($_ =~ /T: /, `cat  $d/README`);
     my $context = $contextL[0];
     $context =~ s/^T:\s*//; $context =~ s/\s+$//;
@@ -34,34 +35,34 @@ foreach my $d(@dirs)
 	$res{$alg}{$context} = [$solved, $time, $length];
 	$res2{$context}{$alg} = [$solved, $time, $length];
     }
-    
-    my @alg = sort keys %res;
-    my @contexts = sort keys %res2;
-    print '\\begin{tabular}{l|', 'c' x @alg, '}', "\n";
-    print "\\toprule\n";
-    foreach my $a(@alg) {
-	print " & $a"; }
-    print "\\\\\n";
-    print "\\midrule\n";
-    foreach my $c(@contexts)
-    {
-	print $c;
-	foreach my $a(@alg)
-	{
-	    my ($s, $t, $l) = @{$res2{$c}{$a} || [-1, -1, -1]};
-	    if ($s < 0.0)
-	    {
-		print " & N/A";
-	    }
-	    else
-	    {
-		$s = sprintf("%.0f", $s * 100.0);
-		$t = sprintf("%.2f", $t);
-		print " & $t / $s\\%";
-	    }
-	}
-	print "\\\\\n";
-    }  
-    print "\\bottomrule\n";
-    print '\end{tabular}', "\n";
 }
+my @alg = qw/RRTConnect LBKPIECE SBL RRT KPIECE/;#sort keys %res;
+my @contexts = qw/N\/A 10000\/0 10000\/20 10000\/100/;
+print '\\begin{tabular}{l|', 'c' x @alg, '}', "\n";
+print "\\toprule\n";
+foreach my $a(@alg) {
+    print " & $a"; }
+print "\\\\\n";
+print "\\midrule\n";
+foreach my $c(@contexts)
+{
+    print $c;
+    foreach my $a(@alg)
+    {
+	my ($s, $t, $l) = @{$res2{$c}{$a} || [-1, -1, -1]};
+	if ($s < 0.0)
+	{
+	    print " & N/A";
+	}
+	else
+	{
+	    $s = sprintf("%.0f", $s * 100.0);
+	    $t = sprintf("%.2f", $t);
+	    print " & $t / $s\\%";
+	}
+    }
+    print "\\\\\n";
+}  
+print "\\bottomrule\n";
+print '\end{tabular}', "\n";
+

@@ -47,7 +47,7 @@ inline moveit_msgs::Constraints getDualArmConstraints(double offset)
   pcm2.target_point_offset.y = 0;
   pcm2.target_point_offset.z = 0;
   pcm2.constraint_region_shape.type = moveit_msgs::Shape::BOX;
-  pcm2.constraint_region_shape.dimensions.push_back(0.01);
+  pcm2.constraint_region_shape.dimensions.push_back(0.5);
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   

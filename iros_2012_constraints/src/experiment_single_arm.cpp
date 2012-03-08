@@ -207,11 +207,11 @@ void testPlan(void)
     
 }
 
-void computeDB(void)
+void computeDB(int ns, int ne)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c = getSingleArmConstraints(); 
-    ompl_interface.addConstraintApproximation(c, "right_arm", "PoseModel", psm->getPlanningScene()->getCurrentState(), 10000, 20);
+    ompl_interface.addConstraintApproximation(c, "right_arm", "PoseModel", psm->getPlanningScene()->getCurrentState(), ns, ne);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
@@ -225,9 +225,16 @@ int main(int argc, char **argv)
     
     setupEnv();
 
-    testPlan(); runExp();
-    
-    //    computeDB();
+    if (argc == 3)
+    {
+      int ns = atoi(argv[1]);
+      int ne = atoi(argv[2]);
+      computeDB(ns, ne);
+    }
+    else
+    {
+      testPlan(); runExp();
+    }
     
     return 0;
 }

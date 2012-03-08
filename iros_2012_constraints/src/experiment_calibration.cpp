@@ -200,11 +200,11 @@ void testPlan(void)
     }
 }
 
-void computeDB(void)
+void computeDB(int ns, int ne)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c =  getVisibilityConstraints("attached");
-    ompl_interface.addConstraintApproximation(c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), 100000, 200);
+    ompl_interface.addConstraintApproximation(c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), ns, ne);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
@@ -217,10 +217,18 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    setupEnv();    
-    //    computeDB();
-    
-    //    testPlan(); runExp();
+    setupEnv();   
+
+    if (argc == 3)
+    {
+      int ns = atoi(argv[1]);
+      int ne = atoi(argv[2]);
+      computeDB(ns, ne);
+    }
+    else
+    {
+      testPlan(); runExp();
+    }
     
     return 0;
 }
