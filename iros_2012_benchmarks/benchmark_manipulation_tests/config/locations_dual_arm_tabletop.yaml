@@ -1,23 +1,23 @@
 locations:
 
-  - name: above_table_01
-    pose: 0.76 -0.2 0.88 0.1 -0.02 0.02
-  - name: above_table_02
-    pose: 0.63 0.05 0.91 -1.34 0.24 -0.24
-  - name: above_table_03
-    pose: 0.69 -0.02 0.845 1.0 -0.26 0.32
-  - name: above_table_04
-    pose: 0.6 -0.22 0.964 1.57 1.57 0.01
-  - name: above_table_05
-    pose: 0.716 -0.08 0.892 -2.30 0 1.2
-  - name: below_table_01
-    pose: 0.5 -0.3 0.45 0 0.35 -0.1
-  - name: below_table_02
-    pose: 0.55 -0.03 0.53 1.6 0.76 -0.08
-  - name: below_table_03
-    pose: 0.5 -0.35 0.45 1.6 0.9 -0.01
-  - name: below_table_04
-    pose: 0.57 -0.28 0.47 0.0 0.0 1.57
-  - name: below_table_05
-    pose: 0.55 -0.15 0.45 0 -0.45 -0.12
+  - name: tabletop_01
+    pose: 0.52 -0.28 1.0 0 0 0
+  - name: tabletop_02
+    pose: 0.5 -0.1 0.398 0 0 0
+  - name: tabletop_03
+    pose: 0.58 -0.06 0.94 0 0 0.14
+  - name: tabletop_04
+    pose: 0.54 0.12 0.41 0 0 -0.12
+  - name: tabletop_05
+    pose: 0.65 -0.1 0.95 0 0 0.13
+  - name: tabletop_06
+    pose: 0.586 0.056 0.422 0 0 -0.06
+  - name: tabletop_07
+    pose: 0.535 -0.039 0.98 0 0 0.05
+  - name: tabletop_08
+    pose: 0.58 0.058 0.40 0 0 -0.045
+  - name: tabletop_09
+    pose: 0.68 -0.04 0.88 0 0 0.06
+  - name: tabletop_10
+    pose: 0.605 0.03 0.42 0 0 -0.06
 

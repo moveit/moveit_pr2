@@ -1,8 +1,103 @@
 experiments:
 
   - name: tabletop_01
-    goal: above_table_01
-    pre_action: nothing
+    goal: tabletop_01
+    pre_action: attach
     post_action: nothing
     sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_02
+    goal: tabletop_02
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_03
+    goal: tabletop_03
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_04
+    goal: tabletop_04
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_05
+    goal: tabletop_05
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_06
+    goal: tabletop_06
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_07
+    goal: tabletop_07
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_08
+    goal: tabletop_08
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_09
+    goal: tabletop_09
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
+  - name: tabletop_10
+    goal: tabletop_10
+    pre_action: attach
+    post_action: nothing
+    sound_bite: "how ya doin buddy?"
+    start:
+      right: -0.657967 0.888673 -1.431100 -1.073419 -0.705232 -1.107079 2.806742
+      left: 0.848628 0.779700 1.396294 -0.828274 0.687905 -1.518703 0.394348
+      base: 0.000000 0.000000 0.000000
+      spine: 0.000000
 

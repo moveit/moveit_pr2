@@ -58,6 +58,7 @@ bool BenchmarkManipulationTests::getParams()
   std::string p;
 
   ph_.param<std::string>("known_objects_filename",known_objects_filename_, "");
+  ph_.param<std::string>("attached_object_filename",attached_object_filename_, "");
   ph_.param<std::string>("trajectory_folder_path",trajectory_folder_path_, "/tmp");
   time_t clock;
   time(&clock);
@@ -89,6 +90,7 @@ bool BenchmarkManipulationTests::getParams()
     goal_tolerance_[5] = 0.05;
   }
 
+  printf("0\n");
   ph_.param<std::string>("benchmark_service", benchmark_service_name_, "/benchmark_planning_problem"); 
   ph_.param<std::string>("world_frame", world_frame_, "map");
   ph_.param<std::string>("robot_model_root_frame", robot_model_root_frame_, "odom");
@@ -123,6 +125,7 @@ bool BenchmarkManipulationTests::getParams()
       larm_object_offset_.push_back(atof(p.c_str()));
   }
  
+  printf("0.5\n");
   if(ph_.hasParam("collision_object_offset"))
   {
     collision_object_offset_.clear();
@@ -156,6 +159,7 @@ bool BenchmarkManipulationTests::getParams()
   btoffset.setRPY(larm_object_offset_[3],larm_object_offset_[4],larm_object_offset_[5]);
   tf::quaternionTFToMsg(btoffset,larm_object_pose_.orientation);
 
+  printf("1\n");
   if(ph_.hasParam("use_current_pose_as_start_state"))
     ph_.getParam("use_current_pose_as_start_state", use_current_state_as_start_);
  
@@ -284,6 +288,7 @@ bool BenchmarkManipulationTests::getExperiments()
   XmlRpc::XmlRpcValue plist;
   std::string p;
 
+  printf("7\n");
   if(!ph_.hasParam(exp_name))
   {
     ROS_WARN("No list of experiments found on the param server.");
@@ -303,6 +308,7 @@ bool BenchmarkManipulationTests::getExperiments()
     return false;
   }
 
+  printf("6\n");
   for(int i = 0; i < exp_list.size(); ++i)
   {
     if(!exp_list[i].hasMember("name"))
@@ -334,6 +340,7 @@ bool BenchmarkManipulationTests::getExperiments()
     else
       e.sound_bite = std::string(exp_list[i]["sound_bite"]);
 
+  printf("5\n");
     if(exp_list[i].hasMember("start"))
     {
       e.start.rangles.clear();
@@ -343,23 +350,28 @@ bool BenchmarkManipulationTests::getExperiments()
       std::stringstream ss(plist);
       while(ss >> p)
         e.start.rangles.push_back(atof(p.c_str()));
+      printf("10\n");
       
       plist = exp_list[i]["start"]["left"];
       std::stringstream ss1(plist);
       while(ss1 >> p)
         e.start.langles.push_back(atof(p.c_str()));
       
+      printf("11\n");
       plist = exp_list[i]["start"]["base"];
       std::stringstream ss2(plist);
       while(ss2 >> p)
         bpose.push_back(atof(p.c_str()));
+      printf("12\n");
       if(bpose.size() == 3)
       {
         e.start.body.x = bpose[0];
         e.start.body.y = bpose[1];
         e.start.body.theta = bpose[2];
       }
+      printf("13\n"); fflush(stdout);
       e.start.body.z = double(exp_list[i]["start"]["spine"]);
+      printf("14\n"); fflush(stdout);
     }
     else
     {
@@ -496,24 +508,28 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
 {
   char sTemp[1024];
   float temp[6];
- 
-  att_object.link_name = "r_gripper_r_finger_tip_link";
+  tf::Quaternion q;
+  att_object.link_name = "r_wrist_roll_link";
+  att_object.touch_links.push_back("r_gripper");
+  att_object.touch_links.push_back("l_gripper");
   att_object.touch_links.push_back("r_gripper_palm_link");
   att_object.touch_links.push_back("r_gripper_r_finger_link");
   att_object.touch_links.push_back("r_gripper_l_finger_link");
   att_object.touch_links.push_back("r_gripper_l_finger_tip_link");
+  att_object.touch_links.push_back("r_gripper_r_finger_tip_link");
+  att_object.touch_links.push_back("r_wrist_roll_link");
   att_object.touch_links.push_back("l_gripper_palm_link");
   att_object.touch_links.push_back("l_gripper_r_finger_link");
   att_object.touch_links.push_back("l_gripper_l_finger_link");
   att_object.touch_links.push_back("l_gripper_l_finger_tip_link");
   att_object.touch_links.push_back("l_gripper_r_finger_tip_link");
-  att_object.object.header.frame_id = "e_wrist_roll_link";
+  att_object.touch_links.push_back("l_wrist_roll_link");
+  att_object.object.header.frame_id = "r_wrist_roll_link";
   att_object.object.operation = moveit_msgs::CollisionObject::ADD;
   att_object.object.header.stamp = ros::Time::now();
   att_object.object.shapes.resize(1);
   att_object.object.shapes[0].type = moveit_msgs::Shape::BOX;
   att_object.object.poses.resize(1);
-  att_object.object.poses[0] = rarm_object_pose;
 
   FILE* fid = fopen(object_file.c_str(), "r");
   if(fid == NULL)
@@ -526,7 +542,29 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
   if(fscanf(fid,"%s",sTemp) < 1)
     ROS_WARN("Parsed string has length < 1. (%s)", sTemp);
   att_object.object.id = sTemp;
-
+  // xyz in r_wrist_roll_link
+  if(fscanf(fid,"%s",sTemp) < 1)
+    ROS_WARN("Parsed string has length < 1. (%s)", sTemp); 
+  if(strcmp(sTemp, "xyz:") == 0)
+  {
+    if(fscanf(fid,"%f %f %f",&(temp[0]),&(temp[1]),&(temp[2])) < 1)
+      ROS_WARN("Failed to parse xyz.");
+    att_object.object.poses[0].position.x = temp[0];
+    att_object.object.poses[0].position.y = temp[1];
+    att_object.object.poses[0].position.z = temp[2];
+    ROS_ERROR("xyz: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
+  }
+  // rpy in r_wrist_roll_link
+  if(fscanf(fid,"%s",sTemp) < 1)
+    ROS_WARN("Parsed string has length < 1. (%s)", sTemp); 
+  if(strcmp(sTemp, "rpy:") == 0)
+  {
+    if(fscanf(fid,"%f %f %f",&(temp[0]),&(temp[1]),&(temp[2])) < 1)
+      ROS_WARN("Failed to parse xyz.");
+    q.setRPY(temp[0],temp[1],temp[2]);
+    tf::quaternionTFToMsg(q, att_object.object.poses[0].orientation);
+    ROS_ERROR("rpy: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
+  }
   // dims
   if(fscanf(fid,"%s",sTemp) < 1)
     ROS_WARN("Parsed string has length < 1. (%s)", sTemp); 
@@ -538,15 +576,7 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
     att_object.object.shapes[0].dimensions[0] = temp[0];
     att_object.object.shapes[0].dimensions[1] = temp[1];
     att_object.object.shapes[0].dimensions[2] = temp[2];  
-  }
-  // xyz in r_wrist_roll_link
-  if(strcmp(sTemp, "xyz:") == 0)
-  {
-    if(fscanf(fid,"%f %f %f",&(temp[0]),&(temp[1]),&(temp[2])) < 1)
-      ROS_WARN("Failed to parse xyz.");
-    att_object.object.poses[0].position.x = temp[0];
-    att_object.object.poses[0].position.y = temp[1];
-    att_object.object.poses[0].position.z = temp[2];
+    ROS_ERROR("dims: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
   }
   return true;
 }

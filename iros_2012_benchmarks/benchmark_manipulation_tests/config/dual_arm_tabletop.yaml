@@ -22,7 +22,7 @@ goal_tolerance:
 
 # true: use the last waypoint in the previous experiment's trajectory as the start state for the next experiment 
 # false: use the start state specified in the experiment description as the start state of that experiment
-use_current_pose_as_start_state: true
+use_current_pose_as_start_state: false
 
 #collision_object_offset:
 #  xyz: -1.28 -0.9 0
@@ -33,17 +33,22 @@ use_current_pose_as_start_state: true
 # pose of {r,l}_wrist_roll_links in the object frame
 object_pose_in_gripper:
   right:
-    xyz: -0.20 -0.1 0.0
-    rpy: 0.0 0.0 0.0
+    xyz: 0 -0.36 0
+    rpy: 1.57 0 1.57
   left:
-    xyz: -0.20 0.1 0.0
-    rpy: 0.0 0.0 0.0
+    xyz: 0 0.36 0
+    rpy: 1.57 0 -1.57
 
 initial_start_state:
-  right: 0 0.017997624551430391 -0.005238188295824564 -0.43192349103359273 -0.00041708680445573521 -0.74471175505726084 -0.0010002085575777642
-  left: 0 0.018023182385653591 0.005683010665493704 -0.43150111655319634 0.00079943310185193195 -0.7439117804053561 0.00049889278955195238
+  right: -0.657967 0.888673 -1.4311 -1.073419 -0.705232 -1.107079 2.806742 
+  left: 0.848628 0.7797 1.396294 -0.828274 0.687905 -1.518703 0.394348
   base: 0 0 0
-  spine: 0.1
+  spine: 0.0
+
+#  right: 0 0.017997624551430391 -0.005238188295824564 -0.43192349103359273 -0.00041708680445573521 -0.74471175505726084 -0.0010002085575777642
+#  left: 0 0.018023182385653591 0.005683010665493704 -0.43150111655319634 0.00079943310185193195 -0.7439117804053561 0.00049889278955195238
+#  base: 0 0 0
+#  spine: 0.1
 
 
 
