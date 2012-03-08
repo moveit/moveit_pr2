@@ -1,0 +1,13 @@
+<launch>
+
+  <node pkg="benchmark_manipulation_tests" name="benchmark_manipulation_tests" type="runTest" output="screen" >
+    <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/dual_arm_tabletop.yaml" />
+    <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/locations_dual_arm_tabletop.yaml" />
+    <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/experiments_dual_arm_tabletop.yaml" />
+    <!-- <param name="known_objects_filename" value="$(find benchmark_manipulation_tests)/env/tabletop.env" /> -->
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+
+    <param name="benchmark_results_folder" value="$(find benchmark_manipulation_tests)/results/" />
+  </node>
+
+</launch>

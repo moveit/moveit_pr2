@@ -1251,7 +1251,7 @@ bool BenchmarkManipulationTests::printPathToFile(FILE** file, const trajectory_m
 
   for(size_t i = 0; i < traj.points.size(); ++i)
   {
-    for(size_t j = 0; j < traj.points[i].positions.size(); ++j)
+    for(size_t j = 0; j < 7; ++j)
       jnt_pos[j] = traj.points[i].positions[j];
 
     if(!computeFK(jnt_pos, pose))
@@ -1262,7 +1262,11 @@ bool BenchmarkManipulationTests::printPathToFile(FILE** file, const trajectory_m
     tf::poseMsgToTF(pose, tf_pose);
     tf_pose.getBasis().getRPY(roll,pitch,yaw);
 
-    fprintf(*file, "%1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %2.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f\n", traj.points[i].positions[0],traj.points[i].positions[1],traj.points[i].positions[2],traj.points[i].positions[3],traj.points[i].positions[4],traj.points[i].positions[5],traj.points[i].positions[6],pose.position.x, pose.position.y, pose.position.z, roll, pitch, yaw, pose.orientation.x,pose.orientation.y, pose.orientation.z, pose.orientation.w);
+    if(experiment_type_ == 1)
+      fprintf(*file, "%1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %2.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f\n", traj.points[i].positions[0],traj.points[i].positions[1],traj.points[i].positions[2],traj.points[i].positions[3],traj.points[i].positions[4],traj.points[i].positions[5],traj.points[i].positions[6],pose.position.x, pose.position.y, pose.position.z, roll, pitch, yaw, pose.orientation.x,pose.orientation.y, pose.orientation.z, pose.orientation.w);
+    else
+      fprintf(*file, "%1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %2.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f, %1.4f\n", traj.points[i].positions[0],traj.points[i].positions[1],traj.points[i].positions[2],traj.points[i].positions[3],traj.points[i].positions[4],traj.points[i].positions[5],traj.points[i].positions[6], traj.points[i].positions[7],traj.points[i].positions[8],traj.points[i].positions[9],traj.points[i].positions[10],traj.points[i].positions[11],traj.points[i].positions[12],traj.points[i].positions[13], pose.position.x, pose.position.y, pose.position.z, roll, pitch, yaw, pose.orientation.x,pose.orientation.y, pose.orientation.z, pose.orientation.w);
+
   }
   fflush(*file);
 
