@@ -1,6 +1,6 @@
 <launch>
 
-  <node name="benchmark_server" launch-prefix="gdb --args " pkg="moveit_benchmarks" type="run_benchmark" respawn="false" output="screen">
+  <node name="benchmark_server" pkg="moveit_benchmarks" type="run_benchmark" respawn="false" output="screen">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
 
