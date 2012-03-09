@@ -2,7 +2,7 @@
 
 int main (int argc, char **argv)
 {
-  ros::init(argc, argv, "benchmark_manipulation_test");
+  ros::init(argc, argv, "benchmark_manipulation_test", ros::init_options::AnonymousName);
   BenchmarkManipulationTests exp;
 
   if(!exp.getParams())

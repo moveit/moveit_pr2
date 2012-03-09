@@ -1566,6 +1566,7 @@ void BenchmarkManipulationTests::visualizeTrajectories(const moveit_msgs::Comput
     sbpl_display_path_pub_.publish(disp);
   usleep(1000);
 
+  sleep(5);
   ROS_INFO("[exp] Finished publishing trajectories.");
 }
 

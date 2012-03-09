@@ -1,6 +1,6 @@
 <launch>
 
-  <node pkg="benchmark_manipulation_tests" name="benchmark_manipulation_tests" type="runTest" output="screen" >
+  <node pkg="benchmark_manipulation_tests" name="$(anon benchmark_manipulation_tests)" type="runTest" output="screen" >
     <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/single_arm_countertop.yaml" />
     <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/locations_countertop.yaml" />
     <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/experiments_countertop.yaml" />
