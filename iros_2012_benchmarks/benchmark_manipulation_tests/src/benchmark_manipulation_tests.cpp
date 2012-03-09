@@ -470,6 +470,7 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
     {
       if(!collision_object_offset_.empty()) 
       {
+        ROS_WARN("[exp] Applying offset to the collision objects...");
         geometry_msgs::Pose p, p2;
         Eigen::Affine3d a;
         a(0,0) = cos(collision_object_offset_[5]);
@@ -759,6 +760,12 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
     }
   }
 
+  ROS_INFO("[exp] Recording stats to /tmp/benchmark_stats.csv");
+  if(!writeStatsToFile(res,name))
+  {
+    ROS_ERROR("[exp] Failed to write stats to file.");
+    return false;
+  } 
 
   ROS_INFO("[exp] Recording trajectories to file...");
   if(!writeTrajectoriesToFile(res,name))
@@ -804,6 +811,8 @@ bool BenchmarkManipulationTests::runExperiment(std::string name)
   if(use_current_state_as_start_)
     writeCompleteExperimentFile(exp_map_[name],start);
 
+  visualizeRobotPose(start, "start", 0);
+  sleep(0.5);
   printRobotPose(start, "start");
   ROS_INFO("[exp]  goal: %s", exp_map_[name].goal.c_str());
   if(!requestPlan(start, name))
@@ -1443,7 +1452,7 @@ bool BenchmarkManipulationTests::createTrajectoryFolder(std::string exp_name)
   struct stat st;
   time_t clock;
   time(&clock);
-  std::string time(ctime(&clock));;
+  std::string time(ctime(&clock));
   time.erase(time.size()-1, 1);
 
   std::string folder = benchmark_results_folder_ + experiment_group_name_ + "/trajectories/" + exp_name; // + "_" + time;
@@ -1514,6 +1523,51 @@ bool BenchmarkManipulationTests::writeTrajectoriesToFile(const moveit_msgs::Comp
       fclose(fptr);
     }
   }
+  return true;
+}
+
+bool BenchmarkManipulationTests::writeStatsToFile(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string exp_name)
+{
+  std::string status;
+  FILE* fptr = NULL;
+
+  time_t clock;
+  time(&clock);
+  std::string time(ctime(&clock));
+  time.erase(time.size()-1, 1);
+
+  if(res.planner_interfaces.size() != res.responses.size())
+    return false;
+  if(res.planner_interfaces.empty())
+    return false;
+
+  std::string filename = "/tmp/benchmark_stats.csv";
+  if((fptr = fopen(filename.c_str(), "a")) == NULL)
+  {
+    ROS_ERROR("[node] Failed to create stats file. (%s)", filename.c_str());
+    return false;
+  }
+  ROS_INFO("[exp] Successfully created stats file: %s", filename.c_str());
+
+  for(size_t i = 0; i < res.planner_interfaces.size(); ++i)
+  {
+    fprintf(fptr, "%s, %s, %s, ", exp_name.c_str(), res.planner_interfaces[i].c_str(), ompl_planner_id_.c_str());
+    printf("%s, %s, %s, ", exp_name.c_str(), res.planner_interfaces[i].c_str(), ompl_planner_id_.c_str());
+    for(size_t j = 0; j < res.responses[i].trajectory.size(); ++j)
+    {
+      if(res.responses[i].trajectory[j].joint_trajectory.points.empty())
+        status = "FAIL";  
+      else
+        status = "success";
+
+      fprintf(fptr, "%s, %s, %0.5f, ", res.responses[i].description[j].c_str(), status.c_str(), res.responses[i].processing_time[j].toSec());
+      printf("%s, %s, %0.5f, ", res.responses[i].description[j].c_str(), status.c_str(), res.responses[i].processing_time[j].toSec());
+    }
+    fprintf(fptr, " %s\n", time.c_str());
+    printf(" %s\n", time.c_str());
+  }
+  ROS_INFO("[exp] Successfully wrote the stats to a file.");
+  fclose(fptr);
   return true;
 }
 

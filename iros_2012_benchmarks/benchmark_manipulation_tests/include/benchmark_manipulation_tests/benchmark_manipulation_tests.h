@@ -89,6 +89,8 @@ class BenchmarkManipulationTests
     void visualizeTrajectories(const moveit_msgs::ComputePlanningBenchmark::Response &res);
     bool getTrajectoryDisplayMsg(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string planner_interface, std::string description, moveit_msgs::DisplayTrajectory &disp);
 
+    bool writeStatsToFile(const moveit_msgs::ComputePlanningBenchmark::Response &res, std::string exp_name);
+
   private:
 
     ros::NodeHandle nh_;
