@@ -1,0 +1,513 @@
+Experiment pr2_arms_experiment3_arms[RRTConnectkConfigDefault]
+Running on i7
+Starting at 2012-03-08T17:45:54.094783
+<<<|
+Properties of the state space 'arms_PoseModel'
+  - signature: 34 0 26 0 13 0 7 2 1 2 1 1 5 5 6 1 3 3 3 0 13 0 7 2 1 2 1 1 5 5 6 1 3 3 3 
+  - dimension: 26
+  - extent: 10.0698
+  - sanity checks for state space passed
+  - probability of valid states: 0.349
+  - average length of a valid motion: 0.057988
+Settings for the state space 'arms_PoseModel'
+  - state validity check resolution: 5%
+  - valid segment count factor: 1
+  - state space:
+Compound state space 'arms_PoseModel' of dimension 26 (locked) [
+Compound state space 'CompoundSpace29' of dimension 13 (locked) [
+Compound state space 'J(l_forearm_roll_joint,l_wrist_roll_joint,J(l_shoulder_pan_joint,l_shoulder_lift_joint,l_upper_arm_roll_joint,l_elbow_flex_joint,l_wrist_flex_joint))' of dimension 7 (locked) [
+SO2 state space 'l_forearm_roll_joint'
+ of weight 1
+SO2 state space 'l_wrist_roll_joint'
+ of weight 1
+Real vector state space 'J(l_shoulder_pan_joint,l_shoulder_lift_joint,l_upper_arm_roll_joint,l_elbow_flex_joint,l_wrist_flex_joint)' of dimension 5 with bounds: 
+  - min: -0.564602 -0.3536 -0.65 -2.1213 -2 
+  - max: 2.1354 1.2963 3.75 -0.15 -0.1 
+  and dimension names: 'l_shoulder_pan_joint' 'l_shoulder_lift_joint' 'l_upper_arm_roll_joint' 'l_elbow_flex_joint' 'l_wrist_flex_joint' 
+ of weight 5
+]
+No registered projections
+ of weight 0
+Compound state space 'left_arm_Workspace' of dimension 6 (locked) [
+Real vector state space 'RealVectorSpace31' of dimension 3 with bounds: 
+  - min: -1 -1 -1 
+  - max: 1 1 1 
+ of weight 1
+SO(3) state space 'SO3Space32' (represented using quaternions)
+ of weight 0.5
+]
+Registered projections:
+  - <default>
+Projection of dimension 3
+Cell sizes (computed defaults): [0.1 0.1 0.1]
+ of weight 1
+]
+No registered projections
+ of weight 1
+Compound state space 'CompoundSpace39' of dimension 13 (locked) [
+Compound state space 'J(r_forearm_roll_joint,r_wrist_roll_joint,J(r_shoulder_pan_joint,r_shoulder_lift_joint,r_upper_arm_roll_joint,r_elbow_flex_joint,r_wrist_flex_joint))' of dimension 7 (locked) [
+SO2 state space 'r_forearm_roll_joint'
+ of weight 1
+SO2 state space 'r_wrist_roll_joint'
+ of weight 1
+Real vector state space 'J(r_shoulder_pan_joint,r_shoulder_lift_joint,r_upper_arm_roll_joint,r_elbow_flex_joint,r_wrist_flex_joint)' of dimension 5 with bounds: 
+  - min: -2.1354 -0.3536 -3.75 -2.1213 -2 
+  - max: 0.564602 1.2963 0.65 -0.15 -0.1 
+  and dimension names: 'r_shoulder_pan_joint' 'r_shoulder_lift_joint' 'r_upper_arm_roll_joint' 'r_elbow_flex_joint' 'r_wrist_flex_joint' 
+ of weight 5
+]
+No registered projections
+ of weight 0
+Compound state space 'right_arm_Workspace' of dimension 6 (locked) [
+Real vector state space 'RealVectorSpace41' of dimension 3 with bounds: 
+  - min: -1 -1 -1 
+  - max: 1 1 1 
+ of weight 1
+SO(3) state space 'SO3Space42' (represented using quaternions)
+ of weight 0.5
+]
+Registered projections:
+  - <default>
+Projection of dimension 3
+Cell sizes (computed defaults): [0.1 0.1 0.1]
+ of weight 1
+]
+No registered projections
+ of weight 1
+]
+Registered projections:
+  - <default>
+Projection of dimension 2
+Cell sizes (computed defaults): [0.1 0.1]
+
+Declared parameters:
+longest_valid_segment_fraction = 0.050000000000000003
+projection.cellsize.0 = 0.10000000000000001
+projection.cellsize.1 = 0.10000000000000001
+projection.cellsize_factor = 
+valid_segment_count_factor = 1
+Valid state sampler named uniform with parameters:
+nr_attempts = 100
+Planner RRTConnect specs:
+Multithreaded:                 No
+Reports approximate solutions: No
+Can optimize solutions:        No
+Aware of the following parameters: range
+Declared parameters for planner RRTConnect:
+range = 2.0139591767730605
+Start states:
+Compound state [
+Compound state [
+Compound state [
+SO2State [0.898135]
+SO2State [0.0402895]
+RealVectorState [2.13008 0.893423 1.49479 -1.44857 -1.55074]
+]
+Compound state [
+RealVectorState [0.0601908 0.690593 -0.327022]
+SO3State [0.64157 -0.290995 -0.295914 0.645094]
+]
+]
+Compound state [
+Compound state [
+SO2State [1.26707]
+SO2State [-1.12132]
+RealVectorState [0.495095 0.0952849 -2.93666 -1.06755 -1.48356]
+]
+Compound state [
+RealVectorState [0.52373 0.159823 -0.326855]
+SO3State [-0.292312 -0.641739 0.645547 0.293247]
+]
+]
+]
+Tag: -1
+Flags: 24
+Validity known: No
+10 goal states, threshold = 2.22045e-16, memory address = 0xca12a0
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+Compound state [
+Compound state [
+Compound state [
+SO2State [-1.07001]
+SO2State [0.426203]
+RealVectorState [-0.056477 0.206485 2.70591 -0.238801 -1.6267]
+]
+Compound state [
+RealVectorState [0.779599 0.111828 -0.213326]
+SO3State [-0.441687 0.553865 0.554184 -0.437065]
+]
+]
+Compound state [
+Compound state [
+SO2State [-0.0152482]
+SO2State [-0.321267]
+RealVectorState [-0.872557 0.27542 -1.75356 -0.789074 -1.39915]
+]
+Compound state [
+RealVectorState [0.616001 -0.573493 -0.210125]
+SO3State [-0.551963 -0.439119 0.44099 0.555013]
+]
+]
+]
+Tag: -1
+Flags: 29
+Validity known: Yes
+Validity value: True
+
+
+Properties of benchmarked planners:
+Planner RRTConnect specs:
+Multithreaded:                 No
+Reports approximate solutions: No
+Can optimize solutions:        No
+Aware of the following parameters: range
+|>>>
+3253524777 is the random seed
+15 seconds per run
+4096 MB per run
+50 runs per planner
+20.6602 seconds spent to collect the data
+1 planners
+geometric_RRTConnect
+6 common properties
+longest_valid_segment_fraction = 0.050000000000000003
+projection.cellsize.0 = 0.10000000000000001
+projection.cellsize.1 = 0.10000000000000001
+projection.cellsize_factor = 
+range = 2.0139591767730605
+valid_segment_count_factor = 1
+22 properties for each run
+approximate solution BOOLEAN
+correct solution BOOLEAN
+correct solution strict BOOLEAN
+crashed BOOLEAN
+graph motions INTEGER
+graph states INTEGER
+memory REAL
+simplification time REAL
+simplified correct solution BOOLEAN
+simplified correct solution strict BOOLEAN
+simplified solution clearance REAL
+simplified solution length REAL
+simplified solution segments INTEGER
+simplified solution smoothness REAL
+solution clearance REAL
+solution difference REAL
+solution length REAL
+solution segments INTEGER
+solution smoothness REAL
+solved BOOLEAN
+time REAL
+valid segment fraction REAL
+50 runs
+0; 1; 1; 0; 14; 20; 0; 0.078739000000000003; 1; 1; 0; 4.2714562645289735; 80; 1464.1007807687035; 0; 0; 4.4648699909431731; 6; 7.7931077061080236; 1; 0.122336; 0.033980582524271843; 
+0; 1; 1; 0; 20; 31; 0.01171875; 0.060048999999999998; 1; 1; 0; 4.7796102620815963; 48; 979.82567183448236; 0; 0; 5.9939495794073236; 9; 29.264235757498412; 1; 0.12945400000000001; 0.041928721174004195; 
+0; 1; 1; 0; 76; 87; 0.01171875; 0.064089999999999994; 1; 1; 0; 4.887790959400939; 64; 2242.3181588950374; 0; 0; 6.5714914603390087; 12; 123.87344447472496; 1; 0.418466; 0.04717566728739913; 
+0; 1; 1; 0; 95; 106; 0.01171875; 0.064023999999999998; 1; 1; 0; 5.5194884177161594; 32; 408.31843166939188; 0; 0; 7.3101216327828293; 11; 66.464078149458331; 1; 0.43710100000000002; 0.063502673796791448; 
+0; 1; 1; 0; 169; 180; 0.01171875; 0.050681999999999998; 1; 1; 0; 5.2893952438093415; 28; 394.93575347945716; 0; 0; 8.6677276868265185; 16; 145.78206629639882; 1; 0.76567300000000005; 0.064063684609552696; 
+0; 1; 1; 0; 96; 107; 0.01171875; 0.066115999999999994; 1; 1; 0; 3.9336672074262888; 40; 485.08516572370149; 0; 0; 6.5367174943806488; 13; 168.01752093784066; 1; 0.45996999999999999; 0.059813084112149535; 
+0; 1; 1; 0; 82; 93; 0.01171875; 0.059729999999999998; 1; 1; 0; 5.9777660871442801; 44; 998.41646530408082; 0; 0; 7.183385437110692; 12; 48.083034121938631; 1; 0.42380899999999999; 0.060876020786933931; 
+0; 1; 1; 0; 82; 93; 0.01171875; 0.069792999999999994; 1; 1; 0; 4.8494992936040298; 36; 592.75190528429812; 0; 0; 7.5640115725520287; 14; 98.752669477932827; 1; 0.40084500000000001; 0.061840120663650078; 
+0; 1; 1; 0; 44; 50; 0.01171875; 0.061797999999999999; 1; 1; 0; 5.2026816535261036; 48; 630.75280049119476; 0; 0; 7.5694170825421647; 12; 63.576474175177871; 1; 0.18576999999999999; 0.072727272727272724; 
+0; 1; 1; 0; 32; 43; 0.01171875; 0.048724999999999997; 1; 1; 0; 5.2471737931482245; 24; 98.373867770009255; 0; 0; 7.8576181531339397; 11; 47.690020429048126; 1; 0.213758; 0.039800995024875621; 
+0; 1; 1; 0; 50; 61; 0.078125; 0.066262000000000001; 1; 1; 0; 5.682696235442247; 56; 900.27790153069793; 0; 0; 8.5170356452094538; 13; 64.076177224546143; 1; 0.222634; 0.05549389567147614; 
+0; 1; 1; 0; 16; 21; 0.171875; 0.045506999999999999; 1; 1; 0; 4.0335868251805911; 40; 468.90439280307413; 0; 0; 4.5039993920917976; 6; 7.5300225617692211; 1; 0.096162999999999998; 0.050473186119873815; 
+0; 1; 1; 0; 111; 122; 0.171875; 0.052096000000000003; 1; 1; 0; 4.9362793186424483; 24; 101.08278375244821; 0; 0; 7.7485330135641028; 14; 100.64592668022991; 1; 0.58552999999999999; 0.050271739130434784; 
+0; 1; 1; 0; 24; 35; 0.27734375; 0.047882000000000001; 1; 1; 0; 4.0896267611362145; 40; 952.11698753657845; 0; 0; 5.2569810411370037; 7; 40.832762935278204; 1; 0.147344; 0.051724137931034482; 
+0; 1; 1; 0; 35; 46; 0.296875; 0.053942999999999998; 1; 1; 0; 4.202917208263754; 20; 73.30590605604651; 0; 0; 6.07276316205441; 12; 93.892063067541883; 1; 0.19175200000000001; 0.047361299052774017; 
+0; 1; 1; 0; 72; 83; 0.296875; 0.044075999999999997; 1; 1; 0; 3.9308516520992072; 48; 422.97744471126117; 0; 0; 4.4313823893645914; 7; 9.1127720313924989; 1; 0.35898099999999999; 0.057416267942583733; 
+0; 1; 1; 0; 19; 24; 0.44921875; 0.047335000000000002; 1; 1; 0; 4.3697377259195989; 40; 561.4606205485718; 0; 0; 5.9231772380989636; 9; 34.922331058300898; 1; 0.099743999999999999; 0.048717948717948718; 
+0; 1; 1; 0; 69; 80; 0.453125; 0.068125000000000005; 1; 1; 0; 4.9286113186815665; 24; 60.148122454295219; 0; 0; 9.018488793956136; 15; 92.43807958758687; 1; 0.34480899999999998; 0.048319327731092439; 
+0; 1; 1; 0; 103; 112; 0.59765625; 0.098057000000000005; 1; 1; 0; 4.6576963206400395; 56; 1063.9703340782848; 0; 0; 6.3545953888334745; 13; 41.470728919132476; 1; 0.48375200000000002; 0.057897695334457558; 
+0; 1; 1; 0; 57; 63; 0.6796875; 0.058108; 1; 1; 0; 4.9134742932183428; 40; 1057.1845841871427; 0; 0; 8.3555144758085813; 12; 46.164590239872354; 1; 0.30879200000000001; 0.053072625698324022; 
+0; 1; 1; 0; 204; 215; 0.70703125; 0.049738999999999998; 1; 1; 0; 5.5619848245177419; 28; 423.95480662447198; 0; 0; 7.7004561659758997; 15; 114.3769579300925; 1; 0.80792900000000001; 0.073752711496746198; 
+0; 1; 1; 0; 45; 56; 0.921875; 0.058722999999999997; 1; 1; 0; 5.3831973672095215; 28; 139.04866554062659; 0; 0; 7.450117151895479; 13; 59.631876007163015; 1; 0.26512599999999997; 0.046106557377049183; 
+0; 1; 1; 0; 63; 74; 0.9609375; 0.052496000000000001; 1; 1; 0; 5.5673681559795183; 36; 581.59008965259829; 0; 0; 7.8934836245893303; 12; 68.913257962825554; 1; 0.26976800000000001; 0.067814854682454254; 
+0; 1; 1; 0; 13; 15; 0.9609375; 0.058327999999999998; 1; 1; 0; 4.9251601369239832; 56; 2604.9646252971866; 0; 0; 5.441021722315595; 8; 26.941972486529139; 1; 0.081285999999999997; 0.045138888888888888; 
+0; 1; 1; 0; 47; 58; 1.03515625; 0.056555000000000001; 1; 1; 0; 5.1411273941470128; 24; 56.451085972352459; 0; 0; 7.9425888754829428; 12; 74.41230285613058; 1; 0.27280399999999999; 0.051086956521739134; 
+0; 1; 1; 0; 95; 106; 1.1015625; 0.044759; 1; 1; 0; 4.9750504496851482; 28; 365.39563568309285; 0; 0; 8.1972969957022563; 14; 62.9142371744095; 1; 0.43901000000000001; 0.068002863278453826; 
+0; 1; 1; 0; 58; 69; 1.1015625; 0.058699000000000001; 1; 1; 0; 4.3759108264075293; 48; 861.83738866702458; 0; 0; 6.4909599494470811; 13; 126.96110476856386; 1; 0.24873000000000001; 0.075422626788036407; 
+0; 1; 1; 0; 34; 45; 1.42578125; 0.052491000000000003; 1; 1; 0; 4.9739090834072694; 24; 61.455840974986565; 0; 0; 7.22747751933613; 9; 22.257123799487953; 1; 0.153283; 0.07780320366132723; 
+0; 1; 1; 0; 56; 67; 1.43359375; 0.055224000000000002; 1; 1; 0; 5.6528517068664472; 24; 201.18592332711802; 0; 0; 9.0381803780817478; 14; 56.503093518081627; 1; 0.307228; 0.059829059829059832; 
+0; 1; 1; 0; 34; 41; 1.43359375; 0.053208999999999999; 1; 1; 0; 4.4644174843156996; 40; 629.85060843899669; 0; 0; 5.8318926567534843; 10; 23.768043343876581; 1; 0.208703; 0.047287899860917942; 
+0; 1; 1; 0; 71; 82; 1.4921875; 0.069783999999999999; 1; 1; 0; 4.9771946586433469; 48; 594.89523666039156; 0; 0; 8.6269329516353697; 16; 91.87085216118453; 1; 0.368085; 0.058388157894736843; 
+0; 1; 1; 0; 50; 61; 1.578125; 0.069092000000000001; 1; 1; 0; 4.7812160462442987; 32; 501.90236528607335; 0; 0; 6.2705727503257416; 12; 60.652833269676897; 1; 0.266679; 0.055991041433370664; 
+0; 1; 1; 0; 32; 43; 1.5859375; 0.069514000000000006; 1; 1; 0; 4.5276546740823225; 48; 729.38683590439666; 0; 0; 5.4236363001527508; 9; 13.450172506552956; 1; 0.186921; 0.055459272097053723; 
+0; 1; 1; 0; 38; 48; 1.67578125; 0.079667000000000002; 1; 1; 0; 3.8489308630674728; 48; 475.66432985376264; 0; 0; 5.2448889048584375; 10; 52.304582489392274; 1; 0.20304700000000001; 0.061488673139158574; 
+0; 1; 1; 0; 42; 49; 1.765625; 0.045082999999999998; 1; 1; 0; 5.1983032913221372; 28; 459.2218455364868; 0; 0; 7.1658285417937639; 12; 87.041011024257287; 1; 0.188389; 0.064814814814814811; 
+0; 1; 1; 0; 57; 68; 1.84375; 0.071720000000000006; 1; 1; 0; 4.684291136953358; 28; 211.114765412141; 0; 0; 7.9409571572698177; 16; 148.05987053097704; 1; 0.30460599999999999; 0.049222797927461141; 
+0; 1; 1; 0; 33; 44; 1.94140625; 0.077273999999999995; 1; 1; 0; 4.2034841601876227; 48; 713.36158366751124; 0; 0; 5.3038531587343485; 10; 44.822244427662284; 1; 0.15945899999999999; 0.056313993174061432; 
+0; 1; 1; 0; 41; 52; 1.9609375; 0.10241400000000001; 1; 1; 0; 5.6351567830039615; 64; 1331.3749459342864; 0; 0; 6.9145032400591013; 10; 44.859739587084903; 1; 0.23705899999999999; 0.050000000000000003; 
+0; 1; 1; 0; 18; 27; 2.01953125; 0.058706000000000001; 1; 1; 0; 4.8669101597483291; 28; 240.09545199323665; 0; 0; 7.0546263198160677; 10; 33.06671432436093; 1; 0.107155; 0.048000000000000001; 
+0; 1; 1; 0; 29; 39; 2.01953125; 0.052318000000000003; 1; 1; 0; 4.6784942320908538; 48; 898.49263469212201; 0; 0; 6.2714630475361623; 10; 77.915460698595339; 1; 0.153396; 0.068720379146919433; 
+0; 1; 1; 0; 15; 22; 2.0859375; 0.083135000000000001; 1; 1; 0; 4.9563056255388478; 56; 1501.3118779652079; 0; 0; 6.3206422404939619; 9; 33.990049284183272; 1; 0.098810999999999996; 0.050000000000000003; 
+0; 1; 1; 0; 6; 8; 2.12109375; 0.039329999999999997; 1; 1; 0; 4.3415604508695305; 32; 82.381207426953594; 0; 0; 5.4360258142518729; 6; 4.0815716395904884; 1; 0.036746000000000001; 0.078947368421052627; 
+0; 1; 1; 0; 25; 36; 2.19140625; 0.080130999999999994; 1; 1; 0; 5.1197284058195764; 56; 1248.118671554751; 0; 0; 6.6803289313660663; 10; 43.426611147824126; 1; 0.130607; 0.060386473429951688; 
+0; 1; 1; 0; 30; 41; 2.25390625; 0.086929000000000006; 1; 1; 0; 4.8885051553528287; 48; 785.61763155255824; 0; 0; 7.2787644246049785; 11; 60.732495755007854; 1; 0.16400200000000001; 0.054151624548736461; 
+0; 1; 1; 0; 65; 76; 2.34375; 0.094711000000000004; 1; 1; 0; 4.6293968712929701; 64; 4883.3516610886709; 0; 0; 9.0334275177499794; 18; 156.57284702552417; 1; 0.322687; 0.057624113475177305; 
+0; 1; 1; 0; 11; 20; 2.45703125; 0.045600000000000002; 1; 1; 0; 4.3697377509304429; 40; 561.46051365709354; 0; 0; 5.0274744468715191; 7; 15.378547596104713; 1; 0.051324000000000002; 0.082089552238805971; 
+0; 1; 1; 0; 114; 125; 2.47265625; 0.077976000000000004; 1; 1; 0; 5.3444402710210666; 56; 1327.532411178368; 0; 0; 7.4355264736316737; 14; 67.270182646603956; 1; 0.52836799999999995; 0.060573857598299682; 
+0; 1; 1; 0; 24; 26; 2.47265625; 0.055518999999999999; 1; 1; 0; 4.5945638324678582; 40; 500.51167450951471; 0; 0; 6.5111515616288314; 9; 25.547872534053752; 1; 0.13020699999999999; 0.062337662337662338; 
+0; 1; 1; 0; 48; 56; 2.546875; 0.126029; 1; 1; 0; 5.3929267227643249; 64; 1615.267110645769; 0; 0; 6.5464173049803485; 10; 45.28661839680953; 1; 0.25065700000000002; 0.056804733727810648; 
+0; 1; 1; 0; 44; 55; 2.62890625; 0.073917999999999998; 1; 1; 0; 4.813921467944148; 56; 751.58277569913389; 0; 0; 5.4888915370985476; 10; 28.173071940160686; 1; 0.26148700000000002; 0.045929018789144051; 
+.

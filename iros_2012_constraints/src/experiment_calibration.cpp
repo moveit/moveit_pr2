@@ -138,7 +138,7 @@ void benchmarkPathConstrained(const std::string &config)
     moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
     moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
     
-    mplan_req.average_count = 50;
+    mplan_req.average_count = 100;
     mplan_req.motion_plan_request.planner_id = config;
     mplan_req.motion_plan_request.group_name = "right_arm"; 
     

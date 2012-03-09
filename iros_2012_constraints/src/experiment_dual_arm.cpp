@@ -47,6 +47,12 @@ planning_scene_monitor::PlanningSceneMonitor *psm = NULL;
 std::vector<double> positions(14);
 std::vector<double> offer_tray(14);
 std::vector<double> left_side(14);
+std::vector<double> goal_0_6(14);
+std::vector<double> start_0_6(14);
+std::vector<double> goal_0_5(14);
+std::vector<double> start_0_5(14);
+std::vector<double> goal_0_8(14);
+std::vector<double> start_0_8(14);
 
 void setupEnv(void)
 {
@@ -183,16 +189,110 @@ void setupEnv(void)
     left_side[12] =  -1.48356;
     left_side[13] =  -1.12132;
 
+    start_0_6[0] = 1.34156;
+    start_0_6[1] = 1.01507;
+    start_0_6[2] = 1.01421;
+    start_0_6[3] = -0.956862;
+    start_0_6[4] = 1.14058;
+    start_0_6[5] = -1.7723;
+    start_0_6[6] = 0.274768;
+    start_0_6[7] = 0.543448;
+    start_0_6[8] = 1.08639;
+    start_0_6[9] = 0.161299;
+    start_0_6[10] = -0.862036;
+    start_0_6[11] = -1.62438;
+    start_0_6[12] = -1.48133;
+    start_0_6[13] = -0.230606;
+
+    goal_0_6[0] = 0.307431;
+    goal_0_6[1] = -0.350818;
+    goal_0_6[2] = 1.48688;
+    goal_0_6[3] = -1.96938;
+    goal_0_6[4] = 2.90038;
+    goal_0_6[5] = -0.488208;
+    goal_0_6[6] = 3.00527;
+    goal_0_6[7] = -0.810138;
+    goal_0_6[8] = -0.35244;
+    goal_0_6[9] = -2.00063;
+    goal_0_6[10] = -0.873304;
+    goal_0_6[11] = 0.516566;
+    goal_0_6[12] = -1.99173;
+    goal_0_6[13] = -0.073988;
+    
+    start_0_5[0] = 2.1319;
+    start_0_5[1] = 1.00411;
+    start_0_5[2] = 2.15505;
+    start_0_5[3] = -1.68104;
+    start_0_5[4] = 0.91095;
+    start_0_5[5] = -0.799175;
+    start_0_5[6] = 0.269671;
+    start_0_5[7] = 0.094083;
+    start_0_5[8] = 0.925437;
+    start_0_5[9] = -1.20162;
+    start_0_5[10] = -0.959545;
+    start_0_5[11] = -0.875904;
+    start_0_5[12] = -1.365;
+    start_0_5[13] = -0.280029;
+    
+    goal_0_5[0] = 0.200434;
+    goal_0_5[1] = -0.352736;
+    goal_0_5[2] = 1.91295;
+    goal_0_5[3] = -1.26381;
+    goal_0_5[4] = -0.752352;
+    goal_0_5[5] = -0.603635;
+    goal_0_5[6] = 0.353072;
+    goal_0_5[7] = -0.734753;
+    goal_0_5[8] = -0.35236;
+    goal_0_5[9] = -2.06899;
+    goal_0_5[10] = -1.00025;
+    goal_0_5[11] = 0.583209;
+    goal_0_5[12] = -1.49615;
+    goal_0_5[13] = -0.184431;
+    
+
+
+    start_0_8[0] =  0.745964;
+    start_0_8[1] =  1.27262;
+    start_0_8[2] =  -0.032833;
+    start_0_8[3] =  -0.984991;
+    start_0_8[4] =  1.72441;
+    start_0_8[5] =  -1.99906;
+    start_0_8[6] =  0.319863;
+    start_0_8[7] =  -0.110486;
+    start_0_8[8] =  0.583719;
+    start_0_8[9] =  -2.70953;
+    start_0_8[10] =  -0.362025;
+    start_0_8[11] =  0.828837;
+    start_0_8[12] =  -1.6888;
+    start_0_8[13] =  -0.902069;
+    
+    goal_0_8[0] =  -0.0223649;
+    goal_0_8[1] =  0.0453215;
+    goal_0_8[2] =  0.929686;
+    goal_0_8[3] =  -0.383853;
+    goal_0_8[4] =  0.626532;
+    goal_0_8[5] =  -1.49834;
+    goal_0_8[6] =  -0.174885;
+    goal_0_8[7] =  -0.731765;
+    goal_0_8[8] =  -0.353563;
+    goal_0_8[9] =  -3.08874;
+    goal_0_8[10] =  -0.651675;
+    goal_0_8[11] =  1.37769;
+    goal_0_8[12] =  -1.98146;
+    goal_0_8[13] =  -0.338797;
+
+
+
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("arms")->setStateValues(offer_tray);
 
-    ros::WallDuration(2.0).sleep();
+    ros::WallDuration(1.0).sleep();
     
     moveit_msgs::PlanningScene psmsg;
     psm->getPlanningScene()->getPlanningSceneMsg(psmsg);
     pub_scene.publish(psmsg);
     ROS_INFO("Scene published.");
     
-    ros::WallDuration(2.0).sleep();
+    ros::WallDuration(1.0).sleep();
 }
 
 void benchmarkPathConstrained(const std::string &config, double offset)
@@ -204,7 +304,7 @@ void benchmarkPathConstrained(const std::string &config, double offset)
     moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
     moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
     
-    mplan_req.average_count = 50;
+    mplan_req.average_count = 100;
     mplan_req.motion_plan_request.planner_id = config;
     mplan_req.motion_plan_request.group_name = "arms"; 
     
@@ -226,7 +326,6 @@ void benchmarkPathConstrained(const std::string &config, double offset)
     
     mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
     mplan_req.motion_plan_request.start_state.joint_state.position = left_side;
-    
     
     // add path constraints
     mplan_req.motion_plan_request.path_constraints = getDualArmConstraints(offset);
@@ -277,7 +376,8 @@ void testPlan(double offset)
     
     mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
     mplan_req.motion_plan_request.start_state.joint_state.position = left_side;
-    
+
+    //    mplan_req.motion_plan_request.goal_constraints[0] = getDualArmConstraints(offset);
     
     // add path constraints
     mplan_req.motion_plan_request.path_constraints = getDualArmConstraints(offset);
@@ -345,7 +445,7 @@ int main(int argc, char **argv)
     }
     else
     {
-      testPlan(offset); runExp(offset);
+      testPlan(offset);  runExp(offset);
     }
     
     return 0;
