@@ -53,6 +53,8 @@ std::vector<double> goal_0_5(14);
 std::vector<double> start_0_5(14);
 std::vector<double> goal_0_8(14);
 std::vector<double> start_0_8(14);
+std::vector<double> goal_0_9(14);
+std::vector<double> start_0_9(14);
 
 void setupEnv(void)
 {
@@ -282,6 +284,38 @@ void setupEnv(void)
     goal_0_8[13] =  -0.338797;
 
 
+    start_0_9[0] = 1.68921;
+    start_0_9[1] = 0.0851638;
+    start_0_9[2] = 3.00473;
+    start_0_9[3] = -1.05166;
+    start_0_9[4] = -0.40381;
+    start_0_9[5] = -1.92925;
+    start_0_9[6] = 1.28593;
+    start_0_9[7] = -0.168312;
+    start_0_9[8] = 1.29531;
+    start_0_9[9] = -1.06432;
+    start_0_9[10] = -1.64963;
+    start_0_9[11] = -1.42407;
+    start_0_9[12] = -1.15196;
+    start_0_9[13] = 0.229295;
+  
+
+
+    goal_0_9[0] = -0.311673;
+    goal_0_9[1] = -0.135908;
+    goal_0_9[2] = 2.49818;
+    goal_0_9[3] = -0.848388;
+    goal_0_9[4] = -0.747691;
+    goal_0_9[5] = -1.68358;
+    goal_0_9[6] = 0.534476;
+    goal_0_9[7] = -2.13499;
+    goal_0_9[8] = 1.00084;
+    goal_0_9[9] = -0.637437;
+    goal_0_9[10] = -1.93309;
+    goal_0_9[11] = -0.91925;
+    goal_0_9[12] = -1.74997;
+    goal_0_9[13] = 0.794386;
+    
 
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("arms")->setStateValues(offer_tray);
 
