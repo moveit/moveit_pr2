@@ -24,6 +24,8 @@ goal_tolerance:
 # false: use the start state specified in the experiment description as the start state of that experiment
 use_current_pose_as_start_state: true
 
+apply_offset_to_collision_objects: false
+
 # only used for both_arms experiments
 # this is currently needed to be on the param server for the single arm experiments as well :)
 # pose of {r,l}_wrist_roll_links in the object frame

@@ -20,6 +20,8 @@ goal_tolerance:
   xyz: 0.02 0.02 0.02
   rpy: 0.05 0.05 0.05
 
+apply_offset_to_collision_objects: true
+
 collision_object_offset:
   xyz: 0.06 -0.05 0.0
   rpy: 0 0 0

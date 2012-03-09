@@ -24,6 +24,8 @@ goal_tolerance:
 # false: use the start state specified in the experiment description as the start state of that experiment
 use_current_pose_as_start_state: true
 
+apply_offset_to_collision_objects: false
+
 #collision_object_offset:
 #  xyz: -1.28 -0.9 0
 #  rpy: 0 0.0 0

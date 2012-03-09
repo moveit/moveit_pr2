@@ -122,7 +122,7 @@ class BenchmarkManipulationTests
     geometry_msgs::Pose rarm_object_pose_;
     geometry_msgs::Pose larm_object_pose_;
     geometry_msgs::Pose collision_object_offset_pose_;
-    
+    bool apply_offset_to_collision_objects_;
 
     std::string known_objects_filename_;
     std::string attached_object_filename_;

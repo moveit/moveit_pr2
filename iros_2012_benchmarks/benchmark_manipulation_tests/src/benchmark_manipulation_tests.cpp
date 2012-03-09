@@ -61,6 +61,8 @@ bool BenchmarkManipulationTests::getParams()
   ph_.param<std::string>("ompl_planner_id",ompl_planner_id_, "");
   ph_.param<std::string>("attached_object_filename",attached_object_filename_, "");
   ph_.param<std::string>("trajectory_folder_path",trajectory_folder_path_, "/tmp");
+  ph_.param("apply_offset_to_collision_objects",apply_offset_to_collision_objects_,false);
+
   time_t clock;
   time(&clock);
   std::string time(ctime(&clock));;
@@ -464,20 +466,25 @@ bool BenchmarkManipulationTests::getCollisionObjects(std::string filename, std::
 
     // apply collision object offset
     // right now just translates and rotates about z
-    if(!collision_object_offset_.empty()) 
+    if(apply_offset_to_collision_objects_)
     {
-      geometry_msgs::Pose p, p2;
-      Eigen::Affine3d a;
-      a(0,0) = cos(collision_object_offset_[5]);
-      a(1,0) = sin(collision_object_offset_[5]);
-      a(0,1) = -sin(collision_object_offset_[5]);
-      a(1,1) = cos(collision_object_offset_[5]);
-      planning_models::msgFromPose(a, p2);
-      multiplyPoses(p2, object.poses[0], p);
-      p.position.x += collision_object_offset_pose_.position.x; 
-      p.position.y += collision_object_offset_pose_.position.y; 
-      p.position.z += collision_object_offset_pose_.position.z; 
-      object.poses[0] = p;
+      if(!collision_object_offset_.empty()) 
+      {
+        geometry_msgs::Pose p, p2;
+        Eigen::Affine3d a;
+        a(0,0) = cos(collision_object_offset_[5]);
+        a(1,0) = sin(collision_object_offset_[5]);
+        a(0,1) = -sin(collision_object_offset_[5]);
+        a(1,1) = cos(collision_object_offset_[5]);
+        planning_models::msgFromPose(a, p2);
+        multiplyPoses(p2, object.poses[0], p);
+        p.position.x += collision_object_offset_pose_.position.x; 
+        p.position.y += collision_object_offset_pose_.position.y; 
+        p.position.z += collision_object_offset_pose_.position.z; 
+        object.poses[0] = p;
+      }
+      else
+        ROS_ERROR("[exp] Expecting to translate/rotate collision objects in robot frame but offset not found.");
     }
 
     collision_objects.push_back(object);
