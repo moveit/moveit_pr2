@@ -384,7 +384,7 @@ bool BenchmarkManipulationTests::getExperiments()
         ROS_DEBUG("No start state defined for %s but it's OK because it's configured to use the current state as the start.",e.name.c_str());
     }
 
-    ROS_INFO("Adding experiment: %s", e.name.c_str());
+    ROS_DEBUG("Adding experiment: %s", e.name.c_str());
     exp_map_[e.name] = e;
   }
 
@@ -552,7 +552,7 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
     att_object.object.poses[0].position.x = temp[0];
     att_object.object.poses[0].position.y = temp[1];
     att_object.object.poses[0].position.z = temp[2];
-    ROS_ERROR("xyz: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
+    ROS_DEBUG("xyz: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
   }
   // rpy in r_wrist_roll_link
   if(fscanf(fid,"%s",sTemp) < 1)
@@ -563,7 +563,7 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
       ROS_WARN("Failed to parse xyz.");
     q.setRPY(temp[0],temp[1],temp[2]);
     tf::quaternionTFToMsg(q, att_object.object.poses[0].orientation);
-    ROS_ERROR("rpy: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
+    ROS_DEBUG("rpy: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
   }
   // dims
   if(fscanf(fid,"%s",sTemp) < 1)
@@ -576,7 +576,7 @@ bool BenchmarkManipulationTests::getAttachedObject(std::string object_file, geom
     att_object.object.shapes[0].dimensions[0] = temp[0];
     att_object.object.shapes[0].dimensions[1] = temp[1];
     att_object.object.shapes[0].dimensions[2] = temp[2];  
-    ROS_ERROR("dims: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
+    ROS_DEBUG("dims: %0.3f %0.3f %0.3f", temp[0], temp[1], temp[2]);
   }
   return true;
 }
@@ -741,7 +741,8 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   ROS_INFO("[exp] Visualizing trajectories using motion planning rviz plugin."); 
   visualizeTrajectories(res);
   sleep(2);
-  /* 
+
+  ROS_INFO("[exp] Setting current pose using the sbpl path");
   if(res.responses.size() > 1)
   {
     if(res.responses[1].trajectory.size() > 1)
@@ -755,10 +756,8 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
         }
       }
     }
-    publishDisplayTrajectoryMsg(res.responses[1].trajectory[1], req.scene.robot_state, "sbpl");
-    sleep(2);
   }
-  */
+
 
   ROS_INFO("[exp] Recording trajectories to file...");
   if(!writeTrajectoriesToFile(res,name))
@@ -798,7 +797,7 @@ bool BenchmarkManipulationTests::runExperiment(std::string name)
   }
   else
     start = exp_map_[name].start;
-
+  
   current_pose_ = start;
 
   if(use_current_state_as_start_)
@@ -833,8 +832,9 @@ bool BenchmarkManipulationTests::performAllExperiments()
   {
     if(!runExperiment(iter->first))
       return false;
+  
+    visualizeRobotPose(current_pose_, "start", 0);
   }
-  visualizeRobotPose(current_pose_, "start", 0);
 
   return true;
 }
