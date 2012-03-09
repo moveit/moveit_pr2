@@ -130,6 +130,7 @@ class BenchmarkManipulationTests
     std::string trajectory_folder_name_;
     std::string trajectory_folder_path_;
     std::string trajectory_files_path_;
+    std::string ompl_planner_id_;
 
     bool use_current_state_as_start_;
     int experiment_type_; // 1: one arm, 2: two arm

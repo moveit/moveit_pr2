@@ -58,6 +58,7 @@ bool BenchmarkManipulationTests::getParams()
   std::string p;
 
   ph_.param<std::string>("known_objects_filename",known_objects_filename_, "");
+  ph_.param<std::string>("ompl_planner_id",ompl_planner_id_, "");
   ph_.param<std::string>("attached_object_filename",attached_object_filename_, "");
   ph_.param<std::string>("trajectory_folder_path",trajectory_folder_path_, "/tmp");
   time_t clock;
@@ -288,7 +289,6 @@ bool BenchmarkManipulationTests::getExperiments()
   XmlRpc::XmlRpcValue plist;
   std::string p;
 
-  printf("7\n");
   if(!ph_.hasParam(exp_name))
   {
     ROS_WARN("No list of experiments found on the param server.");
@@ -308,7 +308,6 @@ bool BenchmarkManipulationTests::getExperiments()
     return false;
   }
 
-  printf("6\n");
   for(int i = 0; i < exp_list.size(); ++i)
   {
     if(!exp_list[i].hasMember("name"))
@@ -340,7 +339,6 @@ bool BenchmarkManipulationTests::getExperiments()
     else
       e.sound_bite = std::string(exp_list[i]["sound_bite"]);
 
-  printf("5\n");
     if(exp_list[i].hasMember("start"))
     {
       e.start.rangles.clear();
@@ -350,28 +348,23 @@ bool BenchmarkManipulationTests::getExperiments()
       std::stringstream ss(plist);
       while(ss >> p)
         e.start.rangles.push_back(atof(p.c_str()));
-      printf("10\n");
       
       plist = exp_list[i]["start"]["left"];
       std::stringstream ss1(plist);
       while(ss1 >> p)
         e.start.langles.push_back(atof(p.c_str()));
       
-      printf("11\n");
       plist = exp_list[i]["start"]["base"];
       std::stringstream ss2(plist);
       while(ss2 >> p)
         bpose.push_back(atof(p.c_str()));
-      printf("12\n");
       if(bpose.size() == 3)
       {
         e.start.body.x = bpose[0];
         e.start.body.y = bpose[1];
         e.start.body.theta = bpose[2];
       }
-      printf("13\n"); fflush(stdout);
       e.start.body.z = double(exp_list[i]["start"]["spine"]);
-      printf("14\n"); fflush(stdout);
     }
     else
     {
@@ -660,6 +653,7 @@ bool BenchmarkManipulationTests::requestPlan(RobotPose &start_state, std::string
   req.filename = benchmark_results_folder_ + "/" + experiment_group_name_ + "/" + name + ".log";
   psm_->getPlanningScene()->getAllowedCollisionMatrix().getMessage(req.scene.allowed_collision_matrix);
 
+  req.scene.name = name;
   req.scene.robot_state.joint_state.header.frame_id = robot_model_root_frame_;
   req.scene.robot_state.joint_state.header.stamp = ros::Time::now();
   req.scene.robot_state.joint_state.name.resize(1);
@@ -983,7 +977,7 @@ void BenchmarkManipulationTests::fillSingleArmPlanningRequest(RobotPose &start_s
   req.group_name = group_name_;
   req.num_planning_attempts = 1;
   req.allowed_planning_time = ros::Duration(60.0);
-  req.planner_id = "";
+  req.planner_id = ompl_planner_id_;
 
   // start state
   for(size_t i = 0; i < start_state.rangles.size(); ++i)
