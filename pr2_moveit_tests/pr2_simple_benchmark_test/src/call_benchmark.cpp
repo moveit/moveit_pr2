@@ -55,6 +55,11 @@ int main(int argc, char **argv)
   // fill planning scene
   tf::TransformListener tf;
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, &tf);
+
+  Eigen::Affine3d t;
+  t = Eigen::Translation3d(0.45, -0.45, 0.7);
+  psm.getPlanningScene()->getCollisionWorld()->addToObject("pole", new shapes::Box(0.1, 0.1, 1.4), t);
+
   if (psm.getPlanningScene()->isConfigured())
     psm.getPlanningScene()->getPlanningSceneMsg(req.scene);
   req.motion_plan_request.start_state = req.scene.robot_state;
@@ -68,7 +73,6 @@ int main(int argc, char **argv)
   req.motion_plan_request.num_planning_attempts = 1;
   req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
 
-  /*
   const std::vector<std::string>& joint_names = psm.getPlanningScene()->getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
   req.motion_plan_request.goal_constraints.resize(1);
   req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
@@ -83,7 +87,7 @@ int main(int argc, char **argv)
   req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
   req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
   req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
-  */  
+  /*
 
   geometry_msgs::PoseStamped pose;
   pose.header.frame_id = psm.getPlanningScene()->getKinematicModel()->getModelFrame();
@@ -96,8 +100,10 @@ int main(int argc, char **argv)
   pose.pose.orientation.w = 1.0;
   moveit_msgs::Constraints goal = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
   req.motion_plan_request.goal_constraints.push_back(goal);
+  */
   
-
+  req.planner_interfaces.push_back("ompl_interface_ros/OMPLPlanner");
+  
   ros::NodeHandle nh;
   ros::service::waitForService(BENCHMARK_SERVICE_NAME);
   ros::ServiceClient benchmark_service_client = nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(BENCHMARK_SERVICE_NAME);
