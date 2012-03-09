@@ -17,6 +17,7 @@ foreach my $d(@dirs)
     my $context = $contextL[0];
     $context =~ s/^T:\s*//; $context =~ s/\s+$//;
     print "$context\n";
+#    `cd $d && rm -f benchmark.db && /home/isucan/projects/moveit_pr2/iros_2012_constraints/exp/ala.py ompl_* -p p.pdf`;
     my $dbh = DBI->connect("dbi:SQLite:dbname=$d/benchmark.db","","");
     my $tl = $dbh->prepare("SELECT name FROM sqlite_master WHERE type='table'");
     $tl->execute();
