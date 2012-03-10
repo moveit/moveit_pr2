@@ -48,7 +48,7 @@ void setupEnv(void)
 {
     psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION);
     ros::NodeHandle nh;
-    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
+    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("/planning_scene", 1);
     planning_scene::PlanningScenePtr scene = psm->getPlanningScene();
     scene->setName("experiment2");
 
@@ -63,7 +63,13 @@ void setupEnv(void)
     aco.touch_links.push_back("r_wrist_roll_link");
     aco.touch_links.push_back("r_gripper_l_finger_tip_link");
     aco.touch_links.push_back("r_gripper_r_finger_tip_link");
-    
+
+    std_msgs::ColorRGBA c;
+    c.r = 0.9f;
+    c.g = 0.2f;
+    c.b = 0.1f;
+    scene->setColor("attached", c);
+
     moveit_msgs::CollisionObject &co = aco.object;
     co.id = "attached";
     co.header.stamp = ros::Time::now();
@@ -93,14 +99,34 @@ void setupEnv(void)
     tuck[6] = -0.0864407;
     psm->getPlanningScene()->getCurrentState().getJointStateGroup("left_arm")->setStateValues(tuck);
     
-    ros::Duration(0.5).sleep();
+    std::vector<double> ssa;
+    ssa.push_back(0.371285);
+    ssa.push_back(0.452859);
+    ssa.push_back(-1.33889);
+    ssa.push_back(-0.690347);
+    ssa.push_back(1.61033);
+    ssa.push_back(-0.958497);
+    ssa.push_back(0.652208);
+
+    std::vector<double> ssb(7);
+    ssb[0] = -0.284597;
+    ssb[1] = 0.5359;
+    ssb[2] = 0.359428;
+    ssb[3] = -0.164032;
+    ssb[4] = -0.640892; 
+    ssb[5] = -1.71483;    
+    ssb[6] = 1.73173;
+    psm->getPlanningScene()->getCurrentState().getJointStateGroup("right_arm")->setStateValues(ssb);
+
+
+    ros::WallDuration(1.0).sleep();
     
     moveit_msgs::PlanningScene psmsg;
     psm->getPlanningScene()->getPlanningSceneMsg(psmsg);
     pub_scene.publish(psmsg);
     ROS_INFO("Scene published.");
     
-    ros::Duration(0.5).sleep();
+    ros::WallDuration(1.0).sleep();
 }
 
 void benchmarkPathConstrained(const std::string &config)
@@ -112,11 +138,11 @@ void benchmarkPathConstrained(const std::string &config)
     moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
     moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
     
-    mplan_req.average_count = 50;
+    mplan_req.average_count = 100;
     mplan_req.motion_plan_request.planner_id = config;
     mplan_req.motion_plan_request.group_name = "right_arm"; 
     
-    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(30.0);
+    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
 
 
     const std::vector<std::string>& joint_names = psm->getPlanningScene()->getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
@@ -158,21 +184,21 @@ void benchmarkPathConstrained(const std::string &config)
 
 void runExp(void)
 {
-    //    benchmarkPathConstrained("SBLkConfigDefault");
-    //    benchmarkPathConstrained("ESTkConfigDefault");
-    //    benchmarkPathConstrained("BKPIECEkConfigDefault");
-
-    //    benchmarkPathConstrained("LBKPIECEkConfigDefault");
-    benchmarkPathConstrained("KPIECEkConfigDefault");
-    //    benchmarkPathConstrained("RRTkConfigDefault");
-        benchmarkPathConstrained("RRTConnectkConfigDefault");
+  benchmarkPathConstrained("SBLkConfigDefault");
+  //    benchmarkPathConstrained("ESTkConfigDefault");
+  //    benchmarkPathConstrained("BKPIECEkConfigDefault");
+  
+  benchmarkPathConstrained("LBKPIECEkConfigDefault");
+  benchmarkPathConstrained("KPIECEkConfigDefault");
+  benchmarkPathConstrained("RRTkConfigDefault");
+  benchmarkPathConstrained("RRTConnectkConfigDefault");
 }
 
 void testPlan(void)
 {    
-    ros::NodeHandle nh;
-    ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
-    ros::service::waitForService(PLANNING_SERVICE_NAME);    
+  ros::NodeHandle nh;
+  ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
+  ros::service::waitForService(PLANNING_SERVICE_NAME);    
 
     ros::ServiceClient service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNING_SERVICE_NAME);
     
@@ -181,7 +207,7 @@ void testPlan(void)
     
     mplan_req.motion_plan_request.planner_id = "KPIECEkConfigDefault";
     mplan_req.motion_plan_request.group_name = "right_arm";     
-    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(65.0);
+    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
     mplan_req.motion_plan_request.random_valid_start_goal = true;
         
     // add path constraintsx
@@ -200,11 +226,11 @@ void testPlan(void)
     }
 }
 
-void computeDB(void)
+void computeDB(int ns, int ne)
 {
     ompl_interface_ros::OMPLInterfaceROS ompl_interface(psm->getPlanningScene()->getKinematicModel());
     moveit_msgs::Constraints c =  getVisibilityConstraints("attached");
-    ompl_interface.addConstraintApproximation(c, c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), 100000);
+    ompl_interface.addConstraintApproximation(c, "right_arm", "JointModel", psm->getPlanningScene()->getCurrentState(), ns, ne);
     ompl_interface.saveConstraintApproximations("/home/isucan/c/");
     ROS_INFO("Done");
 }
@@ -217,12 +243,18 @@ int main(int argc, char **argv)
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    setupEnv();    
-    //    computeDB();
-    
+    setupEnv();   
 
-    //    testPlan();
-    runExp();
+    if (argc == 3)
+    {
+      int ns = atoi(argv[1]);
+      int ne = atoi(argv[2]);
+      computeDB(ns, ne);
+    }
+    else
+    {
+      testPlan();  runExp();
+    }
     
     return 0;
 }

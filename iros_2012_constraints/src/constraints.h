@@ -36,7 +36,7 @@
 
 static const std::string PFRAME = "odom";
 
-inline moveit_msgs::Constraints getDualArmConstraints(double offset)
+inline moveit_msgs::Constraints getDualArmConstraints(double offset, bool large = false)
 {    
   moveit_msgs::Constraints c;
 
@@ -46,7 +46,10 @@ inline moveit_msgs::Constraints getDualArmConstraints(double offset)
   pcm2.target_point_offset.y = 0;
   pcm2.target_point_offset.z = 0;
   pcm2.constraint_region_shape.type = moveit_msgs::Shape::BOX;
-  pcm2.constraint_region_shape.dimensions.push_back(0.01);
+  if (large)
+    pcm2.constraint_region_shape.dimensions.push_back(0.8);
+  else
+      pcm2.constraint_region_shape.dimensions.push_back(0.01);
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   
