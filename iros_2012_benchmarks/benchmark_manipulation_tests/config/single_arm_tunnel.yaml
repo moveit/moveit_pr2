@@ -8,7 +8,7 @@ spine_frame: torso_lift_link
 experiment_group_name: tunnel
 
 # of calls to the planner per experiment
-average_count: 4
+average_count: 2
 
 # list the planner_interfaces you want to benchmark with
 # NOTE:the benchmark server uses all planners by default

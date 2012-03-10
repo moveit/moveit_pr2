@@ -6,6 +6,7 @@
     <rosparam command="load" file="$(find benchmark_manipulation_tests)/config/experiments_countertop.yaml" />
     <param name="known_objects_filename" value="$(find benchmark_manipulation_tests)/env/countertop.env" />
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/planner_choice.yaml"/>
 
     <param name="benchmark_results_folder" value="$(find benchmark_manipulation_tests)/results/" />
   </node>

@@ -8,7 +8,7 @@ spine_frame: torso_lift_link
 experiment_group_name: dual_tabletop
 
 # of calls to the planner per experiment
-average_count: 1
+average_count: 3
 
 # list the planner_interfaces you want to benchmark with
 # the benchmark server includes the ompl by default

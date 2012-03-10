@@ -88,7 +88,7 @@ planner_configs:
     type: geometric::KPIECE
 
   RRTStarkConfigDefault:
-    type: geometric::RRTStar
+    type: geometric::RRTstar
 
   BKPIECEkConfigDefault:
     type: geometric::BKPIECE

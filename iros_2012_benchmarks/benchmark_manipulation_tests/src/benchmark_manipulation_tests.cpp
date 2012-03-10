@@ -815,6 +815,22 @@ bool BenchmarkManipulationTests::runExperiment(std::string name)
   sleep(0.5);
   printRobotPose(start, "start");
   ROS_INFO("[exp]  goal: %s", exp_map_[name].goal.c_str());
+
+
+  /*    - SBLkConfigDefault
+    - SBLkConfig1
+    - SBLkConfig2
+    - SBLkConfig3  
+    - SBLkConfig4
+    - LBKPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - ESTkConfigDefault
+    - KPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - RRTStarkConfigDefault
+  */
+
   if(!requestPlan(start, name))
   {
     ROS_ERROR("[exp] %s failed to plan.", name.c_str());
