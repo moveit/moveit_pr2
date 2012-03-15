@@ -399,8 +399,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
                                                      pose_desired,
                                                      jnt_pos_out,
-                                                     consistency_limit,
                                                      timeout,
+                                                     consistency_limit,
                                                      error_code,
                                                      boost::bind(desired_pose_callback, _1, _2, _3),
                                                      boost::bind(solution_callback, _1, _2, _3));
