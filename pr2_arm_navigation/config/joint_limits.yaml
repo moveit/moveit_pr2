@@ -3,70 +3,70 @@ joint_limits:
     has_velocity_limits: true
     max_velocity: 1.5
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 1.5
   r_shoulder_lift_joint:
     has_velocity_limits: true
-    max_velocity: 1.52
+    max_velocity: 1.5
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 2.5
   r_upper_arm_roll_joint:
     has_velocity_limits: true
-    max_velocity: 0.27
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 5.0
   r_elbow_flex_joint:
     has_velocity_limits: true
-    max_velocity: 1.5
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 20.0
   r_forearm_roll_joint:
     has_velocity_limits: true
-    max_velocity: 1.5
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 20.0
   r_wrist_flex_joint:
     has_velocity_limits: true
-    max_velocity: 1.5
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 20.0
   r_wrist_roll_joint:
     has_velocity_limits: true
-    max_velocity: 1.5
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 20.0
   l_shoulder_pan_joint:
     has_velocity_limits: true
-    max_velocity: 0.8
+    max_velocity: 1.5
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 1.5
   l_shoulder_lift_joint:
     has_velocity_limits: true
-    max_velocity: 0.82
+    max_velocity: 1.5
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 2.5
   l_upper_arm_roll_joint:
     has_velocity_limits: true
-    max_velocity: 0.27
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 5.0
   l_elbow_flex_joint:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 10.0
   l_forearm_roll_joint:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 10.0
     angle_wraparound: true
   l_wrist_flex_joint:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 10.0
   l_wrist_roll_joint:
     has_velocity_limits: true
-    max_velocity: 1.0
+    max_velocity: 2.0
     has_acceleration_limits: true
-    max_acceleration: 1.0
+    max_acceleration: 10.0
