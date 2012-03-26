@@ -1,0 +1,15 @@
+<package>
+  <description brief="pr2_ompl_planning_tests">
+
+     pr2_ompl_planning_tests
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_ompl_planning_tests</url>
+  <depend package="ompl_interface_ros"/>
+
+</package>
+
+
