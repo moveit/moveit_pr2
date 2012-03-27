@@ -11,13 +11,13 @@
   <group ns="moveit_warehouse">
     <param name="warehouse_port" value="$(arg warehouse_port)"/>
     <param name="warehouse_exec" value="$(find mongodb)/mongo/bin/mongod" />
+  
+    <!-- Run the DB server if needed -->
+    <node unless="$(arg settings_only)" name="mongo" cwd="ROS_HOME" type="wrapper.py" pkg="mongodb">
+      <param name="overwrite" value="false"/>
+      <!-- We specify a full path for the database path -->
+      <param name="database_path" value="$(env PWD)/moveit_warehouse/"/>
+    </node>
   </group>
-  
-  <!-- Run the DB server if needed -->
-  <node unless="$(arg settings_only)" name="mongo" cwd="ROS_HOME" type="wrapper.py" pkg="mongodb" args="--warehouse_port=$(arg warehouse_port)">
-    <param name="overwrite" value="false"/>
-    <!-- We specify a full path for the database path -->
-    <param name="database_path" value="$(env PWD)/moveit_warehouse/"/>
-  </node>
-  
+
 </launch>

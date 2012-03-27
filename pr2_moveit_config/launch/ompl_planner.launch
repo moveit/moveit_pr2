@@ -1,6 +1,6 @@
 <launch>
 
-  <node name="ompl_planning" pkg="ompl_interface_ros" type="ompl_planner" respawn="false" output="screen">
+  <node name="ompl_planning" pkg="ompl_interface_ros" type="ompl_planner" respawn="false" output="screen" args="--debug">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
   </node>
