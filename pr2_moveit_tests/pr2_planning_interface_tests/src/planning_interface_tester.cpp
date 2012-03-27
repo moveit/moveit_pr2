@@ -39,9 +39,8 @@
 #include <tf/transform_listener.h>
 
 #include <gtest/gtest.h>
-#include <signal.h>
 
-planning_scene_monitor::PlanningSceneMonitor* g_psm;
+static planning_scene_monitor::PlanningSceneMonitor *g_psm = NULL;
 
 TEST(PlanningInterfaceTester, loadAllPlanners)
 {
@@ -56,7 +55,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   }
 
   std::vector<std::string> classes;
-  std::vector<planning_interface::Planner*> planners;
+  std::vector<boost::shared_ptr<planning_interface::Planner> > planners;
   planning_scene::PlanningSceneConstPtr scene = g_psm->getPlanningScene();
   planning_models::KinematicModelConstPtr model = scene->getKinematicModel();
 
@@ -72,7 +71,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   
     try
     {
-      planning_interface::Planner* p = planner_loader->createClassInstance(*it);
+      boost::shared_ptr<planning_interface::Planner> p(planner_loader->createUnmanagedInstance(*it));
       p->init(model);
       planners.push_back(p);
     }
@@ -83,7 +82,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
     }
   }
 
-  for(std::vector<planning_interface::Planner*>::const_iterator it = planners.begin();
+  for(std::vector<boost::shared_ptr<planning_interface::Planner> >::const_iterator it = planners.begin();
       it != planners.end();
       ++it)
   {
@@ -103,22 +102,12 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
 
 static const std::string ROBOT_DESCRIPTION="robot_description";
 
-// Catch SIGINT to ensure proper shutdown order (otherwise we get a boost lock
-// assert).
-void
-sigint(int signum)
-{
-  delete g_psm;
-  ros::shutdown();
-}
 
 int
 main(int argc, char** argv)
 {
   ros::init(argc, argv, "planner_loader");
   testing::InitGoogleTest(&argc, argv);
-
-  signal(SIGINT, sigint);
 
   tf::TransformListener tf;
   g_psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION, &tf);
@@ -127,12 +116,15 @@ main(int argc, char** argv)
     g_psm->startWorldGeometryMonitor();
     g_psm->startSceneMonitor();
     g_psm->startStateMonitor();
-
+    delete g_psm;
+    
     return RUN_ALL_TESTS();
   }
   else
   {
     ROS_ERROR("Planning scene not configured");
+    delete g_psm;
+    
     return 1;
   }
 }
