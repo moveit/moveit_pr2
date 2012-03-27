@@ -1,0 +1,23 @@
+<launch>
+  <!-- Set the parameters for the warehouse and run the mongodb server. 
+       If the settings_only arg is set to true, only settings are specified 
+       and the database server is NOT run -->
+
+  <arg name="settings_only" default="0" />
+
+  <!-- The default DB port for moveit (not default to avoid potential conflicts) -->  
+  <arg name="warehouse_port" value="33829" /> 
+  
+  <group ns="moveit_warehouse">
+    <param name="warehouse_port" value="$(arg warehouse_port)"/>
+    <param name="warehouse_exec" value="$(find mongodb)/mongo/bin/mongod" />
+  </group>
+  
+  <!-- Run the DB server if needed -->
+  <node unless="$(arg settings_only)" name="mongo" cwd="ROS_HOME" type="wrapper.py" pkg="mongodb" args="--warehouse_port=$(arg warehouse_port)">
+    <param name="overwrite" value="false"/>
+    <!-- We specify a full path for the database path -->
+    <param name="database_path" value="$(env PWD)/moveit_warehouse/"/>
+  </node>
+  
+</launch>
