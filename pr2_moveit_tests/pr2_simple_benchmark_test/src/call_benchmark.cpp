@@ -58,14 +58,14 @@ int main(int argc, char **argv)
 
   Eigen::Affine3d t;
   t = Eigen::Translation3d(0.45, -0.45, 0.7);
-  psm.getPlanningScene()->getCollisionWorld()->addToObject("pole", new shapes::Box(0.1, 0.1, 1.4), t);
+  psm.getPlanningScene()->getCollisionWorld()->addToObject("pole", shapes::ShapePtr(new shapes::Box(0.1, 0.1, 1.4)), t);
 
   if (psm.getPlanningScene()->isConfigured())
     psm.getPlanningScene()->getPlanningSceneMsg(req.scene);
   req.motion_plan_request.start_state = req.scene.robot_state;
   
   // average over 3 runs
-  req.average_count = 10;
+  req.default_average_count = 10;
   req.filename = "benchmark_results.log";
   
   // fill in a goal
@@ -102,7 +102,8 @@ int main(int argc, char **argv)
   req.motion_plan_request.goal_constraints.push_back(goal);
   */
   
-  req.planner_interfaces.push_back("ompl_interface_ros/OMPLPlanner");
+  req.planner_interfaces.resize(1);
+  req.planner_interfaces[0].name = "ompl_interface_ros/OMPLPlanner";
   
   ros::NodeHandle nh;
   ros::service::waitForService(BENCHMARK_SERVICE_NAME);
