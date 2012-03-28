@@ -18,7 +18,6 @@
    <param name="dual_arm/planner/left_arm_description_file" value="$(find sbpl_arm_planner)/config/pr2_left_arm.cfg" />
    <param name="dual_arm/planner/right_arm_description_file" value="$(find sbpl_arm_planner)/config/pr2_right_arm.cfg" />
 
-
   </node>
  
 </launch>

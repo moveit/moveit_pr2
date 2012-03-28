@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Name of default database -->
-  <arg name="moveit_default_database_name" default="default" />
+  <arg name="moveit_warehouse_default_database_name" default="default" />
 
   <!-- Load warehouse parameters -->  
   <include file="$(find pr2_moveit_config)/launch/warehouse_settings.launch">
@@ -11,7 +11,7 @@
   <!-- Run the DB server -->
   <node ns="moveit_warehouse" name="mongo" cwd="ROS_HOME" type="wrapper.py" pkg="mongodb">
     <param name="overwrite" value="false"/>
-    <param name="database_path" value="moveit_warehouse/$(arg moveit_default_database_name)" />
+    <param name="database_path" value="moveit_warehouse/$(arg moveit_warehouse_default_database_name)" />
   </node>
 
 </launch>

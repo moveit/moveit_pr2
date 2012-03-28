@@ -1,0 +1,12 @@
+<launch>
+  <arg name="benchmark_database" default="benchmark-1" />
+  
+  <!-- Run the DB server on the desired database -->
+  <include file="$(find pr2_moveit_config)/launch/warehouse.launch">
+    <arg name="moveit_warehouse_default_database_name" value="$(arg benchmark_database)" />
+  </include>
+
+  <!-- Run the benchmark server -->
+  <include file="$(find pr2_moveit_config)/launch/benchmark_server.launch" />
+  
+</launch>
