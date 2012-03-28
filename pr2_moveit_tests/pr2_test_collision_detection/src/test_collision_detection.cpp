@@ -93,7 +93,7 @@ void testSimple()
     ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
     sleep(1);
 
-    std::vector<shapes::Shape*> attached_shapes(1, new shapes::Box(0.2, 0.1, 0.1));
+    std::vector<shapes::ShapeConstPtr> attached_shapes(1, shapes::ShapeConstPtr(new shapes::Box(0.2, 0.1, 0.1)));
     Eigen::Affine3d t;
     t.setIdentity();
     std::vector<Eigen::Affine3d> attached_poses(1, t);
@@ -155,13 +155,14 @@ void testSimple()
     {
 	t.translation() = Eigen::Vector3d(rng.uniformReal(-1, 1), rng.uniformReal(-1, 1), rng.uniformReal(0, 2));
 	scene->getCollisionWorld()->clearObjects();
-	scene->getCollisionWorld()->addToObject("spere1", new shapes::Sphere(0.05), t);
+	scene->getCollisionWorld()->addToObject("spere1", shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
 	collision_detection::CollisionResult res;
 	scene->checkCollision(req, res);
 	if (!res.collision)
 	{
 	    int x = colliding->getCollisionWorld()->getObjectIds().size();
-	    colliding->getCollisionWorld()->addToObject("speres" + boost::lexical_cast<std::string>(x), new shapes::Sphere(0.05), t);
+	    colliding->getCollisionWorld()->addToObject("speres" + boost::lexical_cast<std::string>(x),
+                                                        shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
 	    std::cout << x << "\n";
 	    if (x == 100)
 		break;

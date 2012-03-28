@@ -54,7 +54,7 @@ void benchmarkSimplePlan(const std::string &config)
     planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
 
-    mplan_req.average_count = 50;
+    mplan_req.motion_plan_request.num_planning_attempts = 50;
     mplan_req.motion_plan_request.planner_id = config;
     mplan_req.motion_plan_request.group_name = "right_arm";
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
@@ -88,7 +88,7 @@ void benchmarkPathConstrained(const std::string &config)
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
   planning_scene::PlanningScene &scene = *psm.getPlanningScene();
 
-  mplan_req.average_count = 50;
+  mplan_req.motion_plan_request.num_planning_attempts = 50;
   mplan_req.motion_plan_request.planner_id = config;
   mplan_req.motion_plan_request.group_name = "right_arm"; 
 
