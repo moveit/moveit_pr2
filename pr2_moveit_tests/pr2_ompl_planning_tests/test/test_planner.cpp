@@ -129,7 +129,7 @@ TEST(OmplPlanning, PositionGoal)
     pcm.target_point_offset.x = 0;
     pcm.target_point_offset.y = 0;
     pcm.target_point_offset.z = 0;
-    pcm.constraint_region_shape.type = moveit_msgs::Shape::SPHERE;
+    pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
     pcm.constraint_region_shape.dimensions.push_back(0.001);
 
     pcm.constraint_region_pose.header.frame_id = scene.getKinematicModel()->getModelFrame();
@@ -233,7 +233,7 @@ TEST(OmplPlanning, PoseGoal)
     pcm.target_point_offset.x = 0;
     pcm.target_point_offset.y = 0;
     pcm.target_point_offset.z = 0;
-    pcm.constraint_region_shape.type = moveit_msgs::Shape::SPHERE;
+    pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
     pcm.constraint_region_shape.dimensions.push_back(0.001);
 
     pcm.constraint_region_pose.header.frame_id = scene.getKinematicModel()->getModelFrame();

@@ -38,7 +38,7 @@ protected:
     obj.operation = moveit_msgs::CollisionObject::ADD;
     obj.id = "obj";
     obj.shapes.resize(1);
-    obj.shapes[0].type = moveit_msgs::Shape::CYLINDER;
+    obj.shapes[0].type = shape_msgs::Shape::CYLINDER;
     obj.shapes[0].dimensions.resize(2);
     obj.shapes[0].dimensions[0] = .02;
     obj.shapes[0].dimensions[1] = .1;

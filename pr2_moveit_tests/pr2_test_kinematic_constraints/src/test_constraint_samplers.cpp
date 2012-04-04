@@ -223,7 +223,7 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
   pcm.target_point_offset.x = 0;
   pcm.target_point_offset.y = 0;
   pcm.target_point_offset.z = 0;
-  pcm.constraint_region_shape.type = moveit_msgs::Shape::SPHERE;
+  pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
   pcm.constraint_region_shape.dimensions.push_back(0.001);
   
   pcm.constraint_region_pose.header.frame_id = kmodel_->getModelFrame();
@@ -320,7 +320,7 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   pcm.target_point_offset.x = 0;
   pcm.target_point_offset.y = 0;
   pcm.target_point_offset.z = 0;
-  pcm.constraint_region_shape.type = moveit_msgs::Shape::SPHERE;
+  pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
   pcm.constraint_region_shape.dimensions.push_back(0.001);
   
   pcm.constraint_region_pose.header.frame_id = kmodel_->getModelFrame();
@@ -449,7 +449,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   pcm.target_point_offset.x = 0;
   pcm.target_point_offset.y = 0;
   pcm.target_point_offset.z = 0;
-  pcm.constraint_region_shape.type = moveit_msgs::Shape::BOX;
+  pcm.constraint_region_shape.type = shape_msgs::Shape::BOX;
   pcm.constraint_region_shape.dimensions.push_back(0.2);
   pcm.constraint_region_shape.dimensions.push_back(0.3);
   pcm.constraint_region_shape.dimensions.push_back(0.4);
@@ -470,7 +470,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   pcm2.target_point_offset.x = 0.7;
   pcm2.target_point_offset.y = 0;
   pcm2.target_point_offset.z = 0;
-  pcm2.constraint_region_shape.type = moveit_msgs::Shape::BOX;
+  pcm2.constraint_region_shape.type = shape_msgs::Shape::BOX;
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
@@ -580,7 +580,7 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   co.header.frame_id = aco.link_name;
   co.operation = moveit_msgs::CollisionObject::ADD;
   co.shapes.resize(1);
-  co.shapes[0].type = moveit_msgs::Shape::BOX;
+  co.shapes[0].type = shape_msgs::Shape::BOX;
   co.shapes[0].dimensions.push_back(0.3);
   co.shapes[0].dimensions.push_back(0.01);
   co.shapes[0].dimensions.push_back(0.3);
