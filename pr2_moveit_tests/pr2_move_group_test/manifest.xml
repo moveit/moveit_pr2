@@ -1,0 +1,20 @@
+<package>
+  <description brief="pr2_move_group_test">
+
+     pr2_move_group_test
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_move_group_test</url>
+
+  <depend package="actionlib"/>
+  <depend package="moveit_msgs"/>
+  <depend package="move_group"/>
+  <depend package="ompl_interface_ros"/>
+  <depend package="pr2_moveit_config"/>
+
+</package>
+
+
