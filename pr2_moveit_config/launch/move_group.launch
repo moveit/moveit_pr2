@@ -5,7 +5,7 @@
   <node name="move_$(arg group)" pkg="move_group" type="move_group" respawn="false" output="screen">
     <param name="group" value="$(arg group)" />
     <param name="planning_plugin" value="$(arg planning_plugin)" />
-    <param name="request_adapters" value="default_planner_request_adapters/FixStartStateBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStatePathConstraintsPlanningRequestAdapter" />
+    <param name="request_adapters" value="default_planner_request_adapters/FixStartStateWorkspaceBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStateBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStatePathConstraintsPlanningRequestAdapter" />
   </node>
   
 </launch>

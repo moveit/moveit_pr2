@@ -147,7 +147,7 @@ void testSimple()
 
     sleep(1);
     
-    planning_scene::PlanningScenePtr colliding = clone(scene);
+    planning_scene::PlanningScenePtr colliding = planning_scene::PlanningScene::clone(scene);
     // construct a planning scene with 100 objects and no collisions
     random_numbers::RandomNumberGenerator rng;
     req.verbose = false;
