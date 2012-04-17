@@ -24,4 +24,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
-rosbuild_add_gtest(test_constraint_samplers src/test_constraint_samplers.cpp)
+rosbuild_add_executable(test_constraint_samplers src/test_constraint_samplers.cpp)
+rosbuild_add_gtest_build_flags(test_constraint_samplers)
+rosbuild_add_rostest(test/test_kinematic_constraints.test)

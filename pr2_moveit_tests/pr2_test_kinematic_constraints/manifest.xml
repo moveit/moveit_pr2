@@ -12,6 +12,7 @@
   <depend package="kinematic_constraints"/>
   <depend package="planning_scene_monitor"/>
   <depend package="kinematics_plugin_loader"/>
+  <depend package="pr2_arm_kinematics"/>
 
 </package>
 

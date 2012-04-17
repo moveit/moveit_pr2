@@ -1,0 +1,10 @@
+<launch>
+  <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
+  <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
+
+  <test pkg="pr2_test_kinematic_constraints" 
+        type="test_constraint_samplers" 
+        test-name="test_kinematic_constraints">
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+  </test>
+</launch>

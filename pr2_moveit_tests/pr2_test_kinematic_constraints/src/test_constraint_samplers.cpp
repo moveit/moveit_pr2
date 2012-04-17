@@ -69,7 +69,7 @@ protected:
   planning_models::KinematicModelConstPtr kmodel_;
 };
 
-/*
+
 TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
 {
   planning_models::KinematicState ks(kmodel_);
@@ -139,7 +139,7 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   moveit_msgs::Constraints c;
   
   // no constraints should give no sampler
-  kinematic_constraints::ConstraintSamplerPtr s0 = kinematic_constraints::constructConstraintsSampler
+  kinematic_constraints::ConstraintSamplerPtr s0 = kinematic_constraints::ConstraintSampler::constructFromMessage
     (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematics_allocator);
   EXPECT_TRUE(s0.get() == NULL);
 
@@ -149,7 +149,7 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   c.joint_constraints.push_back(jcm3);
   c.joint_constraints.push_back(jcm4);
   
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::constructConstraintsSampler
+  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
     (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematics_allocator);
   EXPECT_TRUE(s.get() != NULL);
   
@@ -297,7 +297,7 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
   c.position_constraints.push_back(pcm);
   c.orientation_constraints.push_back(ocm);
   
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::constructConstraintsSampler
+  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
     (kmodel_->getJointModelGroup("left_arm"), c, kmodel_, tf, kinematics_allocator);
   EXPECT_TRUE(s.get() != NULL);
   for (int t = 0 ; t < 100 ; ++t)
@@ -366,7 +366,7 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   sa[kmodel_->getJointModelGroup("right_arm")] = kinematics_allocator;
   
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::constructConstraintsSampler
+  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
     (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematic_constraints::KinematicsAllocator(), sa);
   
   EXPECT_TRUE(s.get() != NULL);
@@ -522,7 +522,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);
   
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::constructConstraintsSampler
+  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
     (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematic_constraints::KinematicsAllocator(), sa);
   
   EXPECT_TRUE(s.get() != NULL);
@@ -566,7 +566,6 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
     }
   }
 }
-*/
 
 TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
 {
@@ -624,7 +623,6 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   
   double distance;
   EXPECT_TRUE(vc.configure(vcm));
-  EXPECT_TRUE(vc.decide(ks, distance, true));
   ros::Publisher pub = nh.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array", 10);
   ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("/planning_scene", 20);
   ros::WallDuration(0.5).sleep();
@@ -636,7 +634,7 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
 	  ks.setToRandomValues();
       }
       while (!vc.decide(ks, distance));
-      ROS_INFO("Found");
+      //      ROS_INFO("Found");
       visualization_msgs::MarkerArray markers;
       vc.getMarkers(ks, markers);
       pub.publish(markers);
