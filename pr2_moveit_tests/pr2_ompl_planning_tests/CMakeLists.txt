@@ -20,8 +20,22 @@ rosbuild_add_executable(call_benchmark src/call_benchmark.cpp)
 rosbuild_add_executable(call_cca src/call_cca.cpp)
 
 # Unit tests
-rosbuild_add_gtest(test_planner test/test_planner.cpp)
-rosbuild_add_gtest(test_simple_plan test/test_simple_plan.cpp)
-rosbuild_add_gtest(test_path_constrained_plan test/test_path_constrained_plan.cpp)
-rosbuild_add_gtest(test_complex_path_constrained_plan test/test_complex_path_constrained_plan.cpp)
-rosbuild_add_gtest(test_dual_arm test/test_dual_arm_plan.cpp)
+rosbuild_add_executable(test_planner src/test_planner.cpp)
+rosbuild_add_gtest_build_flags(test_planner)
+rosbuild_add_rostest(test/test_planner.test)
+
+rosbuild_add_executable(test_simple_plan src/test_simple_plan.cpp)
+rosbuild_add_gtest_build_flags(test_simple_plan)
+rosbuild_add_rostest(test/test_simple_plan.test)
+
+rosbuild_add_executable(test_path_constrained_plan src/test_path_constrained_plan.cpp)
+rosbuild_add_gtest_build_flags(test_path_constrained_plan)
+rosbuild_add_rostest(test/test_path_constrained_plan.test)
+
+rosbuild_add_executable(test_complex_path_constrained_plan src/test_complex_path_constrained_plan.cpp)
+rosbuild_add_gtest_build_flags(test_complex_path_constrained_plan)
+rosbuild_add_rostest(test/test_complex_path_constrained_plan.test)
+
+rosbuild_add_executable(test_dual_arm_plan src/test_dual_arm_plan.cpp)
+rosbuild_add_gtest_build_flags(test_dual_arm_plan)
+rosbuild_add_rostest(test/test_dual_arm.test)
