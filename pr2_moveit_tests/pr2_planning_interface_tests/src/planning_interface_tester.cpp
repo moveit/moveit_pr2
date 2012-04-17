@@ -65,10 +65,15 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   printf("Loading classes:\n");
   for(std::vector<std::string>::const_iterator it = classes.begin();
       it != classes.end();
+      ++it)  
+    printf("  %s\n", it->c_str());
+  fflush(stdout);
+  return;
+  
+  for(std::vector<std::string>::const_iterator it = classes.begin();
+      it != classes.end();
       ++it)
   {
-    printf("  %s\n", it->c_str());
-  
     try
     {
       boost::shared_ptr<planning_interface::Planner> p(planner_loader->createUnmanagedInstance(*it));
@@ -103,11 +108,11 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
 static const std::string ROBOT_DESCRIPTION="robot_description";
 
 
-int
-main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "planner_loader");
   testing::InitGoogleTest(&argc, argv);
+
+  ros::init(argc, argv, "planner_loader");
 
   tf::TransformListener tf;
   g_psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION, &tf);
@@ -116,9 +121,9 @@ main(int argc, char** argv)
     g_psm->startWorldGeometryMonitor();
     g_psm->startSceneMonitor();
     g_psm->startStateMonitor();
+    int r = RUN_ALL_TESTS();
     delete g_psm;
-    
-    return RUN_ALL_TESTS();
+    return r;
   }
   else
   {
