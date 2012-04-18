@@ -56,10 +56,15 @@ bool PR2ArmIK::init(const urdf::Model &robot_model, const std::string &root_name
   boost::shared_ptr<const urdf::Link> link = robot_model.getLink(tip_name);
   while(link && num_joints < 7)
   {
-    boost::shared_ptr<const urdf::Joint> joint = robot_model.getJoint(link->parent_joint->name);
+    boost::shared_ptr<const urdf::Joint> joint;
+    if (link->parent_joint)
+      joint = robot_model.getJoint(link->parent_joint->name);
     if(!joint)
     {
-      ROS_ERROR("Could not find joint: %s",link->parent_joint->name.c_str());
+      if (link->parent_joint)
+        ROS_ERROR("Could not find joint: %s",link->parent_joint->name.c_str());
+      else
+        ROS_ERROR("Link %s has no parent joint",link->name.c_str());
       return false;
     }
     if(joint->type != urdf::Joint::UNKNOWN && joint->type != urdf::Joint::FIXED)
@@ -69,8 +74,25 @@ bool PR2ArmIK::init(const urdf::Model &robot_model, const std::string &root_name
       ROS_DEBUG("Joint axis: %d, %f, %f, %f",6-num_joints,joint->axis.x,joint->axis.y,joint->axis.z);
       if(joint->type != urdf::Joint::CONTINUOUS)
       {
-        min_angles_.push_back(joint->safety->soft_lower_limit);
-        max_angles_.push_back(joint->safety->soft_upper_limit);
+        if (joint->safety)
+        {
+          min_angles_.push_back(joint->safety->soft_lower_limit);
+          max_angles_.push_back(joint->safety->soft_upper_limit);
+        }
+        else
+        {
+          if (joint->limits)
+          {
+            min_angles_.push_back(joint->limits->lower);
+            max_angles_.push_back(joint->limits->upper);
+          }
+          else
+          {
+            min_angles_.push_back(0.0);
+            max_angles_.push_back(0.0);
+            ROS_WARN("No joint limits or joint '%s'",joint->name.c_str());
+          }
+        }
         continuous_joint_.push_back(false);
       }
       else
@@ -126,13 +148,24 @@ void PR2ArmIK::addJointToChainInfo(boost::shared_ptr<const urdf::Joint> joint, k
 {
   moveit_msgs::JointLimits limit;
   info.joint_names.push_back(joint->name);//Joints are coming in reverse order
-  limit.min_position = joint->safety->soft_lower_limit;
-  limit.max_position = joint->safety->soft_upper_limit;
+
   if(joint->type != urdf::Joint::CONTINUOUS)
   {
-    limit.min_position = joint->safety->soft_lower_limit;
-    limit.max_position = joint->safety->soft_upper_limit;
-    limit.has_position_limits = true;
+    if (joint->safety)
+    {
+      limit.min_position = joint->safety->soft_lower_limit;
+      limit.max_position = joint->safety->soft_upper_limit;
+      limit.has_position_limits = true;
+    }
+    else
+      if (joint->limits)
+      {
+        limit.min_position = joint->limits->lower;
+        limit.max_position = joint->limits->upper;
+        limit.has_position_limits = true;
+      }
+      else
+        limit.has_position_limits = false;
   }
   else
   {
@@ -140,8 +173,13 @@ void PR2ArmIK::addJointToChainInfo(boost::shared_ptr<const urdf::Joint> joint, k
     limit.max_position = M_PI;
     limit.has_position_limits = false;
   }
-  limit.max_velocity = joint->limits->velocity;
-  limit.has_velocity_limits = 1;
+  if (joint->limits)
+  {
+    limit.max_velocity = joint->limits->velocity;
+    limit.has_velocity_limits = 1;
+  }
+  else
+    limit.has_velocity_limits = 0;
   info.limits.push_back(limit);
 }
 
