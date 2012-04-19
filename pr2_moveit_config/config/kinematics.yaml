@@ -7,13 +7,9 @@ right_arm:
   kinematics_solver_search_resolution: 0.005
   redundancy:
     name: r_upper_arm_roll_joint
-  tip_name: r_wrist_roll_link
-  root_name: torso_lift_link
 
 left_arm: 
   kinematics_solver: pr2_arm_kinematics/PR2ArmKinematicsPlugin
   kinematics_solver_search_resolution: 0.005
   redundancy:
     name: l_upper_arm_roll_joint
-  tip_name: l_wrist_roll_link
-  root_name: torso_lift_link
