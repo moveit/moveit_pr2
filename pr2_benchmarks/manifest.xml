@@ -10,8 +10,6 @@
   <url>http://ros.org/wiki/pr2_benchmarks</url>
   <depend package="moveit_benchmarks"/>
   <depend package="ompl_interface_ros"/>
-  <depend package="sbpl_arm_planner"/>
-  <depend package="sbpl_two_arm_planner"/>
   <depend package="moveit_warehouse"/>
 
 </package>
