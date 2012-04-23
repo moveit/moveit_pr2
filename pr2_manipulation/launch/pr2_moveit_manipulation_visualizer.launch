@@ -1,9 +1,11 @@
 <launch>
   <arg name="monitor_robot_state" default="false"/>
   <arg name="allow_trajectory_execution" default="false"/>
+  <arg name="do_object_recognition" default="false"/>
 
   <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
+  <rosparam command="load" file="$(find pr2_manipulation)/config/grasping.yaml"/>
 
   <rosparam if="$(arg allow_trajectory_execution)" command="load" file="$(find pr2_arm_navigation)/config/pr2_both_arms_controllers.yaml" />
 
@@ -15,12 +17,19 @@
   <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
   <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
 
+  <rosparam if="$(arg do_object_recognition)" command="load" file="$(find moveit_household_objects_database)/config/wgs36.yaml" />
+  <node if="$(arg do_object_recognition)" pkg="moveit_household_objects_database" name="moveit_household_objects_database_node"
+	type="objects_database_node"/>
+  <include if="$(arg do_object_recognition)" file="$(find moveit_tabletop_object_detector)/launch/tabletop_segmentation.launch"/>
+  <include if="$(arg do_object_recognition)" file="$(find moveit_tabletop_object_detector)/launch/tabletop_object_recognition.launch"/>
+
   <node pkg="moveit_manipulation_visualization" type="moveit_manipulation_visualizer" name="moveit_manipulation_visualizer" output="screen">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
     <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
     <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <param name="do_object_recognition" value="$(arg do_object_recognition)"/>
   </node>
 
 </launch>
