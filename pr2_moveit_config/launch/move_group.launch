@@ -6,6 +6,11 @@
     <param name="group" value="$(arg group)" />
     <param name="planning_plugin" value="$(arg planning_plugin)" />
     <param name="request_adapters" value="default_planner_request_adapters/FixStartStateWorkspaceBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStateBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStatePathConstraintsPlanningRequestAdapter" />
+    <rosparam command="load" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
+
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
+
   </node>
   
 </launch>
