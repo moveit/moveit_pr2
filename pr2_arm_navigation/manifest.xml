@@ -12,6 +12,15 @@
   <depend package="srdf"/>
   <depend package="pr2_arm_kinematics"/>
   <depend package="moveit_visualization_ros"/>
+  <depend package="pluginlib"/>
+  <depend package="pr2_controllers_msgs"/>
+  <depend package="trajectory_execution"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include `rosboost-cfg --cflags`" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lpr2_arm_navigation" />
+    <trajectory_execution plugin="${prefix}/plugin_description.xml"/>
+  </export>
+
 
 </package>
 
