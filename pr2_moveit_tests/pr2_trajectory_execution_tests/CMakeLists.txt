@@ -29,8 +29,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-rosbuild_add_executable(trajectory_execution_test src/trajectory_execution_test.cpp)
+#rosbuild_add_executable(trajectory_execution_test src/trajectory_execution_test.cpp)
 
-rosbuild_add_executable(trajectory_execution_tests src/trajectory_execution_tests.cpp)
-rosbuild_add_gtest_build_flags(trajectory_execution_tests)
-rosbuild_add_rostest(test/trajectory_execution_tests.test)
+#rosbuild_add_executable(trajectory_execution_tests src/trajectory_execution_tests.cpp)
+#rosbuild_add_gtest_build_flags(trajectory_execution_tests)
+#rosbuild_add_rostest(test/trajectory_execution_tests.test)

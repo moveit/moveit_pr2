@@ -29,7 +29,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-rosbuild_add_executable(grasp_evaluator_fast_tests src/grasp_evaluator_fast_tests.cpp) 
-rosbuild_add_gtest_build_flags(grasp_evaluator_fast_tests)
-rosbuild_add_rostest(test/pr2_moveit_manipulation_tests.test)
+#rosbuild_add_executable(grasp_evaluator_fast_tests src/grasp_evaluator_fast_tests.cpp) 
+#rosbuild_add_gtest_build_flags(grasp_evaluator_fast_tests)
+#rosbuild_add_rostest(test/pr2_moveit_manipulation_tests.test)
 
