@@ -1,0 +1,8 @@
+<library path="lib/libpr2_constraint_sampler">
+
+  <class name="pr2_constraint_sampler/PR2ConstraintSamplerAllocator" type="pr2_constraint_sampler::PR2ConstraintSamplerAllocator" base_class_type="constraint_samplers::ConstraintSamplerAllocator">
+    <description>
+    </description>
+  </class>
+
+</library>

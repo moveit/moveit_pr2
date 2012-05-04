@@ -1,0 +1,21 @@
+<package>
+  <description brief="pr2_constraint_sampler">
+
+     pr2_constraint_sampler
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_constraint_sampler</url>
+  <depend package="moveit_msgs"/>
+  <depend package="constraint_samplers"/>
+  <depend package="pluginlib"/>
+
+  <export>
+    <planning_request_adapter plugin="${prefix}/lib/plugin_description.xml"/>
+  </export>
+
+</package>
+
+
