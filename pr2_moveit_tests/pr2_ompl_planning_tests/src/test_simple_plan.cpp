@@ -40,6 +40,7 @@
 #include <moveit_msgs/GetMotionPlan.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <kinematic_constraints/utils.h>
+#include <planning_models/conversions.h>
 
 static const std::string PLANNER_SERVICE_NAME="/ompl_planning/plan_kinematic_path";
 static const std::string ROBOT_DESCRIPTION="robot_description";
@@ -57,33 +58,24 @@ TEST(OmplPlanning, SimplePlan)
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
-    mplan_req.motion_plan_request.planner_id = "SBLkConfigDefault";
+    mplan_req.motion_plan_request.planner_id = "RRTConnectkConfigDefault";
     mplan_req.motion_plan_request.group_name = "right_arm";
     mplan_req.motion_plan_request.num_planning_attempts = 1;
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-    const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
-    mplan_req.motion_plan_request.goal_constraints.resize(1);
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
-    for(unsigned int i = 0; i < joint_names.size(); i++)
-    {
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 0.001;
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 0.001;
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
-    }
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
+    planning_models::KinematicState start = scene.getCurrentState();
+    planning_models::kinematicStateToRobotState(start, mplan_req.motion_plan_request.start_state);
 
+    start.getJointStateGroup("right_arm")->setToRandomValues();
+    mplan_req.motion_plan_request.goal_constraints.resize(1);
+    mplan_req.motion_plan_request.goal_constraints[0] = kinematic_constraints::constructGoalConstraints(start.getJointStateGroup("right_arm"));
+    
     ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
     ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
     EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-
     
     moveit_msgs::DisplayTrajectory d;
     d.model_id = scene.getKinematicModel()->getName();

@@ -51,7 +51,7 @@ void benchmarkSimplePlan(const std::string &config)
     moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
     moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
 
     mplan_req.motion_plan_request.num_planning_attempts = 50;
@@ -85,7 +85,7 @@ void benchmarkPathConstrained(const std::string &config)
   moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
   moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
   
-  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
   planning_scene::PlanningScene &scene = *psm.getPlanningScene();
 
   mplan_req.motion_plan_request.num_planning_attempts = 50;

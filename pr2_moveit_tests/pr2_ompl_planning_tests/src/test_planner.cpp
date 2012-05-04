@@ -45,7 +45,7 @@ static const std::string ROBOT_DESCRIPTION="robot_description";
 
 TEST(OmplInterface, JointModelStateConversion)
 {
-  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
   planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
   EXPECT_TRUE(scene->isConfigured());
   ompl_interface_ros::OMPLInterfaceROS oi(scene->getKinematicModel());
@@ -75,7 +75,7 @@ TEST(OmplPlanning, JointGoal)
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
@@ -115,7 +115,7 @@ TEST(OmplPlanning, PositionGoal)
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
@@ -161,7 +161,7 @@ TEST(OmplPlanning, OrientationGoal)
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
@@ -204,7 +204,7 @@ TEST(OmplPlanning, PoseGoal)
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
@@ -254,7 +254,7 @@ TEST(OmplPlanning, PoseGoal)
 
 TEST(OmplPlanning, SimplePoseGoal)
 { 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 

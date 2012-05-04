@@ -2,7 +2,6 @@
 ## the planner to be used; other parameters can be specified as well, depending 
 ## on the planner
 
-constraint_approximations: /home/isucan/c
 
 right_arm:
   planner_configs:
@@ -46,6 +45,10 @@ arms:
     - RRTStarkConfigDefault
   longest_valid_segment_fraction: 0.05
   projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
+
+whole_body:
+  planner_configs:
+    - msRRTConnectkConfigDefault
 
 planner_configs:
 
@@ -92,3 +95,7 @@ planner_configs:
 
   BKPIECEkConfigDefault:
     type: geometric::BKPIECE
+
+  msRRTConnectkConfigDefault:
+    type: geometric::msRRTConnect
+    subspaces: right_arm left_arm base

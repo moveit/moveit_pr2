@@ -57,7 +57,7 @@ TEST(OmplPlanning, SimplePlan)
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
