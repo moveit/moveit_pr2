@@ -44,7 +44,7 @@ static const std::string ROBOT_DESCRIPTION="robot_description";
 void findSelfCollisionAndDisplayContacts()
 {
     ros::NodeHandle nh;
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
     
     ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
@@ -86,7 +86,7 @@ void findSelfCollisionAndDisplayContacts()
 void testSimple()
 {
     ros::NodeHandle nh;
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
+    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
     
     ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);

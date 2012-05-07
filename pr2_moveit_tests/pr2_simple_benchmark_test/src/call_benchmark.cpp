@@ -53,8 +53,8 @@ int main(int argc, char **argv)
   moveit_msgs::ComputePlanningBenchmark::Request res;
   
   // fill planning scene
-  tf::TransformListener tf;
-  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, &tf);
+  boost::shared_ptr<tf::TransformListener> tf(new tf::TransformListener());
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, tf);
 
   Eigen::Affine3d t;
   t = Eigen::Translation3d(0.45, -0.45, 0.7);
