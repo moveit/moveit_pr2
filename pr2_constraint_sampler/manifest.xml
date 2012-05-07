@@ -13,7 +13,7 @@
   <depend package="pluginlib"/>
 
   <export>
-    <planning_request_adapter plugin="${prefix}/lib/plugin_description.xml"/>
+    <constraint_samplers plugin="${prefix}/lib/plugin_description.xml"/>
   </export>
 
 </package>
