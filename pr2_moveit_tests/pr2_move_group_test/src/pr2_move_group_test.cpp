@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   ros::AsyncSpinner spinner(1);
   spinner.start();
   
-  actionlib::SimpleActionClient<moveit_msgs::MoveGroupAction> act("move_arms", false);
+  actionlib::SimpleActionClient<moveit_msgs::MoveGroupAction> act("move_group", false);
   act.waitForServer();
   
   moveit_msgs::MoveGroupGoal goal;
@@ -64,41 +64,38 @@ int main(int argc, char **argv)
 
 
 
-    goal.request.group_name = "arms";
-    goal.request.num_planning_attempts = 1;
-    goal.request.allowed_planning_time = ros::Duration(5.0);
-
-    geometry_msgs::PoseStamped pose;
-    pose.header.frame_id = "odom_combined";
-    pose.pose.position.x = 0.55;
-    pose.pose.position.y = 0.2;
-    pose.pose.position.z = 1.25;
-    pose.pose.orientation.x = 0.0;
-    pose.pose.orientation.y = 0.0;
-    pose.pose.orientation.z = 0.0;
-    pose.pose.orientation.w = 1.0;    
-    moveit_msgs::Constraints g0 = kinematic_constraints::constructGoalConstraints("l_wrist_roll_link", pose);
-
-
-    pose.pose.position.x = 0.35;
-    pose.pose.position.y = -0.6;
-    pose.pose.position.z = 1.25;
-    pose.pose.orientation.x = 0.0;
-    pose.pose.orientation.y = 0.0;
-    pose.pose.orientation.z = 0.0;
-    pose.pose.orientation.w = 1.0;    
-    moveit_msgs::Constraints g1 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
-
-    goal.request.goal_constraints.resize(1);
-    goal.request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
-    
-
-
-
-
-
+  goal.request.group_name = "arms";
+  goal.request.num_planning_attempts = 1;
+  goal.request.allowed_planning_time = ros::Duration(5.0);
+  
+  geometry_msgs::PoseStamped pose;
+  pose.header.frame_id = "odom_combined";
+  pose.pose.position.x = 0.55;
+  pose.pose.position.y = 0.2;
+  pose.pose.position.z = 1.25;
+  pose.pose.orientation.x = 0.0;
+  pose.pose.orientation.y = 0.0;
+  pose.pose.orientation.z = 0.0;
+  pose.pose.orientation.w = 1.0;    
+  moveit_msgs::Constraints g0 = kinematic_constraints::constructGoalConstraints("l_wrist_roll_link", pose);
+  
+  
+  pose.pose.position.x = 0.35;
+  pose.pose.position.y = -0.6;
+  pose.pose.position.z = 1.25;
+  pose.pose.orientation.x = 0.0;
+  pose.pose.orientation.y = 0.0;
+  pose.pose.orientation.z = 0.0;
+  pose.pose.orientation.w = 1.0;    
+  moveit_msgs::Constraints g1 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
+  
+  goal.request.goal_constraints.resize(1);
+  goal.request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
+  
   act.sendGoal(goal);
-  act.waitForResult(ros::Duration(5.0));
+  if(!act.waitForResult()) {
+    ROS_INFO_STREAM("Apparently returned early");
+  }
   if (act.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
     ROS_INFO("It worked!");
   else

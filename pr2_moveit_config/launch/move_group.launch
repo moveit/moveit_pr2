@@ -1,16 +1,28 @@
 <launch>
-  
+  <arg name="monitor_robot_state" default="true"/>
+  <arg name="allow_trajectory_execution" default="true"/>
+
+  <param unless="$(arg monitor_robot_state)" name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
+  <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
+
+  <group ns="robot_description_planning">
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
+    <rosparam command="load" file="$(find pr2_arm_navigation)/config/joint_limits.yaml"/>
+  </group>
+
+  <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
+  <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
+
   <arg name="planning_plugin" default="ompl_interface_ros/OMPLPlanner" />
   
-  <node name="move_$(arg group)" pkg="move_group" type="move_group" respawn="false" output="screen">
-    <param name="group" value="$(arg group)" />
+  <node name="move_group" pkg="move_group" type="move_group_action_server" respawn="false" output="screen">
     <param name="planning_plugin" value="$(arg planning_plugin)" />
     <param name="request_adapters" value="default_planner_request_adapters/FixStartStateWorkspaceBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStateBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStatePathConstraintsPlanningRequestAdapter" />
-    <rosparam command="load" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
-
+    <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
-
+    <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
+    <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
   </node>
   
 </launch>
