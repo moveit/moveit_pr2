@@ -17,5 +17,5 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 rosbuild_add_executable(planning_interface_tester EXCLUDE_FROM_ALL src/planning_interface_tester.cpp)
-rosbuild_add_gtest_build_flags(planning_interface_tester)
-rosbuild_add_rostest(test/planning_interface_tester.test)
+#rosbuild_add_gtest_build_flags(planning_interface_tester)
+#rosbuild_add_rostest(test/planning_interface_tester.test)
