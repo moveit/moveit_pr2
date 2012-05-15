@@ -14,5 +14,6 @@
   <depend stack="ros" />
   <depend stack="ros_comm" /> <!-- roscpp -->
   <depend stack="moveit_manipulation" />
+  <depend stack="pr2_controllers" />
 
 </stack>
