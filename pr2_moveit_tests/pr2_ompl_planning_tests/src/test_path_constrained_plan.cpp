@@ -66,27 +66,6 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.num_planning_attempts = 1;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
   const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
-  mplan_req.motion_plan_request.goal_constraints.resize(1);
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
-  
-  for(unsigned int i = 0; i < joint_names.size(); i++)
-  {
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 1e-12;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 1e-12;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
-  }
-  
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -0.20826385287398406;
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[1].position = 0.61185361475247468;
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[2].position = -0.67790861269459102;
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -1.0372591097007691;
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[4].position = -0.89601966543848288; 
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.9776217463278662; 
-  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[6].position = 1.8552611548679128;
-
-
 
   mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.21044517893021499);
@@ -96,7 +75,22 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(2.3582101183671629);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.993988668449755);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-2.2779628049776051);
+
   
+  moveit_msgs::PositionConstraint pcm;
+  pcm.link_name = "r_wrist_roll_link";
+  pcm.constraint_region_pose.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
+  pcm.constraint_region_pose.pose.position.x = 0.5;
+  pcm.constraint_region_pose.pose.position.y = 0.0;
+  pcm.constraint_region_pose.pose.position.z = 0.7;
+  pcm.constraint_region_pose.pose.orientation.w = 1.0;
+  pcm.constraint_region_shape.type = shape_msgs::Shape::BOX;
+  pcm.constraint_region_shape.dimensions.push_back(0.1);
+  pcm.constraint_region_shape.dimensions.push_back(0.1);
+  pcm.constraint_region_shape.dimensions.push_back(0.1);
+  pcm.weight = 1.0;
+  mplan_req.motion_plan_request.goal_constraints.resize(1);
+  mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
 
 
   // add path constraints
@@ -113,7 +107,8 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ocm.absolute_y_axis_tolerance = 0.15;
   ocm.absolute_z_axis_tolerance = M_PI;
   ocm.weight = 1.0; 
-
+  std::cout << mplan_req.motion_plan_request << std::endl;
+  
   ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);

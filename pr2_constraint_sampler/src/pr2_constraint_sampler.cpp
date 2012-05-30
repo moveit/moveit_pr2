@@ -54,7 +54,7 @@ public:
     return false;
   }
   
-  virtual bool sample(std::vector<double> &values, const planning_models::KinematicState &reference_state, unsigned int max_attempts = 100)
+  virtual bool sample(planning_models::KinematicState::JointStateGroup *jsg, const planning_models::KinematicState &reference_state, unsigned int max_attempts)
   {
     return false;
   }
