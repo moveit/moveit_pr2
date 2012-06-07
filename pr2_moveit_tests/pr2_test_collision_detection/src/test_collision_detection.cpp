@@ -78,7 +78,7 @@ void findSelfCollisionAndDisplayContacts()
     color.b = 0.0f;
     color.a = 1.0f;
     visualization_msgs::MarkerArray arr;
-    collision_detection::getCollisionMarkersFromContacts(arr, "/base_link", res.contacts, color, ros::Duration(30.0));
+    collision_detection::getCollisionMarkersFromContacts(arr, "/odom_combined", res.contacts, color, ros::Duration(30.0));
     pub_markers.publish(arr);
     ros::Duration(10).sleep();
 }

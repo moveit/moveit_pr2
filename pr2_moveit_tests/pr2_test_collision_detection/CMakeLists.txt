@@ -21,4 +21,3 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 
 rosbuild_add_executable(test_collision_detection src/test_collision_detection.cpp)
-rosbuild_add_executable(test_parallel_speedup src/test_parallel_speedup.cpp)
