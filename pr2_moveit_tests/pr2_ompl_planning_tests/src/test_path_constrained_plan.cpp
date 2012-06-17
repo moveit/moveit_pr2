@@ -79,15 +79,19 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   
   moveit_msgs::PositionConstraint pcm;
   pcm.link_name = "r_wrist_roll_link";
-  pcm.constraint_region_pose.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
-  pcm.constraint_region_pose.pose.position.x = 0.5;
-  pcm.constraint_region_pose.pose.position.y = 0.0;
-  pcm.constraint_region_pose.pose.position.z = 0.7;
-  pcm.constraint_region_pose.pose.orientation.w = 1.0;
-  pcm.constraint_region_shape.type = shape_msgs::Shape::BOX;
-  pcm.constraint_region_shape.dimensions.push_back(0.1);
-  pcm.constraint_region_shape.dimensions.push_back(0.1);
-  pcm.constraint_region_shape.dimensions.push_back(0.1);
+  pcm.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
+
+  pcm.constraint_region.primitive_poses.resize(1);
+  pcm.constraint_region.primitive_poses[0].position.x = 0.5;
+  pcm.constraint_region.primitive_poses[0].position.y = 0.0;
+  pcm.constraint_region.primitive_poses[0].position.z = 0.7;
+  pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
+
+  pcm.constraint_region.primitives.resize(1);
+  pcm.constraint_region.primitives[0].type = shape_msgs::SolidPrimitive::BOX;
+  pcm.constraint_region.primitives[0].dimensions.x = 0.1;
+  pcm.constraint_region.primitives[0].dimensions.y = 0.1;
+  pcm.constraint_region.primitives[0].dimensions.z = 0.1;
   pcm.weight = 1.0;
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
@@ -98,11 +102,11 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   constr.orientation_constraints.resize(1);
   moveit_msgs::OrientationConstraint &ocm = constr.orientation_constraints[0];
   ocm.link_name = "r_wrist_roll_link";
-  ocm.orientation.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
-  ocm.orientation.quaternion.x = 0.0;
-  ocm.orientation.quaternion.y = 0.0;
-  ocm.orientation.quaternion.z = 0.0;
-  ocm.orientation.quaternion.w = 1.0;
+  ocm.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
+  ocm.orientation.x = 0.0;
+  ocm.orientation.y = 0.0;
+  ocm.orientation.z = 0.0;
+  ocm.orientation.w = 1.0;
   ocm.absolute_x_axis_tolerance = 0.15;
   ocm.absolute_y_axis_tolerance = 0.15;
   ocm.absolute_z_axis_tolerance = M_PI;

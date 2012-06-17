@@ -62,8 +62,8 @@ TEST(OmplPlanning, SimplePlan)
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
 
-    mplan_req.motion_plan_request.planner_id = "RRTConnectkConfigDefault";
-    mplan_req.motion_plan_request.group_name = "right_arm";
+    mplan_req.motion_plan_request.planner_id = "msRRTConnectkConfigDefault";
+    mplan_req.motion_plan_request.group_name = "whole_body";
     mplan_req.motion_plan_request.num_planning_attempts = 1;
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
     planning_models::KinematicState start = scene.getCurrentState();
@@ -72,6 +72,7 @@ TEST(OmplPlanning, SimplePlan)
     start.getJointStateGroup("right_arm")->setToRandomValues();
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0] = kinematic_constraints::constructGoalConstraints(start.getJointStateGroup("right_arm"));
+    std::cout << mplan_req.motion_plan_request << std::endl;
     
     ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
     ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);

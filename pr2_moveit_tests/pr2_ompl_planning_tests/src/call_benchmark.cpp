@@ -133,11 +133,11 @@ void benchmarkPathConstrained(const std::string &config)
   constr.orientation_constraints.resize(1);
   moveit_msgs::OrientationConstraint &ocm = constr.orientation_constraints[0];
   ocm.link_name = "r_wrist_roll_link";
-  ocm.orientation.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
-  ocm.orientation.quaternion.x = 0.0;
-  ocm.orientation.quaternion.y = 0.0;
-  ocm.orientation.quaternion.z = 0.0;
-  ocm.orientation.quaternion.w = 1.0;
+  ocm.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
+  ocm.orientation.x = 0.0;
+  ocm.orientation.y = 0.0;
+  ocm.orientation.z = 0.0;
+  ocm.orientation.w = 1.0;
   ocm.absolute_x_axis_tolerance = 0.1;
   ocm.absolute_y_axis_tolerance = 0.1;
   ocm.absolute_z_axis_tolerance = M_PI;

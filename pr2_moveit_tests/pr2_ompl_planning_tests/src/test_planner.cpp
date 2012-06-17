@@ -126,20 +126,22 @@ TEST(OmplPlanning, PositionGoal)
 
     moveit_msgs::PositionConstraint pcm;
     pcm.link_name = "r_wrist_roll_link";
+    pcm.header.frame_id = scene.getKinematicModel()->getModelFrame();
     pcm.target_point_offset.x = 0;
     pcm.target_point_offset.y = 0;
     pcm.target_point_offset.z = 0;
-    pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
-    pcm.constraint_region_shape.dimensions.push_back(0.001);
+    pcm.constraint_region.primitives.resize(1);
+    pcm.constraint_region.primitives[0].type = shape_msgs::SolidPrimitive::SPHERE;
+    pcm.constraint_region.primitives[0].dimensions.x = 0.001;
 
-    pcm.constraint_region_pose.header.frame_id = scene.getKinematicModel()->getModelFrame();
-    pcm.constraint_region_pose.pose.position.x = 0.55;
-    pcm.constraint_region_pose.pose.position.y = -0.2;
-    pcm.constraint_region_pose.pose.position.z = 1.25;
-    pcm.constraint_region_pose.pose.orientation.x = 0.0;
-    pcm.constraint_region_pose.pose.orientation.y = 0.0;
-    pcm.constraint_region_pose.pose.orientation.z = 0.0;
-    pcm.constraint_region_pose.pose.orientation.w = 1.0;
+    pcm.constraint_region.primitive_poses.resize(1);
+    pcm.constraint_region.primitive_poses[0].position.x = 0.55;
+    pcm.constraint_region.primitive_poses[0].position.y = -0.2;
+    pcm.constraint_region.primitive_poses[0].position.z = 1.25;
+    pcm.constraint_region.primitive_poses[0].orientation.x = 0.0;
+    pcm.constraint_region.primitive_poses[0].orientation.y = 0.0;
+    pcm.constraint_region.primitive_poses[0].orientation.z = 0.0;
+    pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
     pcm.weight = 1.0;
     
     mplan_req.motion_plan_request.goal_constraints.resize(1);
@@ -173,11 +175,11 @@ TEST(OmplPlanning, OrientationGoal)
 
     moveit_msgs::OrientationConstraint ocm;
     ocm.link_name = "l_wrist_roll_link";
-    ocm.orientation.header.frame_id = scene.getKinematicModel()->getModelFrame();
-    ocm.orientation.quaternion.x = 0.0;
-    ocm.orientation.quaternion.y = 0.0;
-    ocm.orientation.quaternion.z = 0.0;
-    ocm.orientation.quaternion.w = 1.0;
+    ocm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    ocm.orientation.x = 0.0;
+    ocm.orientation.y = 0.0;
+    ocm.orientation.z = 0.0;
+    ocm.orientation.w = 1.0;
     ocm.absolute_x_axis_tolerance = 0.2;
     ocm.absolute_y_axis_tolerance = 0.1;
     ocm.absolute_z_axis_tolerance = 0.4;
@@ -215,11 +217,11 @@ TEST(OmplPlanning, PoseGoal)
 
     moveit_msgs::OrientationConstraint ocm;
     ocm.link_name = "l_wrist_roll_link";
-    ocm.orientation.header.frame_id = scene.getKinematicModel()->getModelFrame();
-    ocm.orientation.quaternion.x = 0.0;
-    ocm.orientation.quaternion.y = 0.0;
-    ocm.orientation.quaternion.z = 0.0;
-    ocm.orientation.quaternion.w = 1.0;
+    ocm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    ocm.orientation.x = 0.0;
+    ocm.orientation.y = 0.0;
+    ocm.orientation.z = 0.0;
+    ocm.orientation.w = 1.0;
     ocm.absolute_x_axis_tolerance = 0.2;
     ocm.absolute_y_axis_tolerance = 0.1;
     ocm.absolute_z_axis_tolerance = 0.4;
@@ -233,17 +235,19 @@ TEST(OmplPlanning, PoseGoal)
     pcm.target_point_offset.x = 0;
     pcm.target_point_offset.y = 0;
     pcm.target_point_offset.z = 0;
-    pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
-    pcm.constraint_region_shape.dimensions.push_back(0.001);
+    pcm.constraint_region.primitives.resize(1);
+    pcm.constraint_region.primitives[0].type = shape_msgs::SolidPrimitive::SPHERE;
+    pcm.constraint_region.primitives[0].dimensions.x = 0.001;
 
-    pcm.constraint_region_pose.header.frame_id = scene.getKinematicModel()->getModelFrame();
-    pcm.constraint_region_pose.pose.position.x = 0.55;
-    pcm.constraint_region_pose.pose.position.y = 0.2;
-    pcm.constraint_region_pose.pose.position.z = 1.25;
-    pcm.constraint_region_pose.pose.orientation.x = 0.0;
-    pcm.constraint_region_pose.pose.orientation.y = 0.0;
-    pcm.constraint_region_pose.pose.orientation.z = 0.0;
-    pcm.constraint_region_pose.pose.orientation.w = 1.0;
+    pcm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    pcm.constraint_region.primitive_poses.resize(1);
+    pcm.constraint_region.primitive_poses[0].position.x = 0.55;
+    pcm.constraint_region.primitive_poses[0].position.y = 0.2;
+    pcm.constraint_region.primitive_poses[0].position.z = 1.25;
+    pcm.constraint_region.primitive_poses[0].orientation.x = 0.0;
+    pcm.constraint_region.primitive_poses[0].orientation.y = 0.0;
+    pcm.constraint_region.primitive_poses[0].orientation.z = 0.0;
+    pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
     pcm.weight = 1.0;
     mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
 
