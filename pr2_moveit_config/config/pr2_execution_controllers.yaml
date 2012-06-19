@@ -12,24 +12,3 @@ left_arm:
       type: trajectory_execution_ros/FollowJointTrajectoryControllerHandler
       load: false
       default: true
-arms:
-  controllers: 
-    - name: both_arms_controller
-      ns: follow_joint_trajectory
-      type: trajectory_execution_ros/FollowJointTrajectoryControllerHandler
-      load: true
-      default: true
-r_end_effector:
-  controllers:
-    - name: r_gripper_controller
-      ns: gripper_action
-      type: pr2_arm_navigation/Pr2GripperTrajectoryControllerHandler
-      load: false
-      default: true
-l_end_effector:
-  controllers:
-    - name: l_gripper_controller
-      ns: gripper_action
-      type: pr2_arm_navigation/Pr2GripperTrajectoryControllerHandler
-      load: false
-      default: true
