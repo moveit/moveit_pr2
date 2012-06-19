@@ -1,5 +1,5 @@
-<library path="lib/libpr2_arm_navigation">
-  <class name="pr2_arm_navigation/Pr2GripperTrajectoryControllerHandler" type="pr2_arm_navigation::Pr2GripperTrajectoryControllerHandler" base_class_type="trajectory_execution::TrajectoryControllerHandler">
+<library path="lib/libpr2_gripper_controller">
+  <class name="pr2_gripper_controller/Pr2GripperTrajectoryControllerHandler" type="pr2_gripper_controller::Pr2GripperTrajectoryControllerHandler" base_class_type="trajectory_execution::TrajectoryControllerHandler">
     <description>
     </description>
   </class>

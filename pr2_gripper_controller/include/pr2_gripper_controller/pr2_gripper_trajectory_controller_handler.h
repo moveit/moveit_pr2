@@ -45,7 +45,7 @@
 
 /// \brief Trajectory controller handler for the pr2 gripper.
 
-namespace pr2_arm_navigation {
+namespace pr2_gripper_controller {
 
 class Pr2GripperTrajectoryControllerHandler : public trajectory_execution::TrajectoryControllerHandler {
 

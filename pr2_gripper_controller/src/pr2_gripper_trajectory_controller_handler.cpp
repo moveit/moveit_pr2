@@ -34,10 +34,10 @@
 
 /** \author E. Gil Jones */
 
-#include <pr2_arm_navigation/pr2_gripper_trajectory_controller_handler.h>
+#include <pr2_gripper_controller/pr2_gripper_trajectory_controller_handler.h>
 #include <pluginlib/class_list_macros.h>
 
-namespace pr2_arm_navigation 
+namespace pr2_gripper_controller 
 {
 
 static const double GRIPPER_OPEN = 0.086;
@@ -124,6 +124,6 @@ void Pr2GripperTrajectoryControllerHandler::controllerFeedbackCallback(const pr2
 
 }
 
-PLUGINLIB_DECLARE_CLASS(pr2_arm_navigation, Pr2GripperTrajectoryControllerHandler,
-                        pr2_arm_navigation::Pr2GripperTrajectoryControllerHandler,
+PLUGINLIB_DECLARE_CLASS(pr2_gripper_controller, Pr2GripperTrajectoryControllerHandler,
+                        pr2_gripper_controller::Pr2GripperTrajectoryControllerHandler,
                         trajectory_execution::TrajectoryControllerHandler);
