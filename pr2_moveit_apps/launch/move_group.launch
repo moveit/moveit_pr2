@@ -5,7 +5,7 @@
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch" />
 
   <arg name="planning_plugin" default="ompl_interface_ros/OMPLPlanner" />
-  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStateBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStateCollisionPlanningRequestAdapter default_planner_request_adapters/FixStartStatePathConstraintsPlanningRequestAdapter" />
+  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints" />
   
   <node name="move_group" pkg="move_group" type="move_group_action_server" respawn="false" output="screen">
     <param name="planning_plugin" value="$(arg planning_plugin)" />
