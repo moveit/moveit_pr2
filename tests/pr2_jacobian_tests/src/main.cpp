@@ -34,8 +34,11 @@
 
 /* Author: Sachin Chitta */
 
+#include <ros/ros.h>
 #include <robot_model_loader/robot_model_loader.h>
-#include <jacobian_solver/jacobian_solver.h>
+
+#include <planning_models/kinematic_model.h>
+#include <planning_models/kinematic_state.h>
 
 // KDL
 #include <kdl/jntarray.hpp>
@@ -65,15 +68,23 @@ TEST(JacobianSolver, solver)
 {
  srand ( time(NULL) ); // initialize random seed: 
  robot_model_loader::RobotModelLoader model_loader("robot_description");
- jacobian_solver::JacobianSolver solver;
- ASSERT_TRUE(solver.initialize(model_loader.getURDF(),model_loader.getSRDF(),"right_arm"));
+
+ planning_models::KinematicModelPtr kinematic_model;
+ kinematic_model.reset(new planning_models::KinematicModel(model_loader.getURDF(),model_loader.getSRDF()));
+
+ planning_models::KinematicStatePtr kinematic_state;
+ kinematic_state.reset(new planning_models::KinematicState(kinematic_model));
+ kinematic_state->setToDefaultValues();
+
+ planning_models::KinematicState::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
  
  std::string link_name = "r_wrist_roll_link";
  std::vector<double> joint_angles(7,0.0); 
  geometry_msgs::Point ref_position;
  Eigen::MatrixXd jacobian;
  Eigen::Vector3d point(0.0,0.0,0.0);
- ASSERT_TRUE(solver.getJacobian(link_name,joint_angles,point,jacobian));
+ joint_state_group->setStateValues(joint_angles);
+ ASSERT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
 
  KDL::Tree tree;
  if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree)) 
@@ -98,11 +109,11 @@ TEST(JacobianSolver, solver)
    for(int j=0; j < 7; j++)
    {
      q_in(j) = gen_rand(-M_PI,M_PI);
-     //q_in(j) = 0.0;
      joint_angles[j] = q_in(j);
    }
    EXPECT_TRUE(kdl_solver.JntToJac(q_in,jacobian_kdl) >= 0);
-   EXPECT_TRUE(solver.getJacobian(link_name,joint_angles,point,jacobian));  
+   joint_state_group->setStateValues(joint_angles);
+   EXPECT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
    for(unsigned int k=0; k < 6; k++)
    {
      for(unsigned int m=0; m < 7; m++)
@@ -117,15 +128,23 @@ TEST(JacobianSolver, solver2)
 {
  srand ( time(NULL) ); // initialize random seed: 
  robot_model_loader::RobotModelLoader model_loader("robot_description");
- jacobian_solver::JacobianSolver solver;
- ASSERT_TRUE(solver.initialize(model_loader.getURDF(),model_loader.getSRDF(),"left_arm"));
+
+ planning_models::KinematicModelPtr kinematic_model;
+ kinematic_model.reset(new planning_models::KinematicModel(model_loader.getURDF(),model_loader.getSRDF()));
+
+ planning_models::KinematicStatePtr kinematic_state;
+ kinematic_state.reset(new planning_models::KinematicState(kinematic_model));
+ kinematic_state->setToDefaultValues();
+
+ planning_models::KinematicState::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
  
  std::string link_name = "l_wrist_roll_link";
  std::vector<double> joint_angles(7,0.0); 
  geometry_msgs::Point ref_position;
  Eigen::MatrixXd jacobian;
  Eigen::Vector3d point(0.0,0.0,0.0);
- ASSERT_TRUE(solver.getJacobian(link_name,joint_angles,point,jacobian));
+ joint_state_group->setStateValues(joint_angles);
+ ASSERT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
 
  KDL::Tree tree;
  if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree)) 
@@ -150,11 +169,11 @@ TEST(JacobianSolver, solver2)
    for(int j=0; j < 7; j++)
    {
      q_in(j) = gen_rand(-M_PI,M_PI);
-     //q_in(j) = 0.0;
      joint_angles[j] = q_in(j);
    }
    EXPECT_TRUE(kdl_solver.JntToJac(q_in,jacobian_kdl) >= 0);
-   EXPECT_TRUE(solver.getJacobian(link_name,joint_angles,point,jacobian));  
+   joint_state_group->setStateValues(joint_angles);
+   EXPECT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
    for(unsigned int k=0; k < 6; k++)
    {
      for(unsigned int m=0; m < 7; m++)

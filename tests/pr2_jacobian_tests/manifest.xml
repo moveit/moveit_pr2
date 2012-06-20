@@ -9,7 +9,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/pr2_jacobian_tests</url>
   <depend package="robot_model_loader"/>
-  <depend package="jacobian_solver"/>
+  <depend package="planning_models"/>
   <depend package="kdl"/>
   <depend package="kdl_parser"/>
 
