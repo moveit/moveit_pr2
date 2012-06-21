@@ -17,3 +17,4 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 rosbuild_add_executable(pr2_move_group_test src/pr2_move_group_test.cpp)
+rosbuild_add_executable(pr2_move_group_interface_test src/pr2_move_group_interface_test.cpp)
