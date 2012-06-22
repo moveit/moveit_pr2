@@ -45,7 +45,8 @@ int main(int argc, char **argv)
   spinner.start();
   
   move_group_interface::MoveGroup group("right_arm");
-  
+  move_group_interface::MoveGroup group2("left_arm");
+
   geometry_msgs::PoseStamped pose;
   pose.header.frame_id = "base_link";
   pose.pose.position.x = 0.55;
@@ -63,6 +64,9 @@ int main(int argc, char **argv)
   group.setRandomTarget();
   if (group.move())
     ROS_INFO("Success!");
+
+  group2.setRandomTarget();
+  group2.move();
 
   return 0;
 }
