@@ -1,20 +1,20 @@
 <launch>
 
-  <rosparam command="load" file="$(find pr2_arm_navigation)/config/pr2_both_arms_controllers.yaml" />
+  <rosparam command="load" file="$(find pr2_moveit_config)/config/pr2_both_arms_controllers.yaml" />
   
   <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
 
   <group ns="robot_description_planning">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
-    <rosparam command="load" file="$(find pr2_arm_navigation)/config/joint_limits.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/joint_limits.yaml"/>
   </group>
 
   <node pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
   <node pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
 
   <node pkg="pr2_trajectory_execution_ros" type="trajectory_execution_test" name="trajectory_execution_test" output="screen">
-    <rosparam command="load" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
   </node>
 
 </launch>

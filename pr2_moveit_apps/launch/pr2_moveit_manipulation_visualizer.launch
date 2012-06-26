@@ -3,15 +3,15 @@
   <arg name="allow_trajectory_execution" default="false"/>
   <arg name="do_object_recognition" default="false"/>
 
-  <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
+  <param unless="$(arg monitor_robot_state)" name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
   <rosparam command="load" file="$(find pr2_manipulation)/config/grasping.yaml"/>
 
-  <rosparam if="$(arg allow_trajectory_execution)" command="load" file="$(find pr2_arm_navigation)/config/pr2_both_arms_controllers.yaml" />
+  <rosparam if="$(arg allow_trajectory_execution)" command="load" file="$(find pr2_moveit_config)/config/pr2_both_arms_controllers.yaml" />
 
   <group ns="robot_description_planning">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
-    <rosparam command="load" file="$(find pr2_arm_navigation)/config/joint_limits.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/joint_limits.yaml"/>
   </group>
   
   <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
@@ -26,11 +26,12 @@
   <node pkg="moveit_manipulation_visualization" type="moveit_manipulation_visualizer" name="moveit_manipulation_visualizer" output="screen">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
-    <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_arm_navigation)/config/pr2_execution_controllers.yaml"/>
+    <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
     <param name="request_adapters" value="default_planner_request_adapters/FixStartStateWorkspaceBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStateBoundsPlanningRequestAdapter default_planner_request_adapters/FixStartStatePathConstraintsPlanningRequestAdapter" />
     <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
     <param name="do_object_recognition" value="$(arg do_object_recognition)"/>
+    <param name="start_state_max_bounds_error" value=".01"/>
   </node>
 
 </launch>
