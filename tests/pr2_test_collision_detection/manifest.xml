@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/pr2_test_collision_detection</url>
 
   <depend package="collision_detection"/>
+  <depend package="collision_detection_fcl"/>
   <depend package="planning_scene_monitor"/>
 
 </package>
