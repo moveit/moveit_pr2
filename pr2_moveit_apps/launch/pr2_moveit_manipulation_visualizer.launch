@@ -6,7 +6,10 @@
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
-  
+ 
+  <arg name="planning_plugin" default="ompl_interface_ros/OMPLPlanner" />
+  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints" />
+ 
   <param unless="$(arg monitor_robot_state)" name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
   <rosparam command="load" file="$(find pr2_manipulation)/config/grasping.yaml"/>
@@ -28,10 +31,11 @@
   <include if="$(arg do_object_recognition)" file="$(find moveit_tabletop_object_detector)/launch/tabletop_object_recognition.launch"/>
 
   <node pkg="moveit_manipulation_visualization" type="moveit_manipulation_visualizer" name="moveit_manipulation_visualizer" output="screen" launch-prefix="$(arg launch_prefix)">
+    <param name="planning_plugin" value="$(arg planning_plugin)" />
+    <param name="request_adapters" value="$(arg planning_adapters)" />
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
     <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
-    <param name="request_adapters" value="default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStatePathConstraints default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateCollision" />
     <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
     <param name="do_object_recognition" value="$(arg do_object_recognition)"/>
