@@ -39,34 +39,21 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "pr2_move_group_interface_test", ros::init_options::AnonymousName);
+  ros::init(argc, argv, "rw_move_group_interface_test", ros::init_options::AnonymousName);
   
   ros::AsyncSpinner spinner(1);
   spinner.start();
   
-  move_group_interface::MoveGroup group("right_arm");
-  move_group_interface::MoveGroup group2("left_arm");
+  move_group_interface::MoveGroup group("arm");
+//  move_group_interface::MoveGroup group2("left_arm");
 
-  geometry_msgs::PoseStamped pose;
-  pose.header.frame_id = "base_link";
-  pose.pose.position.x = 0.55;
-  pose.pose.position.y = 0.2;
-  pose.pose.position.z = 0.75;
-  pose.pose.orientation.x = 0.0;
-  pose.pose.orientation.y = 0.0;
-  pose.pose.orientation.z = 0.0;
-  pose.pose.orientation.w = 1.0;
+  std::vector<double> v(7, 0);
+  v[3] = -1.2;
+
+
+  group.setJointValueTarget(v);
   
-  group.setPoseTarget(pose);
-  if (group.move())
-    ROS_INFO("Success!");
-
-  group.setRandomTarget();
-  if (group.move())
-    ROS_INFO("Success!");
-
-  group2.setRandomTarget();
-  group2.move();
+  group.move();
 
   return 0;
 }

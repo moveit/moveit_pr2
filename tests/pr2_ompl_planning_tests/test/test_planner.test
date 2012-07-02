@@ -6,7 +6,7 @@
     <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
   </group>
 
-  <include file="$(find pr2_moveit_config)/launch/ompl_planner.launch"/>
+  <include file="$(find pr2_moveit_apps)/launch/ompl_planner.launch"/>
 
   <test pkg="pr2_ompl_planning_tests" type="test_planner" test-name="test_planner">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
