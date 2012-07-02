@@ -1,0 +1,17 @@
+<package>
+  <description brief="pr2_test_chomp_planner">
+
+     pr2_test_chomp_planner
+
+  </description>
+  <author>E. Gil Jones</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_test_collision_distance_field</url>
+  <depend package="collision_distance_field"/>
+  <depend package="chomp_motion_planner"/>
+  <depend package="robot_model_loader"/>
+  <depend package="planning_scene"/>
+</package>
+
+
