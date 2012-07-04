@@ -1,0 +1,24 @@
+<package>
+  <description brief="pr2_moveit_controller_manager">
+
+     pr2_moveit_controller_manager
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_moveit_controller_manager</url>
+  <depend package="moveit_controller_manager"/>
+  <depend package="pr2_mechanism_msgs"/>
+  <depend package="control_msgs"/>
+  <depend package="actionlib"/>
+  <depend package="pluginlib"/>
+  <depend package="roscpp"/>
+
+  <export>
+    <pr2_moveit_controller_manager plugin="${prefix}/lib/plugin_description.xml"/>
+  </export>
+
+</package>
+
+

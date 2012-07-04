@@ -1,0 +1,8 @@
+<library path="lib/libpr2_moveit_controller_manager">
+
+  <class name="pr2_moveit_controller_manager/Pr2MoveitControllerManager" type="pr2_moveit_controller_manager::Pr2MoveitControllerManager" base_class_type="moveit_controller_manager::MoveitControllerManager">
+    <description>
+    </description>
+  </class>
+
+</library>

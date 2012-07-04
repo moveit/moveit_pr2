@@ -12,3 +12,7 @@ left_arm:
       type: trajectory_execution_ros/FollowJointTrajectoryControllerHandler
       load: false
       default: true
+      joints:
+	- j1
+	- j2
+

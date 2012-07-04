@@ -114,8 +114,7 @@ int main(int argc, char** argv)
 
   ros::init(argc, argv, "planner_loader");
 
-  tf::TransformListener tf;
-  g_psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION, &tf);
+  g_psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION);
   if(g_psm->getPlanningScene() && g_psm->getPlanningScene()->isConfigured())
   {
     g_psm->startWorldGeometryMonitor();
