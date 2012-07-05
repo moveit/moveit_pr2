@@ -55,7 +55,7 @@ class Pr2FollowJointTrajectoryControllerHandle : public moveit_controller_manage
 public:
   
   Pr2FollowJointTrajectoryControllerHandle(const std::string &name, const std::string &ns = "follow_joint_trajectory") :
-    moveit_controller_manager::MoveItControllerHandle(name), namespace_(ns), done_(false)
+    moveit_controller_manager::MoveItControllerHandle(name), namespace_(ns), done_(true)
   {  
     follow_joint_trajectory_action_client_.reset(new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>(name_ + "/" + namespace_, true));
     while (ros::ok() && !follow_joint_trajectory_action_client_->waitForServer(ros::Duration(5.0)))
@@ -74,6 +74,7 @@ public:
     }
     if (!done_)
       cancelExecution();
+    ROS_DEBUG_STREAM("Sending trajectory to FollowJointTrajectory action for controller " << name_);
     control_msgs::FollowJointTrajectoryGoal goal;
     goal.trajectory = trajectory.joint_trajectory;
     follow_joint_trajectory_action_client_->sendGoal(goal,
@@ -99,10 +100,11 @@ public:
     return true;
   }
   
-  virtual void waitForExecution(void)
+  virtual bool waitForExecution(const ros::Duration &timeout = ros::Duration(0))
   { 
     if (follow_joint_trajectory_action_client_ && !done_)
-      follow_joint_trajectory_action_client_->waitForResult();
+      return follow_joint_trajectory_action_client_->waitForResult(timeout);
+    return true;
   }
 
   virtual moveit_controller_manager::ExecutionStatus::Value getLastExecutionStatus(void)
@@ -113,11 +115,17 @@ public:
   void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
                               const control_msgs::FollowJointTrajectoryResultConstPtr& result)
   {
-    ROS_INFO_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
+    ROS_DEBUG_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
     if (state == actionlib::SimpleClientGoalState::SUCCEEDED)
       last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
-    else
-      last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
+    else  
+    {
+      if (state == actionlib::SimpleClientGoalState::ABORTED)
+        last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
+      else
+        last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
+    }
+    
     done_ = true;
   }
   
@@ -158,27 +166,47 @@ public:
             ROS_WARN("Name and joints must be specifed for each controller");
           else
           {
-            ControllerInformation ci;
-            std::string name = std::string(controller_list[i]["name"]);
-            if (controller_list[i].hasMember("default"))
+            try
             {
-              std::string def = std::string(controller_list[i]["default"]);
-              std::transform(def.begin(), def.end(), def.begin(), ::tolower);
-              if (def == "true" || def == "yes")
-                ci.default_ = true;
+              ControllerInformation ci;
+              std::string name = std::string(controller_list[i]["name"]);
+              if (controller_list[i].hasMember("default"))
+              {
+                try
+                {
+                  if (controller_list[i]["default"].getType() == XmlRpc::XmlRpcValue::TypeBoolean)
+                  {
+                    ci.default_ = controller_list[i]["default"];
+                  }
+                  else
+                  {
+                    std::string def = std::string(controller_list[i]["default"]);
+                    std::transform(def.begin(), def.end(), def.begin(), ::tolower);
+                    if (def == "true" || def == "yes")
+                      ci.default_ = true;
+                  }
+                }
+                catch (...)
+                {
+                }
+              }
+              if (controller_list[i].hasMember("ns"))
+                ci.ns_ = std::string(controller_list[i]["ns"]);
+              if (controller_list[i]["joints"].getType() == XmlRpc::XmlRpcValue::TypeArray)
+              {
+                int nj = controller_list[i]["joints"].size();
+                for (int j = 0 ; j < nj ; ++j)
+                  ci.joints_.push_back(std::string(controller_list[i]["joints"][j]));
+              }
+              else
+                ROS_WARN_STREAM("The list of joints for controller " << name << " is not specified as an array");
+              if (!ci.joints_.empty())
+                possibly_unloaded_controllers_[name] = ci;
             }
-            if (controller_list[i].hasMember("ns"))
-              ci.ns_ = std::string(controller_list[i]["ns"]);
-            if (controller_list[i]["joints"].getType() == XmlRpc::XmlRpcValue::TypeArray)
+            catch (...)
             {
-              int nj = controller_list[i]["joints"].size();
-              for (int j = 0 ; j < nj ; ++j)
-                ci.joints_.push_back(std::string(controller_list[i]["joints"][j]));
+              ROS_ERROR("Unable to parse controller information");
             }
-            else
-              ROS_WARN_STREAM("The list of joints for controller " << name << " is not specified as an array");
-            if (!ci.joints_.empty())
-              possibly_unloaded_controllers_[name] = ci;
           }
     }
     else
@@ -190,11 +218,11 @@ public:
     while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/switch_controller", ros::Duration(5.0)))
       ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/switch_controller" << " to come up");
 
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/load_controllers", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/load_controllers" << " to come up");
+    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/load_controller", ros::Duration(5.0)))
+      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/load_controller" << " to come up");
 
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/unload_controllers", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/unload_controllers" << " to come up");
+    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/unload_controller", ros::Duration(5.0)))
+      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/unload_controller" << " to come up");
     
     lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_ns_ + "/list_controllers", true);
     switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_ns_ + "/switch_controller", true);
