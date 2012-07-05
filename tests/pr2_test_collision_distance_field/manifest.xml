@@ -1,0 +1,16 @@
+<package>
+  <description brief="pr2_test_collision_distance_field">
+
+     pr2_test_collision_distance_field
+
+  </description>
+  <author>E. Gil Jones</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_test_collision_distance_field</url>
+  <depend package="collision_distance_field"/>
+  <depend package="collision_detection_fcl"/>
+  <depend package="robot_model_loader"/>
+</package>
+
+
