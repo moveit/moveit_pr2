@@ -16,7 +16,7 @@
   <depend package="roscpp"/>
 
   <export>
-    <pr2_moveit_controller_manager plugin="${prefix}/lib/plugin_description.xml"/>
+    <moveit_controller_manager plugin="${prefix}/lib/plugin_description.xml"/>
   </export>
 
 </package>

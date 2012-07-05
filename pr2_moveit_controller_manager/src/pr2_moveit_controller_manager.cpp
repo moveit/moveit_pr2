@@ -32,13 +32,19 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Ioan Sucan */
+/* Author: Ioan Sucan, E. Gil Jones */
 
 #include <ros/ros.h>
 #include <moveit_controller_manager/moveit_controller_manager.h>
 #include <control_msgs/FollowJointTrajectoryAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <pluginlib/class_list_macros.h>
+
+#include <pr2_mechanism_msgs/ListControllers.h>
+#include <pr2_mechanism_msgs/SwitchController.h>
+#include <pr2_mechanism_msgs/LoadController.h>
+#include <pr2_mechanism_msgs/UnloadController.h>
+#include <algorithm>
 #include <map>
 
 namespace pr2_moveit_controller_manager
@@ -152,21 +158,27 @@ public:
             ROS_WARN("Name and joints must be specifed for each controller");
           else
           {
-            std::vector<std::string> joints;
+            ControllerInformation ci;
             std::string name = std::string(controller_list[i]["name"]);
-            std::string ns;
+            if (controller_list[i].hasMember("default"))
+            {
+              std::string def = std::string(controller_list[i]["default"]);
+              std::transform(def.begin(), def.end(), def.begin(), ::tolower);
+              if (def == "true" || def == "yes")
+                ci.default_ = true;
+            }
             if (controller_list[i].hasMember("ns"))
-              ns = std::string(controller_list[i]["ns"]);
+              ci.ns_ = std::string(controller_list[i]["ns"]);
             if (controller_list[i]["joints"].getType() == XmlRpc::XmlRpcValue::TypeArray)
             {
               int nj = controller_list[i]["joints"].size();
               for (int j = 0 ; j < nj ; ++j)
-                joints.push_back(std::string(controller_list[i]["joints"][j]));
+                ci.joints_.push_back(std::string(controller_list[i]["joints"][j]));
             }
             else
               ROS_WARN_STREAM("The list of joints for controller " << name << " is not specified as an array");
-            if (!joints.empty())
-              possibly_unloaded_controllers_[name] = std::make_pair(ns, joints);
+            if (!ci.joints_.empty())
+              possibly_unloaded_controllers_[name] = ci;
           }
     }
     else
@@ -175,8 +187,8 @@ public:
     while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/list_controllers", ros::Duration(5.0)))
       ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/list_controllers" << " to come up");
 
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/switch_controllers", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/switch_controllers" << " to come up");
+    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/switch_controller", ros::Duration(5.0)))
+      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/switch_controller" << " to come up");
 
     while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/load_controllers", ros::Duration(5.0)))
       ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/load_controllers" << " to come up");
@@ -184,10 +196,10 @@ public:
     while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/unload_controllers", ros::Duration(5.0)))
       ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/unload_controllers" << " to come up");
     
-    lister_service_ = gh.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_ns_ + "/list_controllers", true);
-    switcher_service_ = gh.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_ns_ + "/switch_controller", true);
-    loader_service_ = gh.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_ns_ + "/load_controller", true);
-    unloader_service_ = gh.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_ns_ + "/unload_controller", true);
+    lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_ns_ + "/list_controllers", true);
+    switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_ns_ + "/switch_controller", true);
+    loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_ns_ + "/load_controller", true);
+    unloader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_ns_ + "/unload_controller", true);
   }
   
   virtual ~Pr2MoveItControllerManager(void)
@@ -196,67 +208,177 @@ public:
   
   virtual moveit_controller_manager::MoveItControllerHandlePtr getControllerHandle(const std::string &name)
   {
+    std::map<std::string, moveit_controller_manager::MoveItControllerHandlePtr>::const_iterator it = handle_cache_.find(name);
+    if (it != handle_cache_.end())
+      return it->second;
+    
+    moveit_controller_manager::MoveItControllerHandlePtr new_handle;
     if (possibly_unloaded_controllers_.find(name) != possibly_unloaded_controllers_.end())
     {
-      const std::string &ns = possibly_unloaded_controllers_.at(name).first;
-      if (!ns.emty())
-        return moveit_controller_manager::MoveItControllerHandlePtr(new Pr2FollowJointTrajectoryControllerHandle(name, ns));
+      const std::string &ns = possibly_unloaded_controllers_.at(name).ns_;
+      if (!ns.empty())
+        new_handle.reset(new Pr2FollowJointTrajectoryControllerHandle(name, ns));
     }
-    return moveit_controller_manager::MoveItControllerHandlePtr(new Pr2FollowJointTrajectoryControllerHandle(name));
+    if (!new_handle)
+      new_handle.reset(new Pr2FollowJointTrajectoryControllerHandle(name));
+    handle_cache_[name] = new_handle;
+    return new_handle;
   }
   
   virtual void getControllersList(std::vector<std::string> &names)
-  {  
+  {    
+    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+    std::set<std::string> names_set;
+    names_set.insert(res.controllers.begin(), res.controllers.end());
+    
+    for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
+      names_set.insert(it->first);
+    
     names.clear();
-    if (ros::service::waitForService(controller_manager_ns + "/list_controllers", ros::Duration(1.0)))
-    {
-      
-    }
+    names.insert(names.end(), names_set.begin(), names_set.end());
   }
   
   virtual void getActiveControllers(std::vector<std::string> &names)
   {
+    names.clear();
+    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+    for (std::size_t i = 0; i < res.controllers.size(); ++i)
+      if (res.state[i] == "running")
+        names.push_back(res.controllers[i]);
   }
   
   virtual void getLoadedControllers(std::vector<std::string> &names)
-  {
+  {  
+    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+    names = res.controllers;
   }
   
   virtual void getControllerJoints(const std::string &name, std::vector<std::string> &joints)
   {
+    std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.find(name);
+    if (it != possibly_unloaded_controllers_.end())
+      joints = it->second.joints_;
+    else
+    {
+      ROS_WARN("The joints for controller '%s' are not known. Perhaps the controller configuration is not loaded on the param server?", name.c_str());
+      joints.clear();
+    }
   }
   
-  virtual ControllerState getControllerState(const std::string &name)
+  virtual moveit_controller_manager::MoveItControllerManager::ControllerState getControllerState(const std::string &name)
   {
-    return ControllerState();
+    moveit_controller_manager::MoveItControllerManager::ControllerState state;
+    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+    for (std::size_t i = 0; i < res.controllers.size(); ++i)
+    {
+      if (res.controllers[i] == name)
+      {
+        state.loaded_ = true;
+        if (res.state[i] == "running")
+          state.active_ = true;
+        break;
+      }
+    }
+    std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.find(name);
+    if (it != possibly_unloaded_controllers_.end())
+      if (it->second.default_)
+        state.default_ = true;
+    return state;
   }
   
   virtual bool loadController(const std::string &name)
   {
-    return false;
+    last_lister_response_ = ros::Time();  
+    handle_cache_.erase(name);
+    pr2_mechanism_msgs::LoadController::Request req;
+    pr2_mechanism_msgs::LoadController::Response res;
+    req.name = name;
+    if (!loader_service_.call(req, res))
+    {
+      ROS_WARN_STREAM("Something went wrong with loader service");
+      return false;
+    }
+    if (!res.ok)
+      ROS_WARN_STREAM("Loading controller " << name << " failed");
+    return res.ok;
   }
   
   virtual bool unloadController(const std::string &name)
-  {
-    return false;
+  { 
+    last_lister_response_ = ros::Time();
+    handle_cache_.erase(name);
+    pr2_mechanism_msgs::UnloadController::Request req;
+    pr2_mechanism_msgs::UnloadController::Response res;
+    req.name = name;
+    if (!unloader_service_.call(req, res))
+    {
+      ROS_WARN_STREAM("Something went wrong with unloader service");
+      return false;
+    }
+    if (!res.ok)
+      ROS_WARN_STREAM("Unloading controller " << name << " failed");
+    return res.ok;
   }
   
-  virtual bool switchControllers(const std::vector<std::string> &load, const std::vector<std::string> &unload)
-  {
-    return false;
+  virtual bool switchControllers(const std::vector<std::string> &activate, const std::vector<std::string> &deactivate)
+  {  
+    last_lister_response_ = ros::Time();
+    pr2_mechanism_msgs::SwitchController::Request req;
+    pr2_mechanism_msgs::SwitchController::Response res;
+    
+    req.strictness = pr2_mechanism_msgs::SwitchController::Request::BEST_EFFORT;
+    req.start_controllers = activate;
+    req.stop_controllers = deactivate;
+    if (!switcher_service_.call(req, res))
+    {
+      ROS_WARN_STREAM("Something went wrong with switcher service");
+      return false;
+    }
+    if (!res.ok)
+      ROS_WARN_STREAM("Switcher service failed");
+    return res.ok;
   }
   
-protected:
+protected: 
+
+  const pr2_mechanism_msgs::ListControllers::Response &getListControllerServiceResponse(void)
+  {
+    static const ros::Duration max_cache_age(10.0);
+    if ((ros::Time::now() - last_lister_response_) > max_cache_age)
+    {
+      pr2_mechanism_msgs::ListControllers::Request req;
+      if (!lister_service_.call(req, cached_lister_response_))
+        ROS_WARN_STREAM("Something went wrong with lister service");
+      last_lister_response_ = ros::Time::now();
+    }
+    return cached_lister_response_;
+  }
   
   ros::NodeHandle node_handle_;    
+  ros::NodeHandle root_node_handle_;    
 
   std::string controller_manager_ns_; 
   ros::ServiceClient loader_service_;
   ros::ServiceClient unloader_service_;
   ros::ServiceClient switcher_service_;
   ros::ServiceClient lister_service_;
+  
+  ros::Time last_lister_response_;
+  pr2_mechanism_msgs::ListControllers::Response cached_lister_response_;
 
-  std::map<std::string, std::pair<std::string, std::vector<std::string> > > possibly_unloaded_controllers_;
+  std::map<std::string, moveit_controller_manager::MoveItControllerHandlePtr> handle_cache_;
+  
+  struct ControllerInformation
+  {
+    ControllerInformation(void) : default_(false)
+    {
+    }
+    
+    bool default_;
+    std::string ns_;
+    std::vector<std::string> joints_;
+  };
+  std::map<std::string, ControllerInformation> possibly_unloaded_controllers_;
 };
 
 }
