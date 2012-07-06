@@ -80,21 +80,21 @@ link_spheres:
   - link: r_gripper_r_finger_link
     spheres:
       - x: 0.03
-        y: -0.025
+        y: 0.025
         z: 0.00
         radius: 0.04
       - x: 0.08 
-        y: -0.0175
+        y: 0.0175
         z: 0.00
         radius: 0.035
   - link: r_gripper_r_finger_tip_link
     spheres:
       - x: 0.015 
-        y: 0.005 
+        y: -0.005 
         z: 0.00 
         radius: 0.03
       - x: 0.035
-        y: 0.005
+        y: -0.005
         z: 0.00
         radius: 0.02
   - link: r_gripper_l_finger_tip_link
