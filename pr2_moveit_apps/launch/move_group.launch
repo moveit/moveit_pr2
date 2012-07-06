@@ -10,7 +10,7 @@
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <arg name="planning_plugin" default="ompl_interface_ros/OMPLPlanner" />
-  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints" />
+  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints default_planner_request_adapters/AddTimeParameterization" />
   <arg name="controller_manager_plugin" default="pr2_moveit_controller_manager/Pr2MoveItControllerManager" />
   
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="move_group" type="move_group_action_server" respawn="false" output="screen">

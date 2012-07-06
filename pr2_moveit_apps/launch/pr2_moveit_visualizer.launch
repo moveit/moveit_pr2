@@ -7,7 +7,7 @@
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <arg name="planning_plugin" default="ompl_interface_ros/OMPLPlanner" /> 
-  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints" />
+  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints default_planner_request_adapters/AddTimeParameterization" />
 
   <param unless="$(arg monitor_robot_state)" name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
   <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
