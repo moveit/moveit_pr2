@@ -1,0 +1,15 @@
+<launch>
+  <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
+  <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
+
+  <group ns="robot_description_planning">
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
+  </group>
+
+  <rosparam command="load" file="$(find pr2_moveit_config)/config/link_spheres.yaml"/>
+
+  <test pkg="pr2_test_collision_distance_field"
+        type="test_pr2_low_spheres_speed" 
+        test-name="test_pr2_low_spheres_speed">
+  </test>
+</launch>

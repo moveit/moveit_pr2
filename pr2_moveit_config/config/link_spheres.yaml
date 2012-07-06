@@ -1,0 +1,129 @@
+link_spheres:
+  - link: r_shoulder_pan_link
+    spheres: 
+      - x: 0.09
+        y: 0.0 
+        z: 0.00 
+        radius: 0.18
+  - link: r_upper_arm_roll_link
+    spheres:
+      - x: 0.18 
+        y: 0.0 
+        z: -0.015 
+        radius: 0.11
+      - x: 0.26 
+        y: 0.00 
+        z: -0.035 
+        radius: 0.08
+      - x: 0.3275 
+        y: 0.00 
+        z: -0.035 
+        radius: 0.08
+      - x: 0.40 
+        y: 0.0 
+        z: -0.0 
+        radius: 0.105
+  - link: r_forearm_roll_link
+    spheres: 
+      - x: 0.13
+        y: 0.0
+        z: 0.005 
+        radius: 0.075
+      - x: 0.20
+        y: 0.025
+        z: -0.01
+        radius: 0.055
+      - x: 0.20
+        y: -0.025 
+        z: -0.01 
+        radius: 0.055
+      - x: 0.265
+        y: 0.0275 
+        z: -0.015
+        radius: 0.05
+      - x: 0.265
+        y: -0.0275
+        z: -0.015 
+        radius: 0.05
+      - x: 0.32 
+        y: 0.0225
+        z: -0.005
+        radius: 0.05
+      - x: 0.32
+        y: -0.0225
+        z: -0.005
+        radius: 0.05
+  - link: r_wrist_roll_link
+    spheres:
+      - x: 0.0725 
+        y: -0.0175 
+        z: 0.00 
+        radius: 0.04
+      - x: 0.0725
+        y: 0.0175
+        z: 0.00
+        radius: 0.04
+      - x: 0.0925
+        y: 0.0
+        z: 0.00
+        radius: 0.04
+  - link: r_gripper_l_finger_link
+    spheres:
+      - x: 0.03
+        y: 0.025
+        z: 0.00
+        radius: 0.04
+      - x: 0.08
+        y: 0.0175
+        z: 0.00
+        radius: 0.035
+  - link: r_gripper_r_finger_link
+    spheres:
+      - x: 0.03
+        y: -0.025
+        z: 0.00
+        radius: 0.04
+      - x: 0.08 
+        y: -0.0175
+        z: 0.00
+        radius: 0.035
+  - link: r_gripper_r_finger_tip_link
+    spheres:
+      - x: 0.015 
+        y: 0.005 
+        z: 0.00 
+        radius: 0.03
+      - x: 0.035
+        y: 0.005
+        z: 0.00
+        radius: 0.02
+  - link: r_gripper_l_finger_tip_link
+    spheres:
+      - x: 0.015 
+        y: -0.005 
+        z: 0.00 
+        radius: 0.03
+      - x: 0.035 
+        y: -0.005 
+        z: 0.00 
+        radius: 0.02
+  - link: r_shoulder_lift_link
+    spheres: none
+  - link: r_upper_arm_link
+    spheres: none
+  - link: r_elbow_flex_link
+    spheres: none
+  - link: r_forearm_link
+    spheres: none
+  - link: r_wrist_flex_link
+    spheres: none
+  - link: r_gripper_palm_link
+    spheres: none
+  - link: r_gripper_palm_link
+    spheres: none
+  - link: r_gripper_motor_accelerometer_link
+    spheres: none
+
+
+      
+
