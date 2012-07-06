@@ -16,9 +16,10 @@
   <depend package="moveit_visualization_ros"/>
   <depend package="pluginlib"/>
   <depend package="pr2_controllers_msgs"/>
-  <depend package="trajectory_execution"/>
+  <depend package="trajectory_execution_manager"/>
   <depend package="move_group"/>
-  <depend package="planning_request_adapter_plugins"/>
+  <depend package="planning_request_adapter_plugins"/>  
+  <depend package="pr2_moveit_controller_manager"/>
   <depend package="moveit_manipulation_visualization"/>
   <depend package="pr2_gripper_controller"/>
 
