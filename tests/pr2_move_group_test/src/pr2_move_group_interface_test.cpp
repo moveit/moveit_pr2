@@ -44,16 +44,20 @@ int main(int argc, char **argv)
   ros::AsyncSpinner spinner(1);
   spinner.start();
   
-  move_group_interface::MoveGroup group("right_arm");
-//  move_group_interface::MoveGroup group2("left_arm");
+  move_group_interface::MoveGroup group("arms");
+  move_group_interface::MoveGroup group2("left_arm");
 
 //  std::vector<double> v(7, 0);
 //  v[3] = -1.2;
 
   for (int i = 0 ; i < 100 ; ++i)
   {
-    group.setRandomTarget();
-    group.move();
+    group.setRandomTarget();   
+    group2.setRandomTarget();
+    group.move(false);
+    sleep(1);
+    group2.move();
+    
     ROS_INFO("Done");
   }
   

@@ -94,7 +94,7 @@ public:
     {
       ROS_INFO_STREAM("Cancelling execution of trajectory on controller " << name_);
       follow_joint_trajectory_action_client_->cancelGoal();
-      last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
+      last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
       done_ = true;
     }
     return true;
@@ -120,7 +120,7 @@ public:
       last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
     else  
     {
-      if (state == actionlib::SimpleClientGoalState::ABORTED)
+      if (state == actionlib::SimpleClientGoalState::ABORTED || state == actionlib::SimpleClientGoalState::PREEMPTED)
         last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
       else
         last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
