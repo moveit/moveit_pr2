@@ -122,8 +122,8 @@ protected:
   planning_models::TransformsPtr                 ftf_;
   planning_models::TransformsConstPtr            ftf_const_;
   
-  boost::shared_ptr<collision_detection::CollisionRobot> crobot_df_;
-  boost::shared_ptr<collision_detection::CollisionWorld> cworld_df_;
+  boost::shared_ptr<collision_distance_field::CollisionRobotDistanceField> crobot_df_;
+  boost::shared_ptr<collision_distance_field::CollisionWorldDistanceField> cworld_df_;
 
   boost::shared_ptr<collision_detection::CollisionRobot> crobot_fcl_;
   boost::shared_ptr<collision_detection::CollisionWorld> cworld_fcl_;
@@ -153,14 +153,15 @@ TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
 
   collision_detection::CollisionResult res1;
   //first check with this group doesn't count
-  crobot_df_->checkSelfCollision(req, res1, kstate, *acm_);  
+  boost::shared_ptr<collision_distance_field::CollisionRobotDistanceField::GroupStateRepresentation> gsr;
+  crobot_df_->checkSelfCollision(req, res1, kstate, *acm_, gsr);  
   crobot_fcl_->checkSelfCollision(req, res1, kstate, *acm_);  
 
   for(unsigned int i = 0; i < TRIALS; i++) {
     jsg->setToRandomValues();
     collision_detection::CollisionResult res;
     ros::WallTime before = ros::WallTime::now();
-    crobot_df_->checkSelfCollision(req, res, kstate);
+    crobot_df_->checkSelfCollision(req, res, kstate, gsr);
     total_speed_df += (ros::WallTime::now()-before);
     bool df_in_collision = false;
     if(res.collision) {
