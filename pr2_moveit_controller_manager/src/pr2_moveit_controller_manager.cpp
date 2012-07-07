@@ -94,7 +94,7 @@ public:
     {
       ROS_INFO_STREAM("Cancelling execution of trajectory on controller " << name_);
       follow_joint_trajectory_action_client_->cancelGoal();
-      last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
+      last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
       done_ = true;
     }
     return true;
@@ -107,7 +107,7 @@ public:
     return true;
   }
 
-  virtual moveit_controller_manager::ExecutionStatus::Value getLastExecutionStatus(void)
+  virtual moveit_controller_manager::ExecutionStatus getLastExecutionStatus(void)
   {
     return last_exec_;
   }
@@ -116,22 +116,22 @@ public:
                               const control_msgs::FollowJointTrajectoryResultConstPtr& result)
   {
     ROS_DEBUG_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
-    if (state == actionlib::SimpleClientGoalState::SUCCEEDED)
+    if (state == actionlib::SimpleClientGoalState::ABORTED)
       last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
-    else  
-    {
-      if (state == actionlib::SimpleClientGoalState::ABORTED || state == actionlib::SimpleClientGoalState::PREEMPTED)
+    else
+      if (state == actionlib::SimpleClientGoalState::ABORTED)
         last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
       else
-        last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
-    }
-    
+        if (state == actionlib::SimpleClientGoalState::PREEMPTED)
+          last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
+        else
+          last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
     done_ = true;
   }
   
   void controllerActiveCallback(void) 
   {
-    ROS_DEBUG_STREAM("Controller " << name_ << " went active");
+    ROS_DEBUG_STREAM("Controller " << name_ << " started execution");
   }
   
   void controllerFeedbackCallback(const control_msgs::FollowJointTrajectoryFeedbackConstPtr& feedback)
@@ -140,7 +140,7 @@ public:
   
 protected:
   
-  moveit_controller_manager::ExecutionStatus::Value last_exec_;  
+  moveit_controller_manager::ExecutionStatus last_exec_;  
   std::string namespace_;
   boost::shared_ptr<actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> > follow_joint_trajectory_action_client_;
   bool done_;
