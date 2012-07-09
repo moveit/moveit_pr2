@@ -50,12 +50,12 @@ int main(int argc, char **argv)
 //  std::vector<double> v(7, 0);
 //  v[3] = -1.2;
 
-  for (int i = 0 ; i < 100 ; ++i)
+  for (int i = 0 ; i < 10 ; ++i)
   {
     group.setRandomTarget();   
     group2.setRandomTarget();
     group.move(false);
-    sleep(1);
+    sleep(2);
     group2.move();
     
     ROS_INFO("Done");
