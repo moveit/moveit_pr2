@@ -153,7 +153,7 @@ TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
 
   collision_detection::CollisionResult res1;
   //first check with this group doesn't count
-  boost::shared_ptr<collision_distance_field::CollisionRobotDistanceField::GroupStateRepresentation> gsr;
+  boost::shared_ptr<collision_distance_field::GroupStateRepresentation> gsr;
   crobot_df_->checkSelfCollision(req, res1, kstate, *acm_, gsr);  
   crobot_fcl_->checkSelfCollision(req, res1, kstate, *acm_);  
 
