@@ -116,7 +116,7 @@ public:
                               const control_msgs::FollowJointTrajectoryResultConstPtr& result)
   {
     ROS_DEBUG_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
-    if (state == actionlib::SimpleClientGoalState::ABORTED)
+    if (state == actionlib::SimpleClientGoalState::SUCCEEDED)
       last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
     else
       if (state == actionlib::SimpleClientGoalState::ABORTED)
