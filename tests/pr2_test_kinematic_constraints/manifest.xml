@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/pr2_test_kinematic_constraints</url>
   <depend package="roscpp"/>
   <depend package="kinematic_constraints"/>
+  <depend package="constraint_samplers"/>
   <depend package="planning_scene_monitor"/>
   <depend package="kinematics_plugin_loader"/>
   <depend package="pr2_arm_kinematics"/>

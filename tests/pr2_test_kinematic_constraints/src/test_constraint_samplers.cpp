@@ -36,8 +36,8 @@
 
 #include <planning_scene_monitor/planning_scene_monitor.h>
 #include <kinematic_constraints/kinematic_constraint.h>
-#include <kinematic_constraints/constraint_samplers.h>
-#include <kinematics_plugin_loader/kinematics_plugin_loader.h>
+#include <constraint_samplers/default_constraint_samplers.h>
+#include <constraint_samplers/constraint_sampler_manager.h>
 #include <geometric_shapes/shape_operations.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <planning_models/conversions.h>
@@ -54,7 +54,7 @@ protected:
   
   virtual void SetUp()
   {
-    psm_.reset(new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION, NULL));
+    psm_.reset(new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION));
     kmodel_ = psm_->getPlanningScene()->getKinematicModel();
   };
   
@@ -118,29 +118,22 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   js.push_back(jc3);
   js.push_back(jc4);
   
-  kinematic_constraints::JointConstraintSampler jcs(kmodel_->getJointModelGroup("arms"), js);
+  constraint_samplers::JointConstraintSampler jcs(psm_->getPlanningScene(), "arms", js);
   EXPECT_EQ(jcs.getConstrainedJointCount(), 2);
   EXPECT_EQ(jcs.getUnconstrainedJointCount(), 12);
 
   for (int t = 0 ; t < 1000 ; ++t)
   {
-    std::vector<double> values;
-    EXPECT_TRUE(jcs.sample(values, ks));
-    ks.getJointStateGroup("arms")->setStateValues(values);
-    double distance(0.0);
-    EXPECT_TRUE(jc2.decide(ks,distance));
-    EXPECT_TRUE(jc3.decide(ks,distance));
+    EXPECT_TRUE(jcs.sample(ks.getJointStateGroup("arms"), ks, 1));
+    EXPECT_TRUE(jc2.decide(ks).satisfied);
+    EXPECT_TRUE(jc3.decide(ks).satisfied);
   }
 
-  kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
-  kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
-  
   // test the automatic construction of constraint sampler
   moveit_msgs::Constraints c;
   
   // no constraints should give no sampler
-  kinematic_constraints::ConstraintSamplerPtr s0 = kinematic_constraints::ConstraintSampler::constructFromMessage
-    (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematics_allocator);
+  constraint_samplers::ConstraintSamplerPtr s0 = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s0.get() == NULL);
 
   // add the constraints
@@ -149,19 +142,15 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   c.joint_constraints.push_back(jcm3);
   c.joint_constraints.push_back(jcm4);
   
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
-    (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematics_allocator);
+  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s.get() != NULL);
   
   // test the generated sampler
   for (int t = 0 ; t < 1000 ; ++t)
   {
-    std::vector<double> values;
-    EXPECT_TRUE(s->sample(values, ks));
-    ks.getJointStateGroup("arms")->setStateValues(values);
-    double distance;
-    EXPECT_TRUE(jc2.decide(ks,distance));
-    EXPECT_TRUE(jc3.decide(ks,distance));
+    EXPECT_TRUE(s->sample(ks.getJointStateGroup("arms"), ks, 1));
+    EXPECT_TRUE(jc2.decide(ks).satisfied);
+    EXPECT_TRUE(jc3.decide(ks).satisfied);
   }
 }
 
@@ -175,11 +164,11 @@ TEST_F(ConstraintSamplerTestBase, OrientationConstraintsSampler)
   moveit_msgs::OrientationConstraint ocm;
   
   ocm.link_name = "r_wrist_roll_link";
-  ocm.orientation.header.frame_id = ocm.link_name; 
-  ocm.orientation.quaternion.x = 0.5;
-  ocm.orientation.quaternion.y = 0.5;
-  ocm.orientation.quaternion.z = 0.5;
-  ocm.orientation.quaternion.w = 0.5;
+  ocm.header.frame_id = ocm.link_name; 
+  ocm.orientation.x = 0.5;
+  ocm.orientation.y = 0.5;
+  ocm.orientation.z = 0.5;
+  ocm.orientation.w = 0.5;
   ocm.absolute_x_axis_tolerance = 0.01;
   ocm.absolute_y_axis_tolerance = 0.01;
   ocm.absolute_z_axis_tolerance = 0.01;
@@ -187,25 +176,17 @@ TEST_F(ConstraintSamplerTestBase, OrientationConstraintsSampler)
   
   EXPECT_TRUE(oc.configure(ocm));
   
-  double distance = 0.0;
-  bool p1 = oc.decide(ks, distance);
+  bool p1 = oc.decide(ks).satisfied;
   EXPECT_FALSE(p1);
   
-  ocm.orientation.header.frame_id = kmodel_->getModelFrame();
+  ocm.header.frame_id = kmodel_->getModelFrame();
   EXPECT_TRUE(oc.configure(ocm));
   
-  kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
-  kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
-  
-  kinematic_constraints::IKConstraintSampler iks(kmodel_->getJointModelGroup("right_arm"), kinematics_allocator,
-                                                 kinematic_constraints::IKSamplingPose(oc));
+  constraint_samplers::IKConstraintSampler iks(psm_->getPlanningScene(), "right_arm", constraint_samplers::IKSamplingPose(oc));
   for (int t = 0 ; t < 100 ; ++t)
   {
-    std::vector<double> values;
-    EXPECT_TRUE(iks.sample(values, ks, 100));
-    ks.getJointStateGroup("right_arm")->setStateValues(values);
-    double distance = 0.0;
-    EXPECT_TRUE(oc.decide(ks, distance));
+    EXPECT_TRUE(iks.sample(ks.getJointStateGroup("right_arm"), ks, 100));
+    EXPECT_TRUE(oc.decide(ks).satisfied);
   }
   
 }
@@ -223,17 +204,20 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
   pcm.target_point_offset.x = 0;
   pcm.target_point_offset.y = 0;
   pcm.target_point_offset.z = 0;
-  pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
-  pcm.constraint_region_shape.dimensions.push_back(0.001);
+  pcm.constraint_region.primitives.resize(1);
+  pcm.constraint_region.primitives[0].type = shape_msgs::SolidPrimitive::SPHERE;
+  pcm.constraint_region.primitives[0].dimensions.x = 0.001;
   
-  pcm.constraint_region_pose.header.frame_id = kmodel_->getModelFrame();
-  pcm.constraint_region_pose.pose.position.x = 0.55;
-  pcm.constraint_region_pose.pose.position.y = 0.2;
-  pcm.constraint_region_pose.pose.position.z = 1.25;
-  pcm.constraint_region_pose.pose.orientation.x = 0.0;
-  pcm.constraint_region_pose.pose.orientation.y = 0.0;
-  pcm.constraint_region_pose.pose.orientation.z = 0.0;
-  pcm.constraint_region_pose.pose.orientation.w = 1.0;
+  pcm.header.frame_id = kmodel_->getModelFrame();
+
+  pcm.constraint_region.primitive_poses.resize(1);
+  pcm.constraint_region.primitive_poses[0].position.x = 0.55;
+  pcm.constraint_region.primitive_poses[0].position.y = 0.2;
+  pcm.constraint_region.primitive_poses[0].position.z = 1.25;
+  pcm.constraint_region.primitive_poses[0].orientation.x = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.y = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.z = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
   pcm.weight = 1.0;
   
   EXPECT_TRUE(pc.configure(pcm));
@@ -242,11 +226,11 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
   moveit_msgs::OrientationConstraint ocm;
   
   ocm.link_name = "l_wrist_roll_link";
-  ocm.orientation.header.frame_id = kmodel_->getModelFrame();
-  ocm.orientation.quaternion.x = 0.0;
-  ocm.orientation.quaternion.y = 0.0;
-  ocm.orientation.quaternion.z = 0.0;
-  ocm.orientation.quaternion.w = 1.0;
+  ocm.header.frame_id = kmodel_->getModelFrame();
+  ocm.orientation.x = 0.0;
+  ocm.orientation.y = 0.0;
+  ocm.orientation.z = 0.0;
+  ocm.orientation.w = 1.0;
   ocm.absolute_x_axis_tolerance = 0.2;
   ocm.absolute_y_axis_tolerance = 0.1;
   ocm.absolute_z_axis_tolerance = 0.4;
@@ -254,41 +238,26 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
   
   EXPECT_TRUE(oc.configure(ocm));
 
-  kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
-  kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
-
-  kinematic_constraints::IKConstraintSampler iks1(kmodel_->getJointModelGroup("left_arm"), kinematics_allocator,
-                                                  kinematic_constraints::IKSamplingPose(pc, oc));
+  constraint_samplers::IKConstraintSampler iks1(psm_->getPlanningScene(), "left_arm", constraint_samplers::IKSamplingPose(pc, oc));
   for (int t = 0 ; t < 100 ; ++t)
   {
-    std::vector<double> values;
-    EXPECT_TRUE(iks1.sample(values, ks, 100));
-    ks.getJointStateGroup("left_arm")->setStateValues(values);
-    double distance(0.0);
-    EXPECT_TRUE(pc.decide(ks,distance));
-    EXPECT_TRUE(oc.decide(ks,distance));
+    EXPECT_TRUE(iks1.sample(ks.getJointStateGroup("left_arm"), ks, 100));
+    EXPECT_TRUE(pc.decide(ks).satisfied);
+    EXPECT_TRUE(oc.decide(ks).satisfied);
   }
   
-  kinematic_constraints::IKConstraintSampler iks2(kmodel_->getJointModelGroup("left_arm"), kinematics_allocator,
-                                                  kinematic_constraints::IKSamplingPose(pc));
+  constraint_samplers::IKConstraintSampler iks2(psm_->getPlanningScene(), "left_arm", constraint_samplers::IKSamplingPose(pc));
   for (int t = 0 ; t < 100 ; ++t)
   {
-    std::vector<double> values;
-    double distance(0.0);
-    EXPECT_TRUE(iks2.sample(values, ks, 100));
-    ks.getJointStateGroup("left_arm")->setStateValues(values);
-    EXPECT_TRUE(pc.decide(ks,distance));
+    EXPECT_TRUE(iks2.sample(ks.getJointStateGroup("left_arm"), ks, 100));
+    EXPECT_TRUE(pc.decide(ks).satisfied);
   }
   
-  kinematic_constraints::IKConstraintSampler iks3(kmodel_->getJointModelGroup("left_arm"), kinematics_allocator,
-                                                  kinematic_constraints::IKSamplingPose(oc));
+  constraint_samplers::IKConstraintSampler iks3(psm_->getPlanningScene(), "left_arm", constraint_samplers::IKSamplingPose(oc));
   for (int t = 0 ; t < 100 ; ++t)
   {
-    std::vector<double> values;
-    double distance(0.0);
-    EXPECT_TRUE(iks3.sample(values, ks, 100));
-    ks.getJointStateGroup("left_arm")->setStateValues(values);
-    EXPECT_TRUE(oc.decide(ks,distance));
+    EXPECT_TRUE(iks3.sample(ks.getJointStateGroup("left_arm"), ks, 100));
+    EXPECT_TRUE(oc.decide(ks).satisfied);
   }
   
   
@@ -297,18 +266,19 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
   c.position_constraints.push_back(pcm);
   c.orientation_constraints.push_back(ocm);
   
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
-    (kmodel_->getJointModelGroup("left_arm"), c, kmodel_, tf, kinematics_allocator);
+  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "left_arm", c);
   EXPECT_TRUE(s.get() != NULL);
-  for (int t = 0 ; t < 100 ; ++t)
+  static const int NT = 1000;
+  int succ = 0;
+  for (int t = 0 ; t < NT ; ++t)
   {
-    std::vector<double> values;
-    double distance(0.0);
-    EXPECT_TRUE(s->sample(values, ks, 100));
-    ks.getJointStateGroup("left_arm")->setStateValues(values);
-    EXPECT_TRUE(pc.decide(ks,distance));
-    EXPECT_TRUE(oc.decide(ks,distance));
+    EXPECT_TRUE(s->sample(ks.getJointStateGroup("left_arm"), ks, 100));
+    EXPECT_TRUE(pc.decide(ks).satisfied);
+    EXPECT_TRUE(oc.decide(ks).satisfied);
+    if (s->sample(ks.getJointStateGroup("left_arm"), ks, 1))
+      succ++;
   }
+  ROS_INFO("Success rate for IK Constraint Sampler with position & orientation constraints for one arm: %lf", (double)succ / (double)NT);
 }
 
 TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
@@ -320,27 +290,31 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   pcm.target_point_offset.x = 0;
   pcm.target_point_offset.y = 0;
   pcm.target_point_offset.z = 0;
-  pcm.constraint_region_shape.type = shape_msgs::Shape::SPHERE;
-  pcm.constraint_region_shape.dimensions.push_back(0.001);
+
+  pcm.constraint_region.primitives.resize(1);
+  pcm.constraint_region.primitives[0].type = shape_msgs::SolidPrimitive::SPHERE;
+  pcm.constraint_region.primitives[0].dimensions.x = 0.001;
   
-  pcm.constraint_region_pose.header.frame_id = kmodel_->getModelFrame();
-  pcm.constraint_region_pose.pose.position.x = 0.55;
-  pcm.constraint_region_pose.pose.position.y = 0.2;
-  pcm.constraint_region_pose.pose.position.z = 1.25;
-  pcm.constraint_region_pose.pose.orientation.x = 0.0;
-  pcm.constraint_region_pose.pose.orientation.y = 0.0;
-  pcm.constraint_region_pose.pose.orientation.z = 0.0;
-  pcm.constraint_region_pose.pose.orientation.w = 1.0;
+  pcm.header.frame_id = kmodel_->getModelFrame();
+
+  pcm.constraint_region.primitive_poses.resize(1);
+  pcm.constraint_region.primitive_poses[0].position.x = 0.55;
+  pcm.constraint_region.primitive_poses[0].position.y = 0.2;
+  pcm.constraint_region.primitive_poses[0].position.z = 1.25;
+  pcm.constraint_region.primitive_poses[0].orientation.x = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.y = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.z = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
   pcm.weight = 1.0;
   c.position_constraints.push_back(pcm);
   
   moveit_msgs::OrientationConstraint ocm;
   ocm.link_name = "l_wrist_roll_link";
-  ocm.orientation.header.frame_id = kmodel_->getModelFrame();
-  ocm.orientation.quaternion.x = 0.0;
-  ocm.orientation.quaternion.y = 0.0;
-  ocm.orientation.quaternion.z = 0.0;
-  ocm.orientation.quaternion.w = 1.0;
+  ocm.header.frame_id = kmodel_->getModelFrame();
+  ocm.orientation.x = 0.0;
+  ocm.orientation.y = 0.0;
+  ocm.orientation.z = 0.0;
+  ocm.orientation.w = 1.0;
   ocm.absolute_x_axis_tolerance = 0.2;
   ocm.absolute_y_axis_tolerance = 0.1;
   ocm.absolute_z_axis_tolerance = 0.4;
@@ -348,44 +322,39 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   c.orientation_constraints.push_back(ocm);
   
   ocm.link_name = "r_wrist_roll_link";
-  ocm.orientation.header.frame_id = kmodel_->getModelFrame();
-  ocm.orientation.quaternion.x = 0.0;
-  ocm.orientation.quaternion.y = 0.0;
-  ocm.orientation.quaternion.z = 0.0;
-  ocm.orientation.quaternion.w = 1.0;
+  ocm.header.frame_id = kmodel_->getModelFrame();
+  ocm.orientation.x = 0.0;
+  ocm.orientation.y = 0.0;
+  ocm.orientation.z = 0.0;
+  ocm.orientation.w = 1.0;
   ocm.absolute_x_axis_tolerance = 0.01;
   ocm.absolute_y_axis_tolerance = 0.01;
   ocm.absolute_z_axis_tolerance = 0.01;
   ocm.weight = 1.0;
   c.orientation_constraints.push_back(ocm);
   
-  kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
-  kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
-  kinematic_constraints::KinematicsSubgroupAllocator sa;
-  sa[kmodel_->getJointModelGroup("left_arm")] = kinematics_allocator;
-  sa[kmodel_->getJointModelGroup("right_arm")] = kinematics_allocator;
-  
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
-    (kmodel_->getJointModelGroup("arms"), c, kmodel_, tf, kinematic_constraints::KinematicsAllocator(), sa);
-  
+  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s.get() != NULL);
   
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
   
   planning_models::KinematicState ks(kmodel_);
-  ks.setToDefaultValues();
-  for (int t = 0 ; t < 100 ; ++t)
+  ks.setToDefaultValues();  
+  static const int NT = 1000;
+  int succ = 0;
+  for (int t = 0 ; t < 1000 ; ++t)
   {
-    double distance;
-    std::vector<double> values;
-    EXPECT_TRUE(s->sample(values, ks, 1000));
-    ks.getJointStateGroup("arms")->setStateValues(values);
-    EXPECT_TRUE(kset.decide(ks, distance));
-  }
+    EXPECT_TRUE(s->sample(ks.getJointStateGroup("arms"), ks, 1000));
+    EXPECT_TRUE(kset.decide(ks).satisfied);
+    if (s->sample(ks.getJointStateGroup("arms"), ks, 1))
+      succ++;
+  } 
+  ROS_INFO("Success rate for IK Constraint Sampler with position & orientation constraints for both arms: %lf", (double)succ / (double)NT);
 }
 
+/*
 TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples1)
 {
   moveit_msgs::Constraints c;
@@ -455,13 +424,13 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   pcm.constraint_region_shape.dimensions.push_back(0.4);
   
   pcm.constraint_region_pose.header.frame_id = kmodel_->getModelFrame();
-  pcm.constraint_region_pose.pose.position.x = 0.5;
-  pcm.constraint_region_pose.pose.position.y = 0.2;
-  pcm.constraint_region_pose.pose.position.z = 0.6;
-  pcm.constraint_region_pose.pose.orientation.x = 0.0;
-  pcm.constraint_region_pose.pose.orientation.y = 0.0;
-  pcm.constraint_region_pose.pose.orientation.z = 0.0;
-  pcm.constraint_region_pose.pose.orientation.w = 1.0;
+  pcm.constraint_region.primitive_poses[0].position.x = 0.5;
+  pcm.constraint_region.primitive_poses[0].position.y = 0.2;
+  pcm.constraint_region.primitive_poses[0].position.z = 0.6;
+  pcm.constraint_region.primitive_poses[0].orientation.x = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.y = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.z = 0.0;
+  pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
   pcm.weight = 1.0;
   c.position_constraints.push_back(pcm);
 
@@ -476,13 +445,13 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   pcm2.constraint_region_shape.dimensions.push_back(0.01);
   
   pcm2.constraint_region_pose.header.frame_id = "l_wrist_roll_link";
-  pcm2.constraint_region_pose.pose.position.x = 0.0;
-  pcm2.constraint_region_pose.pose.position.y = 0.0;
-  pcm2.constraint_region_pose.pose.position.z = 0.0;
-  pcm2.constraint_region_pose.pose.orientation.x = 0.0;
-  pcm2.constraint_region_pose.pose.orientation.y = 0.0;
-  pcm2.constraint_region_pose.pose.orientation.z = 0.0;
-  pcm2.constraint_region_pose.pose.orientation.w = 1.0;
+  pcm2.constraint_region.primitive_poses[0].position.x = 0.0;
+  pcm2.constraint_region.primitive_poses[0].position.y = 0.0;
+  pcm2.constraint_region.primitive_poses[0].position.z = 0.0;
+  pcm2.constraint_region.primitive_poses[0].orientation.x = 0.0;
+  pcm2.constraint_region.primitive_poses[0].orientation.y = 0.0;
+  pcm2.constraint_region.primitive_poses[0].orientation.z = 0.0;
+  pcm2.constraint_region.primitive_poses[0].orientation.w = 1.0;
   pcm2.weight = 1.0;
   c.position_constraints.push_back(pcm2);
 
@@ -601,22 +570,22 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   vcm.max_range_angle = 0.35;
 
   vcm.target_pose.header.frame_id = aco.object.id;
-  vcm.target_pose.pose.position.x = 0;
-  vcm.target_pose.pose.position.y = 0.05;
-  vcm.target_pose.pose.position.z = 0;
-  vcm.target_pose.pose.orientation.x = sqrt(2.0)/2.0;
-  vcm.target_pose.pose.orientation.y = 0.0;
-  vcm.target_pose.pose.orientation.z = 0.0;
-  vcm.target_pose.pose.orientation.w = sqrt(2.0)/2.0;
+  vcm.target.primitive_poses[0].position.x = 0;
+  vcm.target.primitive_poses[0].position.y = 0.05;
+  vcm.target.primitive_poses[0].position.z = 0;
+  vcm.target.primitive_poses[0].orientation.x = sqrt(2.0)/2.0;
+  vcm.target.primitive_poses[0].orientation.y = 0.0;
+  vcm.target.primitive_poses[0].orientation.z = 0.0;
+  vcm.target.primitive_poses[0].orientation.w = sqrt(2.0)/2.0;
   
   vcm.sensor_pose.header.frame_id = "double_stereo_link";
-  vcm.sensor_pose.pose.position.x = 0.1;
-  vcm.sensor_pose.pose.position.y = 0;
-  vcm.sensor_pose.pose.position.z = 0;
-  vcm.sensor_pose.pose.orientation.x = 0;
-  vcm.sensor_pose.pose.orientation.y = 0;
-  vcm.sensor_pose.pose.orientation.z = 0;
-  vcm.sensor_pose.pose.orientation.w = 1;
+  vcm.sensor.primitive_poses[0].position.x = 0.1;
+  vcm.sensor.primitive_poses[0].position.y = 0;
+  vcm.sensor.primitive_poses[0].position.z = 0;
+  vcm.sensor.primitive_poses[0].orientation.x = 0;
+  vcm.sensor.primitive_poses[0].orientation.y = 0;
+  vcm.sensor.primitive_poses[0].orientation.z = 0;
+  vcm.sensor.primitive_poses[0].orientation.w = 1;
   vcm.weight = 1.0;
   
   planning_models::KinematicState &ks = psm_->getPlanningScene()->getCurrentState();
@@ -645,6 +614,7 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
       ros::WallDuration(.01).sleep();
   }  
 }
+*/
 
 int main(int argc, char **argv)
 {
