@@ -152,8 +152,9 @@ public:
   
   Pr2MoveItControllerManager(void) : node_handle_("~")
   { 
-    node_handle_.param("controller_manager_ns", controller_manager_ns_, std::string("pr2_controller_manager"));
-    
+    node_handle_.param("controller_manager_name", controller_manager_name_, std::string("pr2_controller_manager"));
+    node_handle_.param("use_controller_manager", use_controller_manager_, true);
+
     XmlRpc::XmlRpcValue controller_list;
     if (node_handle_.hasParam("controller_list"))
     {
@@ -210,24 +211,32 @@ public:
           }
     }
     else
-      ROS_DEBUG_STREAM("No controller list specified. Using list obtained from the " << controller_manager_ns_);
+    {
+      if (use_controller_manager_)
+	ROS_DEBUG_STREAM("No controller list specified. Using list obtained from the " << controller_manager_name_);
+      else
+	ROS_ERROR_STREAM("Not using a controller manager and no controllers specified. There are no known controllers.");
+    }
 
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/list_controllers", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/list_controllers" << " to come up");
+    if (use_controller_manager_)
+    {
+      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/list_controllers", ros::Duration(5.0)))
+	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/list_controllers" << " to come up");
 
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/switch_controller", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/switch_controller" << " to come up");
+      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/switch_controller", ros::Duration(5.0)))
+	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/switch_controller" << " to come up");
 
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/load_controller", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/load_controller" << " to come up");
-
-    while (ros::ok() && !ros::service::waitForService(controller_manager_ns_ + "/unload_controller", ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for service " << controller_manager_ns_ + "/unload_controller" << " to come up");
-    
-    lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_ns_ + "/list_controllers", true);
-    switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_ns_ + "/switch_controller", true);
-    loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_ns_ + "/load_controller", true);
-    unloader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_ns_ + "/unload_controller", true);
+      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/load_controller", ros::Duration(5.0)))
+	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/load_controller" << " to come up");
+      
+      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/unload_controller", ros::Duration(5.0)))
+	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/unload_controller" << " to come up");
+      
+      lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_name_ + "/list_controllers", true);
+      switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_name_ + "/switch_controller", true);
+      loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_name_ + "/load_controller", true);
+      unloader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_name_ + "/unload_controller", true);
+    }
   }
   
   virtual ~Pr2MoveItControllerManager(void)
@@ -316,6 +325,11 @@ public:
   
   virtual bool loadController(const std::string &name)
   {
+    if (!use_controller_manager_)
+    {
+      ROS_WARN_STREAM("Cannot load controller without using the controller manager");
+      return false;
+    }
     last_lister_response_ = ros::Time();  
     handle_cache_.erase(name);
     pr2_mechanism_msgs::LoadController::Request req;
@@ -333,6 +347,11 @@ public:
   
   virtual bool unloadController(const std::string &name)
   { 
+    if (!use_controller_manager_)
+    {
+      ROS_WARN_STREAM("Cannot unload controller without using the controller manager");
+      return false;
+    }
     last_lister_response_ = ros::Time();
     handle_cache_.erase(name);
     pr2_mechanism_msgs::UnloadController::Request req;
@@ -349,7 +368,12 @@ public:
   }
   
   virtual bool switchControllers(const std::vector<std::string> &activate, const std::vector<std::string> &deactivate)
-  {  
+  {
+    if (!use_controller_manager_)
+    {
+      ROS_WARN_STREAM("Cannot switch controllers without using the controller manager");
+      return false;
+    }
     last_lister_response_ = ros::Time();
     pr2_mechanism_msgs::SwitchController::Request req;
     pr2_mechanism_msgs::SwitchController::Response res;
@@ -371,13 +395,16 @@ protected:
 
   const pr2_mechanism_msgs::ListControllers::Response &getListControllerServiceResponse(void)
   {
-    static const ros::Duration max_cache_age(10.0);
-    if ((ros::Time::now() - last_lister_response_) > max_cache_age)
+    if (use_controller_manager_)
     {
-      pr2_mechanism_msgs::ListControllers::Request req;
-      if (!lister_service_.call(req, cached_lister_response_))
-        ROS_WARN_STREAM("Something went wrong with lister service");
-      last_lister_response_ = ros::Time::now();
+      static const ros::Duration max_cache_age(10.0);
+      if ((ros::Time::now() - last_lister_response_) > max_cache_age)
+      {
+	pr2_mechanism_msgs::ListControllers::Request req;
+	if (!lister_service_.call(req, cached_lister_response_))
+	  ROS_WARN_STREAM("Something went wrong with lister service");
+	last_lister_response_ = ros::Time::now();
+      }
     }
     return cached_lister_response_;
   }
@@ -385,7 +412,8 @@ protected:
   ros::NodeHandle node_handle_;    
   ros::NodeHandle root_node_handle_;    
 
-  std::string controller_manager_ns_; 
+  std::string controller_manager_name_; 
+  bool use_controller_manager_;
   ros::ServiceClient loader_service_;
   ros::ServiceClient unloader_service_;
   ros::ServiceClient switcher_service_;

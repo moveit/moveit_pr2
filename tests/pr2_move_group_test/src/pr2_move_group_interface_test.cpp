@@ -44,23 +44,105 @@ int main(int argc, char **argv)
   ros::AsyncSpinner spinner(1);
   spinner.start();
   
-  move_group_interface::MoveGroup group("arms");
-  move_group_interface::MoveGroup group2("left_arm");
+  move_group_interface::MoveGroup group("arm");
+//  move_group_interface::MoveGroup group2("left_arm");
+/*
+  std::vector<double> v0(7,0.0);
+  group.setJointValueTarget(v0);
+  
+  group.move();
+  sleep(1);
+  return 0;
+*/
+/*
+  std::vector<double> v;
+  v.push_back(0.4455);
+  v.push_back(-0.1734);
+  v.push_back(1.2177);
+  v.push_back(-0.18);
+  v.push_back(-1.37);
+  v.push_back(0);
+  v.push_back(0);
+  
+  group.setJointValueTarget(v);
+  
+  group.move();
 
-//  std::vector<double> v(7, 0);
-//  v[3] = -1.2;
+  sleep(3);
+  
+  //    std::vector<double> v;
 
-  for (int i = 0 ; i < 10 ; ++i)
-  {
-    group.setRandomTarget();   
-    group2.setRandomTarget();
-    group.move(false);
-    sleep(2);
-    group2.move();
+  v.clear();
+  v.push_back(-1.1);
+  v.push_back(0.5);
+  v.push_back(-0.373);
+  v.push_back(0.126);
+  v.push_back(-1.196);
+  v.push_back(0);
+  v.push_back(0);
+*/
+
+
+/*
+// safe plan
+  std::vector<double> v;
+
+  v.push_back(0.27);
+  v.push_back(-0.68);
+  v.push_back(-0.89);
+  v.push_back(-1.09);
+  v.push_back(-0.87);
+  v.push_back(0); 
+  v.push_back(0);
+
+  group.setJointValueTarget(v);
+  group.move();
+  sleep(2); 
+
+  std::vector<double> q;
+  q.push_back(0.47);
+  q.push_back(0.94);
+  q.push_back(-0.04);
+  q.push_back(0.95);
+  q.push_back(-1.67);
+  q.push_back(0);
+  q.push_back(0);
     
-    ROS_INFO("Done");
-  }
-  
-  
+  group.setJointValueTarget(q);
+  group.move();
+  sleep(1); 
+*/
+
+
+// evil plan
+  std::vector<double> v;
+
+  v.push_back(1.15);
+  v.push_back(-0.105);
+  v.push_back(0.38);
+  v.push_back(0.055);
+  v.push_back(-1.47);
+  v.push_back(0); 
+  v.push_back(0);
+
+  group.setJointValueTarget(v);
+  group.move();
+  sleep(2); 
+
+  std::vector<double> q;
+  q.push_back(-0.69);
+  q.push_back(0.52);
+  q.push_back(1.09);
+  q.push_back(0.8);
+  q.push_back(0.23);
+  q.push_back(0);
+  q.push_back(0);
+    
+  group.setJointValueTarget(q);
+  group.move();
+  sleep(1); 
+
+
+
   return 0;
 }
