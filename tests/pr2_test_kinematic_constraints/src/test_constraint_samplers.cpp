@@ -38,6 +38,7 @@
 #include <kinematic_constraints/kinematic_constraint.h>
 #include <constraint_samplers/default_constraint_samplers.h>
 #include <constraint_samplers/constraint_sampler_manager.h>
+#include <constraint_samplers/constraint_sampler_tools.h>
 #include <geometric_shapes/shape_operations.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <planning_models/conversions.h>
@@ -395,7 +396,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples1)
   ros::Publisher pub_markers = nh.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array", 5); 
   sleep(1);
   visualization_msgs::MarkerArray arr;  
-  s->visualizeDistribution(ks, "r_wrist_roll_link", 10, 1000, arr);
+  constraint_samplers::visualizeDistribution(s, ks, "r_wrist_roll_link", 10, 1000, arr);
   pub_markers.publish(arr);
   ros::Duration(1.0).sleep();  
 }
