@@ -11,6 +11,7 @@
   <depend package="collision_distance_field"/>
   <depend package="collision_detection_fcl"/>
   <depend package="robot_model_loader"/>
+  <depend package="planning_scene_monitor"/>
   <depend package="collision_distance_field_ros"/>
 </package>
 
