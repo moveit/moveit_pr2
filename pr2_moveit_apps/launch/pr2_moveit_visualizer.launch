@@ -31,6 +31,7 @@
     <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
     <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <param name="controller_manager" value="pr2_moveit_controller_manager/Pr2MoveItControllerManager"/>
   </node>
 
 </launch>
