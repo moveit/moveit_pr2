@@ -1,14 +1,13 @@
 <launch>
-  <arg name="benchmark_database" default="benchmark-1" />
+  <arg name="benchmark_database" default="$(find iros_2012_tests)/mongodb" />
   
   <!-- Run the DB server on the desired database -->
-  <include file="$(find pr2_moveit_config)/launch/warehouse.launch">
-    <arg name="moveit_warehouse_default_database_name" value="$(arg benchmark_database)" />
+  <include file="$(find pr2_moveit_apps)/launch/warehouse.launch">
+    <arg name="moveit_warehouse_database_path" value="$(arg benchmark_database)" />
   </include>
 
   <!-- Run the database record tool -->
-  <node name="save_to_warehouse" pkg="moveit_warehouse" type="save_to_warehouse" respawn="false" output="screen">
-    <remap from="motion_plan_request" to="/ompl_planning/motion_plan_request" />
+  <node ns="moveit_warehouse" name="save_to_warehouse" pkg="moveit_warehouse" type="save_to_warehouse" respawn="false" output="screen">
   </node>
 
 </launch>

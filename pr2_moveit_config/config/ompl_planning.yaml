@@ -6,10 +6,6 @@
 right_arm:
   planner_configs:
     - SBLkConfigDefault
-    - SBLkConfig1
-    - SBLkConfig2
-    - SBLkConfig3  
-    - SBLkConfig4
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
     - RRTConnectkConfigDefault
@@ -55,26 +51,9 @@ planner_configs:
   SBLkConfigDefault:
     type: geometric::SBL
 
-  SBLkConfig1:
-    type: geometric::SBL
-    projection_evaluator: link(r_wrist_roll_link)
-
-  SBLkConfig2:
-    type: geometric::SBL
-    projection_evaluator: joints(r_shoulder_pan_joint,r_wrist_flex_joint)
-  
-  SBLkConfig3:
-    type: geometric::SBL
-    projection.cellsize_factor: 0.5
-
-  SBLkConfig4:
-    type: geometric::SBL
-    projection_evaluator: link(r_wrist_roll_link)
-    projection.cellsize_factor: 10
-
   LBKPIECEkConfigDefault:
     type: geometric::LBKPIECE
-    
+
   RRTkConfigDefault:
     type: geometric::RRT
 

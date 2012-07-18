@@ -23,7 +23,8 @@
     <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>  
     <param name="manage_controllers" value="$(arg manage_controllers)"/>
-    <param name="controller_manager" value="$(arg controller_manager_plugin)"/>
+    <param name="controller_manager_name" value="$(arg controller_manager_plugin)"/>
+    <param name="use_controller_manager" value="false"/>
 
   </node>
   
