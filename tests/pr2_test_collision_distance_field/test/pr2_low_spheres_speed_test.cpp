@@ -96,13 +96,13 @@ protected:
       acm_->setEntry(std::string(coll_ops[i]["object1"]), std::string(coll_ops[i]["object2"]), std::string(coll_ops[i]["operation"]) == "disable");
     }
     
-    std::map<std::string, std::vector<collision_distance_field::CollisionSphere> > coll_spheres;
-    collision_distance_field_ros::loadLinkBodySphereDecompositions(nh,
-                                                                   kmodel_,
-                                                                   coll_spheres);
-
-    crobot_df_.reset(new collision_distance_field::CollisionRobotDistanceField(kmodel_, coll_spheres));
-    cworld_df_.reset(new collision_distance_field::CollisionWorldDistanceField());
+    std::map<std::string, std::vector<collision_detection::CollisionSphere> > coll_spheres;
+    collision_detection::loadLinkBodySphereDecompositions(nh,
+                                                          kmodel_,
+                                                          coll_spheres);
+    
+    crobot_df_.reset(new collision_detection::CollisionRobotDistanceField(kmodel_, coll_spheres));
+    cworld_df_.reset(new collision_detection::CollisionWorldDistanceField());
 
     crobot_fcl_.reset(new collision_detection::CollisionRobotFCL(kmodel_));
     cworld_fcl_.reset(new collision_detection::CollisionWorldFCL());
@@ -122,8 +122,8 @@ protected:
   planning_models::TransformsPtr                 ftf_;
   planning_models::TransformsConstPtr            ftf_const_;
   
-  boost::shared_ptr<collision_distance_field::CollisionRobotDistanceField> crobot_df_;
-  boost::shared_ptr<collision_distance_field::CollisionWorldDistanceField> cworld_df_;
+  boost::shared_ptr<collision_detection::CollisionRobotDistanceField> crobot_df_;
+  boost::shared_ptr<collision_detection::CollisionWorldDistanceField> cworld_df_;
 
   boost::shared_ptr<collision_detection::CollisionRobot> crobot_fcl_;
   boost::shared_ptr<collision_detection::CollisionWorld> cworld_fcl_;
@@ -153,7 +153,7 @@ TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
 
   collision_detection::CollisionResult res1;
   //first check with this group doesn't count
-  boost::shared_ptr<collision_distance_field::GroupStateRepresentation> gsr;
+  boost::shared_ptr<collision_detection::GroupStateRepresentation> gsr;
   crobot_df_->checkSelfCollision(req, res1, kstate, *acm_, gsr);  
   crobot_fcl_->checkSelfCollision(req, res1, kstate, *acm_);  
 

@@ -16,11 +16,16 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-rosbuild_add_executable(test_pr2_cd_speed test/pr2_moveit_speed_test.cpp)
-rosbuild_add_gtest_build_flags(test_pr2_cd_speed)
-rosbuild_add_rostest(test/test_collision_detection_speed.test)
+# rosbuild_add_executable(test_pr2_cd_speed test/pr2_moveit_speed_test.cpp)
+# rosbuild_add_gtest_build_flags(test_pr2_cd_speed)
+# rosbuild_add_rostest(test/test_collision_detection_speed.test)
 
 rosbuild_add_executable(test_pr2_low_spheres_speed test/pr2_low_spheres_speed_test.cpp)
 rosbuild_add_gtest_build_flags(test_pr2_low_spheres_speed)
 rosbuild_add_rostest(test/test_collision_detection_low_spheres_speed.test)
+
+rosbuild_add_executable(test_pr2_planning_scene_collision_detection_speed test/pr2_moveit_planning_scene_speed_test.cpp)
+rosbuild_add_gtest_build_flags(test_pr2_planning_scene_collision_detection_speed)
+rosbuild_add_rostest(test/test_planning_scene_collision_detection_speed.test)
+
 
