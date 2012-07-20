@@ -78,3 +78,8 @@ planner_configs:
   msRRTConnectkConfigDefault:
     type: geometric::msRRTConnect
     subspaces: right_arm left_arm base
+
+
+#constraint_approximations_path: /home/isucan/c
+
+#constraint_samplers: plugin_names_of_sampler1 plugin_names_of_sampler2

@@ -1,37 +1,26 @@
 <launch>
-  <arg name="monitor_robot_state" default="false"/>
   <arg name="allow_trajectory_execution" default="false"/>
   
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-  <arg name="planning_plugin" default="ompl_interface_ros/OMPLPlanner" /> 
-  <arg name="planning_adapters" default="default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints default_planner_request_adapters/AddTimeParameterization" />
-
-  <param unless="$(arg monitor_robot_state)" name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
-  <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
-
-  <rosparam if="$(arg allow_trajectory_execution)" command="load" file="$(find pr2_moveit_config)/config/pr2_both_arms_controllers.yaml" />
-
-  <group ns="robot_description_planning">
-    <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
-    <rosparam command="load" file="$(find pr2_moveit_config)/config/joint_limits.yaml"/>
-  </group>
+  <include file="$(find pr2_moveit_config)/launch/planning_context.launch" />
   
   <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
   <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
+  
+  <include ns="moveit_visualization_ros" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
+    <arg name="pipeline" value="ompl" />
+  </include>
 
-
+   <include ns="moveit_visualization_ros" file="$(find pr2_moveit_config)/launch/trajectory_execution.launch">
+    <arg name="moveit_controller_manager" value="pr2" /> 
+    <arg name="moveit_manage_controllers" value="true" />
+  </include>
+ 
   <node pkg="moveit_visualization_ros" type="moveit_visualizer" name="moveit_visualizer" output="screen" launch-prefix="$(arg launch_prefix)">
-    <param name="planning_plugin" value="$(arg planning_plugin)" />
-    <param name="request_adapters" value="$(arg planning_adapters)" />
-    <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
-    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
-    <rosparam if="$(arg allow_trajectory_execution)" file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
-    <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
-    <param name="controller_manager" value="pr2_moveit_controller_manager/Pr2MoveItControllerManager"/>
   </node>
 
 </launch>
