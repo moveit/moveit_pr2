@@ -40,8 +40,8 @@
 #include <moveit_msgs/GetMotionPlan.h>
 #include <kinematic_constraints/utils.h>
 #include <planning_models/conversions.h>
-#include <collision_distance_field/collision_world_distance_field.h>
-#include <collision_distance_field/collision_robot_distance_field.h>
+#include <collision_distance_field/hybrid_collision_world.h>
+#include <collision_distance_field_ros/hybrid_collision_robot_ros.h>
 #include <robot_model_loader/robot_model_loader.h>
 
 class Pr2SBPLPlannerTester : public testing::Test{
@@ -98,7 +98,7 @@ protected:
 TEST_F(Pr2SBPLPlannerTester, SimplePlan) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setCollisionDetectionTypes<collision_detection::CollisionWorldDistanceField, collision_detection::CollisionRobotDistanceField>();
+  ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
