@@ -13,7 +13,7 @@
 
   <!-- Flag indicating whether the controller manager should be used or not -->
   <arg name="use_controller_manager" default="true" />
-  <param name="use_controller_manager" default="$(arg use_controller_manager)" />
+  <param name="use_controller_manager" value="$(arg use_controller_manager)" />
   
   <!-- load controller_list and controller_manager_ns -->
   <rosparam file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>

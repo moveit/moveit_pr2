@@ -1,15 +1,16 @@
 <launch>
   <arg name="allow_trajectory_execution" default="false"/>
-  
+  <arg name="monitor_robot_state" default="false" />
+
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch" />
-  
+
   <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
   <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
-  
+
   <include ns="moveit_visualization_ros" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
     <arg name="pipeline" value="ompl" />
   </include>
