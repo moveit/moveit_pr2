@@ -1,0 +1,8 @@
+<library path="lib/libpr2_moveit_sensor_manager">
+
+  <class name="pr2_moveit_sensor_manager/Pr2MoveItSensorManager" type="pr2_moveit_sensor_manager::Pr2MoveItSensorManager" base_class_type="moveit_sensor_manager::MoveItSensorManager">
+    <description>
+    </description>
+  </class>
+
+</library>

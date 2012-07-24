@@ -1,0 +1,21 @@
+<package>
+  <description brief="pr2_moveit_sensor_manager">
+
+     pr2_moveit_sensor_manager
+
+  </description>
+  <author>Ioan Sucan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_moveit_sensor_manager</url>
+  <depend package="moveit_sensor_manager"/>
+  <depend package="pluginlib"/>
+  <depend package="pr2_controllers_msgs"/>
+
+  <export>
+    <moveit_sensor_manager plugin="${prefix}/lib/plugin_description.xml"/>
+  </export>
+
+</package>
+
+
