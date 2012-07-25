@@ -59,7 +59,7 @@ public:
   {  
     follow_joint_trajectory_action_client_.reset(new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>(name_ + "/" + namespace_, true));
     while (ros::ok() && !follow_joint_trajectory_action_client_->waitForServer(ros::Duration(5.0)))
-      ROS_INFO_STREAM("Waiting for the follow joint trajectory action for controller " << name_ << " to come up");
+      ROS_INFO_STREAM("Waiting for the follow joint trajectory action for controller " << name_ + "/" + namespace_ << " to come up");
     last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
   }
   
