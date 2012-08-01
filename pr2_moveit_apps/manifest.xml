@@ -21,7 +21,6 @@
   <depend package="planning_request_adapter_plugins"/>  
   <depend package="pr2_moveit_controller_manager"/>
   <depend package="moveit_manipulation_visualization"/>
-  <depend package="pr2_gripper_controller"/>
 
 </package>
 
