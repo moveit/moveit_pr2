@@ -37,5 +37,6 @@ rosbuild_add_rostest(test_pr2_arm_ik.launch)
 rosbuild_add_executable(pr2_kinematics_test_as_plugin test/test_kinematics_as_plugin.cpp)
 rosbuild_declare_test(pr2_kinematics_test_as_plugin)
 target_link_libraries(pr2_kinematics_test_as_plugin gtest)
-rosbuild_add_rostest(test_pr2_arm_kinematics_as_plugin.launch)
 
+#rosbuild_add_rostest(test_pr2_arm_kinematics_as_plugin.launch)
+rosbuild_add_rostest(test_pr2_arm_kinematics_as_kdl_plugin.launch)
