@@ -10,6 +10,10 @@
   <url>http://ros.org/wiki/pr2_arm_ik_tests</url>
 
   <depend package="pr2_arm_kinematics"/>
+  <depend package="planning_models"/>
+  <depend package="robot_model_loader"/>
+  <depend package="srdf"/>
+  <depend package="urdf"/>
 
   <!-- Dependencies needed for regression tests, which use Gazebo -->
 
