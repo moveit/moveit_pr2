@@ -11,6 +11,8 @@
 
   <depend package="moveit_benchmarks"/>
   <depend package="ompl_interface_ros"/>
+  <depend package="chomp_interface_ros"/>
+  <depend package="sbpl_interface_ros"/>
   <depend package="moveit_warehouse"/>
   <depend package="pr2_arm_kinematics"/>
   <depend package="moveit_visualization_ros"/>
