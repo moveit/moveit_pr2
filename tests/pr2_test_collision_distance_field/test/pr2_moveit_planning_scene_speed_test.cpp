@@ -60,10 +60,9 @@ protected:
     
     kinematic_model_loader_.reset(new planning_models_loader::KinematicModelLoader("robot_description"));
 
-    planning_scene_monitor::PlanningSceneMonitor::SceneConfigPtr scp(new planning_scene_monitor::PlanningSceneMonitor::SceneConfig<planning_scene::PlanningScene, collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>("distance"));
-    
-    std::vector<planning_scene_monitor::PlanningSceneMonitor::SceneConfigPtr> scpv(1, scp);
-    planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor(scpv, kinematic_model_loader_));
+    planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
+    ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+    planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor(ps, kinematic_model_loader_));
   }
 
   virtual void TearDown()
@@ -207,7 +206,9 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
                                           *hy_robot->getCollisionRobotDistanceField().get(), 
                                           kstate,
                                           gsr);
-    total_speed_df += (ros::WallTime::now()-before);
+    ros::WallDuration dur(ros::WallTime::now()-before);
+    total_speed_df += dur;
+    //std::cerr << "Took " << dur << std::endl;
     bool df_in_collision = false;
     if(res.collision) {
       in_collision_df++;
