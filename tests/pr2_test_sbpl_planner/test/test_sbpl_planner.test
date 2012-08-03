@@ -8,6 +8,7 @@
 
   <test pkg="pr2_test_sbpl_planner"
         type="test_pr2_sbpl_planner"
-        test-name="test_pr2_sbpl_planner">
+        test-name="test_pr2_sbpl_planner"
+	time-limit="600.0">
   </test>
 </launch>

@@ -17,5 +17,5 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 rosbuild_add_executable(test_pr2_sbpl_planner test/pr2_sbpl_planner_test.cpp)
-rosbuild_add_gtest_build_flags(test_pr2_sbpl_planner)
+rosbuild_add_gtest_build_flags(test_pr2_sbpl_planner TIMEOUT 10.0)
 rosbuild_add_rostest(test/test_sbpl_planner.test)
