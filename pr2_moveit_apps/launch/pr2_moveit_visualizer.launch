@@ -11,11 +11,11 @@
   <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
   <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
 
-  <include ns="moveit_visualization_ros" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
+  <include ns="moveit_visualizer" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
     <arg name="pipeline" value="ompl" />
   </include>
 
-   <include ns="moveit_visualization_ros" file="$(find pr2_moveit_config)/launch/trajectory_execution.launch">
+   <include ns="moveit_visualizer" file="$(find pr2_moveit_config)/launch/trajectory_execution.launch">
     <arg name="moveit_controller_manager" value="pr2" /> 
     <arg name="moveit_manage_controllers" value="true" />
   </include>
