@@ -24,14 +24,6 @@
 
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="move_group" type="move_group_action_server" respawn="false" output="screen">
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
-
-    <param name="octomap_frame" type="string" value="odom_combined" />
-    <param name="octomap_resolution" type="double" value="0.02" />
-    <param name="max_range" type="double" value="5.0" />
-
-    <!-- sensors used to update the map -->
-    <rosparam command="load" file="$(find occupancy_map_monitor)/config/sensors_kinect.yaml" />
-
   </node>
   
 </launch>
