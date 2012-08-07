@@ -58,9 +58,22 @@ public:
     moveit_controller_manager::MoveItControllerHandle(name), namespace_(ns), done_(true)
   {  
     follow_joint_trajectory_action_client_.reset(new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>(name_ + "/" + namespace_, true));
-    while (ros::ok() && !follow_joint_trajectory_action_client_->waitForServer(ros::Duration(5.0)))
+    unsigned int attempts = 0;
+    while (ros::ok() && !follow_joint_trajectory_action_client_->waitForServer(ros::Duration(5.0)) && ++attempts < 3)
       ROS_INFO_STREAM("Waiting for the follow joint trajectory action for controller " << name_ + "/" + namespace_ << " to come up");
+
+    if (!follow_joint_trajectory_action_client_->isServerConnected())
+    {
+      ROS_ERROR_STREAM("Action client not connected for joint trajectory controller " << name_ + "/" + namespace_);
+      follow_joint_trajectory_action_client_.reset();
+    }
+    
     last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
+  }
+  
+  bool isConnected(void) const
+  {
+    return follow_joint_trajectory_action_client_;
   }
   
   virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory &trajectory)
@@ -217,25 +230,35 @@ public:
       else
 	ROS_ERROR_STREAM("Not using a controller manager and no controllers specified. There are no known controllers.");
     }
-
+    
     if (use_controller_manager_)
     {
-      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/list_controllers", ros::Duration(5.0)))
+      static const unsigned int max_attempts = 5;
+      unsigned int attempts = 0;
+      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/list_controllers", ros::Duration(5.0)) && ++attempts < max_attempts)
 	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/list_controllers" << " to come up");
-
-      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/switch_controller", ros::Duration(5.0)))
-	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/switch_controller" << " to come up");
-
-      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/load_controller", ros::Duration(5.0)))
-	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/load_controller" << " to come up");
       
-      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/unload_controller", ros::Duration(5.0)))
-	ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/unload_controller" << " to come up");
+      if (attempts < max_attempts)
+        while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/switch_controller", ros::Duration(5.0)) && ++attempts < max_attempts)
+          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/switch_controller" << " to come up");
       
-      lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_name_ + "/list_controllers", true);
-      switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_name_ + "/switch_controller", true);
-      loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_name_ + "/load_controller", true);
-      unloader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_name_ + "/unload_controller", true);
+      if (attempts < max_attempts)
+        while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/load_controller", ros::Duration(5.0))  && ++attempts < max_attempts)
+          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/load_controller" << " to come up");
+      
+      if (attempts < max_attempts)
+        while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/unload_controller", ros::Duration(5.0))  && ++attempts < max_attempts)
+          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/unload_controller" << " to come up");
+      
+      if (attempts < max_attempts)
+      {
+        lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_name_ + "/list_controllers", true);
+        switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_name_ + "/switch_controller", true);
+        loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_name_ + "/load_controller", true);
+        unloader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_name_ + "/unload_controller", true);
+      }
+      else
+        ROS_ERROR("Not using the PR2 controller manager");
     }
   }
   
@@ -258,7 +281,8 @@ public:
     }
     if (!new_handle)
       new_handle.reset(new Pr2FollowJointTrajectoryControllerHandle(name));
-    handle_cache_[name] = new_handle;
+    if (new_handle && static_cast<Pr2FollowJointTrajectoryControllerHandle*>(new_handle.get())->isConnected())
+      handle_cache_[name] = new_handle;
     return new_handle;
   }
   
