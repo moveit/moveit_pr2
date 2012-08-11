@@ -1,0 +1,17 @@
+<launch>
+  <param name="robot_description" textfile="$(find planning_models)/test/urdf/robot.xml" />
+  <param name="robot_description_semantic" textfile="$(find planning_models)/test/srdf/robot.xml" />
+
+  <group ns="robot_description_planning">
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/collision_matrix.yaml"/>
+  </group>
+
+  <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+  <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
+
+  <test pkg="pr2_test_sbpl_planner"
+        type="test_pr2_sbpl_ompl_planner"
+        test-name="test_pr2_sbpl_ompl__planner"
+	time-limit="600.0">
+  </test>
+</launch>
