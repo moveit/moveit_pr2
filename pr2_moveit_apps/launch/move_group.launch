@@ -6,8 +6,8 @@
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-
   <arg name="allow_trajectory_execution" default="true"/>
+  <arg name="max_safe_path_cost" default="0.01"/>
 
   <include ns="move_group" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
     <arg name="pipeline" value="ompl" />
@@ -24,6 +24,7 @@
 
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="move_group" type="move_group_action_server" respawn="false" output="screen">
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <param name="max_safe_path_cost" value="$(arg max_safe_path_cost)"/>
   </node>
   
 </launch>
