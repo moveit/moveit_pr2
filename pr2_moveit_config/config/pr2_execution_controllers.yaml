@@ -2,8 +2,6 @@ controller_manager_ns: pr2_controller_manager
 controller_list:
   - name: r_arm_controller
     ns: follow_joint_trajectory
-    type: trajectory_execution_ros/FollowJointTrajectoryControllerHandler
-    load: false
     default: true
     joints:
       - r_shoulder_pan_joint
@@ -15,8 +13,6 @@ controller_list:
       - r_wrist_roll_joint
   - name: l_arm_controller
     ns: follow_joint_trajectory
-    type: trajectory_execution_ros/FollowJointTrajectoryControllerHandler
-    load: false
     default: true
     joints:
       - l_shoulder_pan_joint
@@ -26,3 +22,8 @@ controller_list:
       - l_forearm_roll_joint
       - l_wrist_flex_joint
       - l_wrist_roll_joint
+  - name: torso_controller
+    ns: follow_joint_trajectory
+    default: true
+    joints:
+      - torso_lift_joint

@@ -6,13 +6,13 @@
 
   <!-- Params are specific to this plugin -->
 
-  <arg name="head_pointing_frame" default="/openni_rgb_optical_frame" />
+  <arg name="head_pointing_frame" default="/head_mount_kinect_rgb_optical_frame" />
   <param name="head_pointing_frame" value="$(arg head_pointing_frame)" />
 
   <!-- Params for the octomap monitor -->
   
   <param name="octomap_frame" type="string" value="odom_combined" />
-  <param name="octomap_resolution" type="double" value="0.02" />
+  <param name="octomap_resolution" type="double" value="0.1" />
   <param name="max_range" type="double" value="5.0" />
   
   <!-- sensors used to update the map -->
