@@ -1,6 +1,10 @@
 <launch>
-  <arg name="allow_trajectory_execution" default="false"/>
-  <arg name="monitor_robot_state" default="false" />
+  <!-- This will help avoid namespace mis-matches with all the parameters we load! -->
+  <arg name="visualizer_node_name" default="moveit_visualizer" />
+  
+  <arg name="robot" default="false"/>
+  <arg name="monitor_robot_state" default="$(arg robot)"/>
+  <arg name="allow_trajectory_execution" default="$(arg robot)"/>
 
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
@@ -11,17 +15,18 @@
   <node unless="$(arg monitor_robot_state)" pkg="robot_state_publisher" type="state_publisher" name="rob_st_pub" />
   <node unless="$(arg monitor_robot_state)" pkg="moveit_visualization_ros" name="wall_clock_server" type="fake_time.py" />
 
-  <include ns="moveit_visualizer" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
+  <include ns="$(arg visualizer_node_name)" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
     <arg name="pipeline" value="ompl" />
   </include>
 
-   <include ns="moveit_visualizer" file="$(find pr2_moveit_config)/launch/trajectory_execution.launch">
+  <include ns="$(arg visualizer_node_name)" file="$(find pr2_moveit_config)/launch/trajectory_execution.launch">
     <arg name="moveit_controller_manager" value="pr2" /> 
     <arg name="moveit_manage_controllers" value="true" />
   </include>
  
-  <node pkg="moveit_visualization_ros" type="moveit_visualizer" name="moveit_visualizer" output="screen" launch-prefix="$(arg launch_prefix)">
+  <node pkg="moveit_visualization_ros" type="moveit_visualizer" name="$(arg visualizer_node_name)" output="screen" launch-prefix="$(arg launch_prefix)">
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <param name="monitor_robot_state" value="$(arg monitor_robot_state)"/>
   </node>
 
 </launch>
