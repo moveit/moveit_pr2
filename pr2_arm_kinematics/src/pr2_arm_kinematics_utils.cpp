@@ -327,7 +327,7 @@ bool checkJointNames(const std::vector<std::string> &joint_names,
     }
     if(request.timeout <= ros::Duration(0.0))
       {
-        response.error_code.val = response.error_code.INVALID_TIMEOUT;
+        response.error_code.val = response.error_code.TIMED_OUT;
 	return false;
       }
     return true;
