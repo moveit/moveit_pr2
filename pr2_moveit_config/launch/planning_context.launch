@@ -9,9 +9,4 @@
     <rosparam command="load" file="$(find pr2_moveit_config)/config/joint_limits.yaml"/>
   </group>
 
-  <group ns="ompl_planning">
-    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
-    <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
-  </group>
-  
 </launch>
