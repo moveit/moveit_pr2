@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /MotionPlanning1
+        - /MotionPlanning1/Planning Request1
+        - /MotionPlanning1/Planned Path1
         - /MotionPlanning1/Planning Scene1
       Splitter Ratio: 0.5
     Tree Height: 302
@@ -329,7 +331,7 @@ Visualization Manager:
         Show Robot Visual: true
         Show Trail: false
         State Display Time: 0.05
-        Trajectory Topic: ""
+        Trajectory Topic: /move_group/display_planned_path
       Planning Metrics:
         Payload: 1
         Show Joint Torques: false
@@ -628,14 +630,14 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-        Planning Scene Topic: /move_group/planning_scene_monitor
+        Planning Scene Topic: /move_group/monitored_planning_scene
         Robot Alpha: 0.5
-        Robot Root Link: ""
+        Robot Root Link: base_footprint
         Scene Alpha: 0.9
         Scene Color: 50; 230; 50
         Scene Display Time: 0.2
-        Scene Name: ""
-        Show Scene Geometry: false
+        Scene Name: (noname)+
+        Show Scene Geometry: true
         Show Scene Robot: false
       Robot Description: robot_description
       Value: true
@@ -651,22 +653,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 4.24319
+      Distance: 3.88953
       Focal Point:
-        Value: -0.16622; 1.1242; 0
-        X: -0.166215
-        Y: 1.12422
+        Value: 0.079083; 0.085499; 0
+        X: 0.0790831
+        Y: 0.0854988
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.120399
+      Pitch: 0.4254
       Target Frame: /base_link
       Value: XYOrbit (rviz)
-      Yaw: 5.2686
+      Yaw: 5.67361
     Saved: ~
 Window Geometry:
   Height: 1032
   QMainWindow State: 000000ff00000000fd0000000100000000000002a60000038cfc0200000004fb000000100044006900730070006c006100790073010000004100000229000000dc00fffffffb0000000800480065006c00700000000342000000bb0000007900fffffffb0000000a0056006900650077007300000001c1000000a9000000a900fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006701000002700000015d0000015d00ffffff000004d20000038c00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Width: 1920
-  X: -2
-  Y: -56
+  X: -3
+  Y: -84
