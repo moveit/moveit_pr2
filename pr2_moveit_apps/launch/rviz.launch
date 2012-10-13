@@ -6,7 +6,8 @@
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
   
-  <node name="rviz" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" output="screen">
+  <node name="rviz" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" 
+	output="screen" args="-d $(find pr2_moveit_apps)/launch/motion_planning.rviz" >
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
   </node>
   
