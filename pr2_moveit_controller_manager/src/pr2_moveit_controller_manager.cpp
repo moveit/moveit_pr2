@@ -85,9 +85,10 @@ public:
       ROS_ERROR("The PR2 FollowJointTrajectory controller cannot execute multi-dof trajectories.");
       return false;
     }
-    if (!done_)
-      cancelExecution();
-    ROS_DEBUG_STREAM("Sending trajectory to FollowJointTrajectory action for controller " << name_);
+    if (done_)
+      ROS_DEBUG_STREAM("Sending trajectory to FollowJointTrajectory action for controller " << name_);
+    else
+      ROS_DEBUG_STREAM("Sending continuation for the currently executed trajectory to FollowJointTrajectory action for controller " << name_);
     control_msgs::FollowJointTrajectoryGoal goal;
     goal.trajectory = trajectory.joint_trajectory;
     follow_joint_trajectory_action_client_->sendGoal(goal,

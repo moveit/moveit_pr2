@@ -1,16 +1,17 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 187
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /Global Options1
         - /MotionPlanning1
         - /MotionPlanning1/Planning Request1
+        - /MotionPlanning1/Planning Metrics1
         - /MotionPlanning1/Planned Path1
         - /MotionPlanning1/Planning Scene1
       Splitter Ratio: 0.5
-    Tree Height: 302
+    Tree Height: 406
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -334,9 +335,9 @@ Visualization Manager:
         Trajectory Topic: /move_group/display_planned_path
       Planning Metrics:
         Payload: 1
-        Show Joint Torques: false
-        Show Manipulability Index: false
-        Show Manipulability Region: false
+        Show Joint Torques: true
+        Show Manipulability Index: true
+        Show Manipulability Region: true
         Show Weight Limit: false
       Planning Request:
         Colliding Link Color: 255; 0; 0
@@ -661,14 +662,14 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.4254
+      Pitch: 0.6004
       Target Frame: /base_link
       Value: XYOrbit (rviz)
-      Yaw: 5.67361
+      Yaw: 6.02361
     Saved: ~
 Window Geometry:
-  Height: 1032
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a60000038cfc0200000004fb000000100044006900730070006c006100790073010000004100000229000000dc00fffffffb0000000800480065006c00700000000342000000bb0000007900fffffffb0000000a0056006900650077007300000001c1000000a9000000a900fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006701000002700000015d0000015d00ffffff000004d20000038c00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
-  Width: 1920
-  X: -3
-  Y: -84
+  Height: 947
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a600000349fc0200000004fb000000100044006900730070006c0061007900730100000028000001d6000000dc00fffffffb0000000800480065006c00700000000342000000bb0000007900fffffffb0000000a0056006900650077007300000001c1000000a9000000a900fffffffb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e006701000002040000016d0000015d00ffffff000003a00000034900000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Width: 1628
+  X: 1569
+  Y: 173

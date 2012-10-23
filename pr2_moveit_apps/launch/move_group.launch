@@ -22,7 +22,7 @@
     <arg name="moveit_sensor_manager" value="pr2" /> 
   </include>
 
-  <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_planning" type="move_group_action_server" respawn="false" output="screen">
+  <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_planning" type="move_group_action_server" respawn="false" output="screen" args=" --debug">
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
     <param name="max_safe_path_cost" value="$(arg max_safe_path_cost)"/>
   </node>
