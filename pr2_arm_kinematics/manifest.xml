@@ -13,6 +13,7 @@
   <depend package="urdf"/>
   <depend package="geometry_msgs"/>
   <depend package="kdl_parser"/>
+  <depend package="moveit_core"/
 
   <depend package="kinematics_msgs" />
 
@@ -22,7 +23,7 @@
   <rosdep name="eigen"/>
   <export>
    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lpr2_arm_kinematics_lib"/>
-  <kinematics_base plugin="${prefix}/kinematics_plugins.xml" />
+   <moveit_core plugin="${prefix}/kinematics_plugins.xml" />
   </export>
 
 
