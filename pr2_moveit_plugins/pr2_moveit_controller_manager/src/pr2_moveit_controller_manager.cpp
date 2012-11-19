@@ -35,7 +35,7 @@
 /* Author: Ioan Sucan, E. Gil Jones */
 
 #include <ros/ros.h>
-#include <moveit_controller_manager/moveit_controller_manager.h>
+#include <moveit/controller_manager/controller_manager.h>
 #include <control_msgs/FollowJointTrajectoryAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <pluginlib/class_list_macros.h>
