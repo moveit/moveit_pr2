@@ -48,8 +48,8 @@ add_subdirectory(pr2_arm_kinematics)
 
 install(
   FILES
-    pr2_kinematics_plugin_description.xml
-    pr2_moveit_controller_manager_plugin_description.xml
+    pr2_moveit_kinematics_plugin_description.xml
+#    pr2_moveit_controller_manager_plugin_description.xml
 #    pr2_moveit_sensor_manager_plugin_description.xml
 #    pr2_moveit_constraint_sampler_plugin_description.xml
   DESTINATION
