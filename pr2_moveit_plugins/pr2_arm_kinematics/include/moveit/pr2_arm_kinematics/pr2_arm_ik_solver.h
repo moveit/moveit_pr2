@@ -30,17 +30,17 @@
 //ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PR2_ARM_IK_SOLVER_H
-#define PR2_ARM_IK_SOLVER_H
+#ifndef MOVEIT_PR2_ARM_IK_SOLVER_
+#define MOVEIT_PR2_ARM_IK_SOLVER_
 
 #include <urdf/model.h>
 #include <Eigen/Core>
 #include <kdl/chainiksolver.hpp>
-#include <pr2_arm_kinematics/pr2_arm_ik.h>
-#include <kinematics_base/kinematics_base.h>
-#include <pr2_arm_kinematics/pr2_arm_kinematics_utils.h>
-#include <kinematics_msgs/GetKinematicSolverInfo.h>
-#include <kinematics_msgs/PositionIKRequest.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_ik.h>
+#include <moveit/kinematics_base/kinematics_base.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_kinematics_utils.h>
+#include <moveit_msgs/GetKinematicSolverInfo.h>
+#include <moveit_msgs/PositionIKRequest.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <tf_conversions/tf_kdl.h>
 
@@ -150,7 +150,7 @@ static const int TIMED_OUT = -2;
        @brief A method to get chain information about the serial chain that the IK operates on 
        @param response This class gets populated with information about the joints that IK operates on, including joint names and limits.
     */
-    void getSolverInfo(kinematics_msgs::KinematicSolverInfo &response);
+    void getSolverInfo(moveit_msgs::KinematicSolverInfo &response);
 
      /**
      * @brief This method searches for and returns the first solution it finds that also satisifies both user defined callbacks.

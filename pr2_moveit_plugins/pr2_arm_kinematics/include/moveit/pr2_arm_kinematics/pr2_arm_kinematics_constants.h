@@ -30,13 +30,12 @@
 //ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PR2_ARM_IK_CONSTANTS_H
-#define PR2_ARM_IK_CONSTANTS_H
+#ifndef MOVEIT_PR2_ARM_IK_CONSTANTS_
+#define MOVEIT_PR2_ARM_IK_CONSTANTS_
 
 namespace pr2_arm_kinematics
 {
   static const int NUM_JOINTS_ARM7DOF = 7;
-
   static const double IK_EPS = 1e-5;
 }
 

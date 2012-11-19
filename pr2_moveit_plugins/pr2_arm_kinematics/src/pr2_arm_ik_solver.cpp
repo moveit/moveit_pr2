@@ -30,7 +30,7 @@
 //ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //POSSIBILITY OF SUCH DAMAGE.
 
-#include <pr2_arm_kinematics/pr2_arm_ik_solver.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_ik_solver.h>
 
 using namespace Eigen;
 using namespace pr2_arm_kinematics;
@@ -50,7 +50,7 @@ PR2ArmIKSolver::PR2ArmIKSolver(const urdf::Model &robot_model,
     active_ = true;
 }
 
-void PR2ArmIKSolver::getSolverInfo(kinematics_msgs::KinematicSolverInfo &response)
+void PR2ArmIKSolver::getSolverInfo(moveit_msgs::KinematicSolverInfo &response)
 {
   pr2_arm_ik_.getSolverInfo(response);
 }
@@ -322,7 +322,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   unsigned int testnum = 0;
 
   geometry_msgs::Pose ik_pose_msg;
-  tf::PoseKDLToMsg(p_in,ik_pose_msg);
+  tf::poseKDLToMsg(p_in,ik_pose_msg);
 
   if(!desired_pose_callback.empty())
   {
@@ -422,7 +422,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   unsigned int testnum = 0;
 
   geometry_msgs::Pose ik_pose_msg;
-  tf::PoseKDLToMsg(p_in,ik_pose_msg);
+  tf::poseKDLToMsg(p_in,ik_pose_msg);
 
   if(!desired_pose_callback.empty())
   {

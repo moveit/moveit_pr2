@@ -30,15 +30,15 @@
 //ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PR2_ARM_IK_H
-#define PR2_ARM_IK_H
+#ifndef MOVEIT_PR2_ARM_IK_H
+#define MOVEIT_PR2_ARM_IK_H
 
 #include <urdf/model.h>
 #include <Eigen/Core>
 #include <Eigen/LU>// provides LU decomposition
 #include <kdl/chainiksolver.hpp>
-#include <pr2_arm_kinematics/pr2_arm_kinematics_utils.h>
-#include <pr2_arm_kinematics/pr2_arm_kinematics_constants.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_kinematics_utils.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_kinematics_constants.h>
 
 
 namespace pr2_arm_kinematics
@@ -85,18 +85,18 @@ public:
      @brief get chain information about the arm. This populates the IK query response, filling in joint level information including names and joint limits. 
      @param The response structure to be filled in.
   */
-  void getSolverInfo(kinematics_msgs::KinematicSolverInfo &info);
+  void getSolverInfo(moveit_msgs::KinematicSolverInfo &info);
 
   /**
      @brief get chain information about the arm.
   */
-  kinematics_msgs::KinematicSolverInfo solver_info_;
+  moveit_msgs::KinematicSolverInfo solver_info_;
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   private:
 
-  void addJointToChainInfo(boost::shared_ptr<const urdf::Joint> joint,kinematics_msgs::KinematicSolverInfo &info);
+  void addJointToChainInfo(boost::shared_ptr<const urdf::Joint> joint,moveit_msgs::KinematicSolverInfo &info);
 
   bool checkJointLimits(const std::vector<double> &joint_values) const;
  

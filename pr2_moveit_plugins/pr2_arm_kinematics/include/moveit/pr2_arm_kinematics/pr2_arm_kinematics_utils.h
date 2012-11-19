@@ -31,8 +31,8 @@
 //POSSIBILITY OF SUCH DAMAGE.
 
 
-#ifndef PR2_ARM_IK_UTILS_H
-#define PR2_ARM_IK_UTILS_H
+#ifndef MOVEIT_PR2_ARM_IK_UTILS_
+#define MOVEIT_PR2_ARM_IK_UTILS_
 
 #include <ros/ros.h>
 #include <vector>
@@ -47,9 +47,9 @@
 #include <tf/transform_listener.h>
 #include <tf_conversions/tf_kdl.h>
 
-#include <kinematics_msgs/GetPositionFK.h>
-#include <kinematics_msgs/GetPositionIK.h>
-#include <kinematics_msgs/GetKinematicSolverInfo.h>
+#include <moveit_msgs/GetPositionFK.h>
+#include <moveit_msgs/GetPositionIK.h>
+#include <moveit_msgs/GetKinematicSolverInfo.h>
 
 
 using namespace angles;
@@ -92,27 +92,27 @@ namespace pr2_arm_kinematics
                    KDL::Tree &kdl_chain);
 
   bool checkJointNames(const std::vector<std::string> &joint_names, 
-                       const kinematics_msgs::KinematicSolverInfo &chain_info);
+                       const moveit_msgs::KinematicSolverInfo &chain_info);
 
   bool checkLinkNames(const std::vector<std::string> &link_names,
-                      const kinematics_msgs::KinematicSolverInfo &chain_info);
+                      const moveit_msgs::KinematicSolverInfo &chain_info);
 
   bool checkLinkName(const std::string &link_name, 
-                     const kinematics_msgs::KinematicSolverInfo &chain_info);
+                     const moveit_msgs::KinematicSolverInfo &chain_info);
  
   bool checkRobotState(moveit_msgs::RobotState &robot_state,
-                       const kinematics_msgs::KinematicSolverInfo &chain_info);
+                       const moveit_msgs::KinematicSolverInfo &chain_info);
 
-  bool checkFKService(kinematics_msgs::GetPositionFK::Request &request, 
-                      kinematics_msgs::GetPositionFK::Response &response, 
-                      const kinematics_msgs::KinematicSolverInfo &chain_info);
+  bool checkFKService(moveit_msgs::GetPositionFK::Request &request, 
+                      moveit_msgs::GetPositionFK::Response &response, 
+                      const moveit_msgs::KinematicSolverInfo &chain_info);
  
-  bool checkIKService(kinematics_msgs::GetPositionIK::Request &request, 
-                      kinematics_msgs::GetPositionIK::Response &response,
-                      const kinematics_msgs::KinematicSolverInfo &chain_info);
+  bool checkIKService(moveit_msgs::GetPositionIK::Request &request, 
+                      moveit_msgs::GetPositionIK::Response &response,
+                      const moveit_msgs::KinematicSolverInfo &chain_info);
  
   int getJointIndex(const std::string &name,
-                    const kinematics_msgs::KinematicSolverInfo &chain_info);
+                    const moveit_msgs::KinematicSolverInfo &chain_info);
 
   bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg, 
                               KDL::Frame &pose_kdl, 
@@ -128,7 +128,7 @@ namespace pr2_arm_kinematics
                          const std::string &name);
 
   void getKDLChainInfo(const KDL::Chain &chain,
-                       kinematics_msgs::KinematicSolverInfo &chain_info);
+                       moveit_msgs::KinematicSolverInfo &chain_info);
 }
 
 #endif// PR2_ARM_IK_UTILS_H

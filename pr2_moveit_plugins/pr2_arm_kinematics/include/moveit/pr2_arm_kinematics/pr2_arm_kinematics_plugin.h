@@ -43,19 +43,19 @@
 #include <tf/transform_listener.h>
 
 #include <angles/angles.h>
-#include <pr2_arm_kinematics/pr2_arm_ik_solver.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_ik_solver.h>
 #include <tf_conversions/tf_kdl.h>
 
-#include <kinematics_msgs/GetPositionFK.h>
-#include <kinematics_msgs/GetPositionIK.h>
-#include <kinematics_msgs/GetKinematicSolverInfo.h>
+#include <moveit_msgs/GetPositionFK.h>
+#include <moveit_msgs/GetPositionIK.h>
+#include <moveit_msgs/GetKinematicSolverInfo.h>
 #include <moveit_msgs/MoveItErrorCodes.h>
 
 #include <kdl/chainfksolverpos_recursive.hpp>
 
 #include <boost/shared_ptr.hpp>
 
-#include <kinematics_base/kinematics_base.h>
+#include <moveit/kinematics_base/kinematics_base.h>
 
 namespace pr2_arm_kinematics
 {
@@ -194,7 +194,7 @@ protected:
   int dimension_;
   boost::shared_ptr<KDL::ChainFkSolverPos_recursive> jnt_to_pose_solver_;
   KDL::Chain kdl_chain_;
-  kinematics_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
+  moveit_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
 
   mutable IKCallbackFn desiredPoseCallback_;
   mutable IKCallbackFn solutionCallback_;    

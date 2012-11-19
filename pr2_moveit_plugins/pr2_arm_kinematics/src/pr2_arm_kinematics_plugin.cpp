@@ -31,11 +31,11 @@
  * Author: Sachin Chitta
  */
 
-#include <pr2_arm_kinematics/pr2_arm_kinematics_plugin.h>
+#include <moveit/pr2_arm_kinematics/pr2_arm_kinematics_plugin.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <kdl_parser/kdl_parser.hpp>
 #include <tf_conversions/tf_kdl.h>
-#include "ros/ros.h"
+#include <ros/ros.h>
 #include <algorithm>
 #include <numeric>
 
@@ -130,7 +130,7 @@ bool PR2ArmKinematicsPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
   }
     
   KDL::Frame pose_desired;
-  tf::PoseMsgToKDL(ik_pose, pose_desired);
+  tf::poseMsgToKDL(ik_pose, pose_desired);
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -181,7 +181,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     return false;
   }
   KDL::Frame pose_desired;
-  tf::PoseMsgToKDL(ik_pose, pose_desired);
+  tf::poseMsgToKDL(ik_pose, pose_desired);
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -235,7 +235,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     return false;
   }
   KDL::Frame pose_desired;
-  tf::PoseMsgToKDL(ik_pose, pose_desired);
+  tf::poseMsgToKDL(ik_pose, pose_desired);
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -290,7 +290,7 @@ void PR2ArmKinematicsPlugin::desiredPoseCallback(const KDL::JntArray& jnt_array,
     ik_seed_state[i] = jnt_array(i);
 
   geometry_msgs::Pose ik_pose_msg;
-  tf::PoseKDLToMsg(ik_pose,ik_pose_msg);
+  tf::poseKDLToMsg(ik_pose,ik_pose_msg);
 
   desiredPoseCallback_(ik_pose_msg,ik_seed_state,error_code);
 }
@@ -306,7 +306,7 @@ void PR2ArmKinematicsPlugin::jointSolutionCallback(const KDL::JntArray& jnt_arra
     ik_seed_state[i] = jnt_array(i);
 
   geometry_msgs::Pose ik_pose_msg;
-  tf::PoseKDLToMsg(ik_pose,ik_pose_msg);
+  tf::poseKDLToMsg(ik_pose,ik_pose_msg);
 
   solutionCallback_(ik_pose_msg,ik_seed_state,error_code);
 }
@@ -326,7 +326,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     return false;
   }
   KDL::Frame pose_desired;
-  tf::PoseMsgToKDL(ik_pose, pose_desired);
+  tf::poseMsgToKDL(ik_pose, pose_desired);
 
   //  desiredPoseCallback_ = desired_pose_callback;
   //  solutionCallback_    = solution_callback;
@@ -380,7 +380,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     return false;
   }
   KDL::Frame pose_desired;
-  tf::PoseMsgToKDL(ik_pose, pose_desired);
+  tf::poseMsgToKDL(ik_pose, pose_desired);
 
   //  desiredPoseCallback_ = desired_pose_callback;
   //  solutionCallback_    = solution_callback;
@@ -454,7 +454,7 @@ bool PR2ArmKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_
     ROS_DEBUG("End effector index: %d",pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i]));
     if(jnt_to_pose_solver_->JntToCart(jnt_pos_in,p_out,pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i])) >=0)
     {
-      tf::PoseKDLToMsg(p_out,poses[i]);
+      tf::poseKDLToMsg(p_out,poses[i]);
     }
     else
     {
