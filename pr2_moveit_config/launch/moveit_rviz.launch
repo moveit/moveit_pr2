@@ -1,14 +1,11 @@
 <launch>
 
-  <include file="$(find pr2_moveit_config)/launch/planning_context.launch" />
-
   <arg name="debug" default="false" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
   
-  <node name="rviz" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" 
-	output="screen" args="-d $(find pr2_moveit_config)/launch/motion_planning.rviz" >
+  <node name="$(anon rviz)" launch-prefix="$(arg launch_prefix)" pkg="rviz" type="rviz" respawn="false" output="screen">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
   </node>
-  
+
 </launch>

@@ -26,7 +26,7 @@ left_arm:
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
     - RRTStarkConfigDefault
-  projection_evaluator: link(l_wrist_roll_link)
+  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
   longest_valid_segment_fraction: 0.05
 
 arms:
@@ -42,9 +42,6 @@ arms:
   longest_valid_segment_fraction: 0.05
   projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
 
-whole_body:
-  planner_configs:
-    - msRRTConnectkConfigDefault
 
 planner_configs:
 
@@ -74,12 +71,3 @@ planner_configs:
 
   BKPIECEkConfigDefault:
     type: geometric::BKPIECE
-
-  msRRTConnectkConfigDefault:
-    type: geometric::msRRTConnect
-    subspaces: right_arm left_arm base
-
-
-#constraint_approximations_path: /home/isucan/c
-
-#constraint_samplers: plugin_names_of_sampler1 plugin_names_of_sampler2
