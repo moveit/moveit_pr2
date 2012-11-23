@@ -8,7 +8,9 @@
   
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
-  <include file="$(find pr2_moveit_config)/launch/move_group.launch"/>
+  <include file="$(find pr2_moveit_config)/launch/move_group.launch">
+    <arg name="allow_trajectory_execution" value="false"/>
+  </include>
 
   <include file="$(find pr2_moveit_config)/launch/moveit_rviz.launch"/>
 
