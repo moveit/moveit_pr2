@@ -26,7 +26,7 @@ left_arm:
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
     - RRTStarkConfigDefault
-  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
+  projection_evaluator: joints(l_shoulder_pan_joint,l_shoulder_lift_joint)
   longest_valid_segment_fraction: 0.05
 
 arms:
