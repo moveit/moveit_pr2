@@ -128,7 +128,6 @@ public:
                                 const std::vector<double> &ik_seed_state,
                                 double timeout,
                                 std::vector<double> &solution,
-                                const IKCallbackFn &desired_pose_callback,
                                 const IKCallbackFn &solution_callback,
                                 moveit_msgs::MoveItErrorCodes &error_code) const;      
 
@@ -148,7 +147,6 @@ public:
                                 unsigned int redundancy,
                                 double consistency_limit,
                                 std::vector<double> &solution,
-                                const IKCallbackFn &desired_pose_callback,
                                 const IKCallbackFn &solution_callback,
                                 moveit_msgs::MoveItErrorCodes &error_code) const;      
     
@@ -195,19 +193,7 @@ protected:
   boost::shared_ptr<KDL::ChainFkSolverPos_recursive> jnt_to_pose_solver_;
   KDL::Chain kdl_chain_;
   moveit_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
-
-  mutable IKCallbackFn desiredPoseCallback_;
-  mutable IKCallbackFn solutionCallback_;    
-
-  void desiredPoseCallback(const KDL::JntArray& jnt_array, 
-                           const KDL::Frame& ik_pose,
-                           moveit_msgs::MoveItErrorCodes& error_code) const;
-
-  void jointSolutionCallback(const KDL::JntArray& jnt_array, 
-                             const KDL::Frame& ik_pose,
-                             moveit_msgs::MoveItErrorCodes& error_code) const;
-
-
+  
 };
 }
 

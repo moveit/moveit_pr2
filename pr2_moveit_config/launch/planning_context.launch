@@ -2,6 +2,9 @@
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="robot_description_semantic" textfile="$(find pr2_moveit_config)/config/pr2.srdf" />
+
+
+  <param name="robot_description" textfile="$(find moveit_core)/kinematic_state/test/urdf/robot.xml" />
   
   <!-- Load to the parameter server yaml files -->
   <group ns="robot_description_planning">    

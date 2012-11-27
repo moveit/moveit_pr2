@@ -279,43 +279,10 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   }
 }
 
-
-void PR2ArmKinematicsPlugin::desiredPoseCallback(const KDL::JntArray& jnt_array, 
-                                                 const KDL::Frame& ik_pose,
-                                                 moveit_msgs::MoveItErrorCodes& error_code) const
-{
-  std::vector<double> ik_seed_state;
-  ik_seed_state.resize(dimension_);
-  for(int i=0; i < dimension_; i++)
-    ik_seed_state[i] = jnt_array(i);
-
-  geometry_msgs::Pose ik_pose_msg;
-  tf::poseKDLToMsg(ik_pose,ik_pose_msg);
-
-  desiredPoseCallback_(ik_pose_msg,ik_seed_state,error_code);
-}
-
-
-void PR2ArmKinematicsPlugin::jointSolutionCallback(const KDL::JntArray& jnt_array, 
-                                                   const KDL::Frame& ik_pose,
-                                                   moveit_msgs::MoveItErrorCodes& error_code) const
-{
-  std::vector<double> ik_seed_state;
-  ik_seed_state.resize(dimension_);
-  for(int i=0; i < dimension_; i++)
-    ik_seed_state[i] = jnt_array(i);
-
-  geometry_msgs::Pose ik_pose_msg;
-  tf::poseKDLToMsg(ik_pose,ik_pose_msg);
-
-  solutionCallback_(ik_pose_msg,ik_seed_state,error_code);
-}
-
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                               const std::vector<double> &ik_seed_state,
                                               double timeout,
                                               std::vector<double> &solution,
-                                              const IKCallbackFn &desired_pose_callback,
                                               const IKCallbackFn &solution_callback,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
 {
@@ -327,9 +294,6 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   }
   KDL::Frame pose_desired;
   tf::poseMsgToKDL(ik_pose, pose_desired);
-
-  //  desiredPoseCallback_ = desired_pose_callback;
-  //  solutionCallback_    = solution_callback;
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -345,7 +309,6 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                                      jnt_pos_out,
                                                      timeout,
                                                      error_code,
-                                                     boost::bind(desired_pose_callback,_1, _2, _3),
                                                      boost::bind(solution_callback, _1, _2, _3));
   if(ik_valid >= 0)
   {
@@ -369,7 +332,6 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               unsigned int redundancy,
                                               double consistency_limit,
                                               std::vector<double> &solution,
-                                              const IKCallbackFn &desired_pose_callback,
                                               const IKCallbackFn &solution_callback,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
 {
@@ -381,9 +343,6 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   }
   KDL::Frame pose_desired;
   tf::poseMsgToKDL(ik_pose, pose_desired);
-
-  //  desiredPoseCallback_ = desired_pose_callback;
-  //  solutionCallback_    = solution_callback;
 
   //Do the IK
   KDL::JntArray jnt_pos_in;
@@ -402,7 +361,6 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                                      timeout,
                                                      consistency_limit,
                                                      error_code,
-                                                     boost::bind(desired_pose_callback, _1, _2, _3),
                                                      boost::bind(solution_callback, _1, _2, _3));
   pr2_arm_ik_solver_->setFreeAngle(old_free_angle);
   if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)

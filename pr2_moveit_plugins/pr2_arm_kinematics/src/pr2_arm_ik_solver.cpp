@@ -304,10 +304,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     KDL::JntArray &q_out, 
                                     const double &timeout, 
                                     moveit_msgs::MoveItErrorCodes &error_code,
-                                    const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
                                     const kinematics::KinematicsBase::IKCallbackFn &solution_callback) 
-//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
@@ -324,19 +321,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   geometry_msgs::Pose ik_pose_msg;
   tf::poseKDLToMsg(p_in,ik_pose_msg);
 
-  if(!desired_pose_callback.empty())
-  {
-    std::vector<double> ik_seed_state(7,0.0);
-    for(int i=0; i < 7; i++)
-      ik_seed_state[i] = q_init(i);
 
-
-    desired_pose_callback(ik_pose_msg,ik_seed_state,error_code);
-  }
-  if(error_code.val != error_code.SUCCESS)
-  {
-    return -1;
-  }
   bool callback_check = true;
   if(solution_callback.empty())
     callback_check = false;
@@ -397,10 +382,7 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
                                     const double &timeout, 
                                     const double &max_consistency,
                                     moveit_msgs::MoveItErrorCodes &error_code,
-                                    const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
                                     const kinematics::KinematicsBase::IKCallbackFn &solution_callback)
-//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-//                                    const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback)
 {
   KDL::JntArray q_init = q_in;
   double initial_guess = q_init(free_angle_);
@@ -424,18 +406,6 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   geometry_msgs::Pose ik_pose_msg;
   tf::poseKDLToMsg(p_in,ik_pose_msg);
 
-  if(!desired_pose_callback.empty())
-  {
-    std::vector<double> ik_seed_state(7,0.0);
-    for(int i=0; i < 7; i++)
-      ik_seed_state[i] = q_init(i);
-
-    desired_pose_callback(ik_pose_msg,ik_seed_state,error_code);
-  }
-  if(error_code.val != error_code.SUCCESS)
-  {
-    return -1;
-  }
   bool callback_check = true;
   if(solution_callback.empty())
     callback_check = false;

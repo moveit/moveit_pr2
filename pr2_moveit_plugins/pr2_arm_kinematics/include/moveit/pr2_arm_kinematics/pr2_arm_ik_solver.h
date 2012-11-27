@@ -159,7 +159,6 @@ static const int TIMED_OUT = -2;
      * @param q_init The initial guess for the inverse kinematics solution. The solver uses the joint value q_init(pr2_ik_->free_angle_) as 
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
      * @param q_out A std::vector of KDL::JntArray containing all found solutions.  
-     * @param desired_pose_callback A callback function to which the desired pose is passed in
      * @param solution_callback A callback function to which IK solutions are passed in
      */
     int CartToJntSearch(const KDL::JntArray& q_in, 
@@ -167,10 +166,7 @@ static const int TIMED_OUT = -2;
                         KDL::JntArray &q_out, 
                         const double &timeout, 
                         moveit_msgs::MoveItErrorCodes &error_code,
-                        const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
                         const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
-                        //                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-                        //                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
 
     int CartToJntSearch(const KDL::JntArray& q_in, 
                         const KDL::Frame& p_in, 
@@ -178,13 +174,7 @@ static const int TIMED_OUT = -2;
                         const double &timeout, 
                         const double& consistency_limit, 
                         moveit_msgs::MoveItErrorCodes &error_code,
-                        const kinematics::KinematicsBase::IKCallbackFn &desired_pose_callback,
                         const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
-
-    //                        const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &desired_pose_callback,
-    //                  const boost::function<void(const KDL::JntArray&,const KDL::Frame&,moveit_msgs::MoveItErrorCodes &)> &solution_callback);
-
-
 
     std::string getFrameId();
 
