@@ -35,7 +35,7 @@
 /* Author: Ioan Sucan */
 
 #include <ros/ros.h>
-#include <moveit_sensor_manager/moveit_sensor_manager.h>
+#include <moveit/sensor_manager/sensor_manager.h>
 #include <pluginlib/class_list_macros.h>
 #include <boost/math/constants/constants.hpp>
 
