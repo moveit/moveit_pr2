@@ -2,7 +2,11 @@
 
   <!-- Set the param that trajectory_execution_manager needs to find the controller plugin -->
   <arg name="moveit_sensor_manager" default="pr2_moveit_sensor_manager/Pr2MoveItSensorManager" />
+
+  <!--
+      Disable for now, as this package is not yet catkinized (dry deps)
   <param name="moveit_sensor_manager" value="$(arg moveit_sensor_manager)"/>
+  -->
 
   <!-- Params are specific to this plugin -->
 
