@@ -1,0 +1,16 @@
+<launch>
+  <!-- send pr2 urdf to param server -->
+  <include file="$(find pr2_description)/robots/upload_pr2.launch" />
+
+  <test test-name="pr2_kinematics_plugin_test" pkg="pr2_moveit_tests" type="pr2_kinematics_test" name="pr2_right_arm_kinematics" time-limit="180" >    
+   <param name="tip_name" value="r_wrist_roll_link" />     
+   <param name="root_name" value="torso_lift_link" />  
+   <param name="search_discretization" value="0.025" />  
+   <param name="number_fk_tests" value="100" />  
+   <param name="number_ik_tests" value="100" />  
+   <param name="number_fk_tests_with_callbacks" value="100" />  
+
+   <param name="plugin_name" value="pr2_arm_kinematics/PR2ArmKinematicsPlugin" />  
+  </test>
+
+</launch>
