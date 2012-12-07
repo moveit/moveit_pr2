@@ -238,6 +238,13 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     error_code.val = error_code.PLANNING_FAILED; 
     return false;
   }
+  if(consistency_limits.size() != dimension_)
+  {
+    ROS_ERROR("Consistency limits should be of size: %d",dimension_);    
+    error_code.val = error_code.PLANNING_FAILED; 
+    return false;
+  }
+
   KDL::Frame pose_desired;
   tf::poseMsgToKDL(ik_pose, pose_desired);
 
@@ -341,6 +348,13 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     error_code.val = error_code.PLANNING_FAILED;
     return false;
   }
+  if(consistency_limits.size() != dimension_)
+  {
+    ROS_ERROR("Consistency limits should be of size: %d",dimension_);    
+    error_code.val = error_code.PLANNING_FAILED; 
+    return false;
+  }
+
   KDL::Frame pose_desired;
   tf::poseMsgToKDL(ik_pose, pose_desired);
 
