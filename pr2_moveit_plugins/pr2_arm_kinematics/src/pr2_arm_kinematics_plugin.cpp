@@ -228,7 +228,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                               const std::vector<double> &ik_seed_state,
                                               double timeout,
-                                              double consistency_limit,
+                                              const std::vector<double> &consistency_limits,
                                               std::vector<double> &solution,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
 {
@@ -252,7 +252,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
 
   int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
                                                      pose_desired,
-                                                     consistency_limit,
+                                                     consistency_limits[free_angle_],
                                                      jnt_pos_out,
                                                      timeout);
 
@@ -330,7 +330,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                               const std::vector<double> &ik_seed_state,
                                               double timeout,
-                                              double consistency_limit,
+                                              const std::vector<double> &consistency_limits,
                                               std::vector<double> &solution,
                                               const IKCallbackFn &solution_callback,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
@@ -353,12 +353,11 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     jnt_pos_in(i) = ik_seed_state[i];
   }
 
-  unsigned int old_free_angle = pr2_arm_ik_solver_->getFreeAngle();
   int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
                                                      pose_desired,
                                                      jnt_pos_out,
                                                      timeout,
-                                                     consistency_limit,
+                                                     consistency_limits[free_angle_],
                                                      error_code,
                                                      boost::bind(solution_callback, _1, _2, _3));
   if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)
