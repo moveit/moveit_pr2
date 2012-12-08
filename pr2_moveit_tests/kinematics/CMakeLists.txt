@@ -1,3 +1,7 @@
 catkin_add_gtest(pr2_kinematics_test src/test_kinematics_as_plugin.cpp)
-target_link_libraries(pr2_kinematics_test ${catkin_LIBRARIES})
+target_link_libraries(pr2_kinematics_test ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 install(TARGETS pr2_kinematics_test RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+catkin_add_gtest(pr2_constraint_aware_kinematics_test src/test_constraint_aware_kinematics.cpp)
+target_link_libraries(pr2_constraint_aware_kinematics_test ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+install(TARGETS pr2_constraint_aware_kinematics_test RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

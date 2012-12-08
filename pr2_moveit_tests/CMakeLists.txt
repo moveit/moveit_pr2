@@ -8,6 +8,8 @@ project(pr2_moveit_tests)
 find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning pluginlib)
 
 find_package(PkgConfig REQUIRED)
+find_package(Eigen REQUIRED)
+find_package(Boost REQUIRED system filesystem date_time thread)
 
 pkg_check_modules(FCL REQUIRED fcl)
 include_directories(${FCL_INCLUDE_DIRS})
