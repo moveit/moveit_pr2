@@ -412,7 +412,7 @@ bool PR2ArmKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_
   for(int i=0; i < dimension_; i++)
   {
     jnt_pos_in(i) = joint_angles[i];
-    ROS_DEBUG("Joint angle: %d %f",i,joint_angles[i]);
+    //    ROS_DEBUG("Joint angle: %d %f",i,joint_angles[i]);
   }
 
   poses.resize(link_names.size());
@@ -420,7 +420,7 @@ bool PR2ArmKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_
   bool valid = true;
   for(unsigned int i=0; i < poses.size(); i++)
   {
-    ROS_DEBUG("End effector index: %d",pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i]));
+    //    ROS_DEBUG("End effector index: %d",pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i]));
     if(jnt_to_pose_solver_->JntToCart(jnt_pos_in,p_out,pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i])) >=0)
     {
       tf::poseKDLToMsg(p_out,poses[i]);
