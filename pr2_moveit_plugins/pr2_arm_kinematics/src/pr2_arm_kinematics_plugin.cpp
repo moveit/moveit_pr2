@@ -238,7 +238,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     error_code.val = error_code.PLANNING_FAILED; 
     return false;
   }
-  if(consistency_limits.size() != dimension_)
+  if(!consistency_limits.empty() && consistency_limits.size() != dimension_)
   {
     ROS_ERROR("Consistency limits should be of size: %d",dimension_);    
     error_code.val = error_code.PLANNING_FAILED; 
@@ -259,7 +259,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
 
   int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
                                                      pose_desired,
-                                                     consistency_limits[free_angle_],
+                                                     consistency_limits.size() > free_angle_ ? consistency_limits[free_angle_] : std::numeric_limits<float>::epsilon(),
                                                      jnt_pos_out,
                                                      timeout);
 
@@ -345,13 +345,13 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
   if(!active_)
   {
     ROS_ERROR("kinematics not active");
-    error_code.val = error_code.PLANNING_FAILED;
+    error_code.val = error_code.FAILURE;
     return false;
   }
-  if(consistency_limits.size() != dimension_)
+  if(!consistency_limits.empty() && consistency_limits.size() != dimension_)
   {
     ROS_ERROR("Consistency limits should be of size: %d",dimension_);    
-    error_code.val = error_code.PLANNING_FAILED; 
+    error_code.val = error_code.FAILURE; 
     return false;
   }
 
@@ -371,7 +371,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                                      pose_desired,
                                                      jnt_pos_out,
                                                      timeout,
-                                                     consistency_limits[free_angle_],
+                                                     consistency_limits.size() > free_angle_ ? consistency_limits[free_angle_] : std::numeric_limits<float>::epsilon(),
                                                      error_code,
                                                      boost::bind(solution_callback, _1, _2, _3));
   if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)
@@ -421,7 +421,7 @@ bool PR2ArmKinematicsPlugin::getPositionFK(const std::vector<std::string> &link_
   for(unsigned int i=0; i < poses.size(); i++)
   {
     //    ROS_DEBUG("End effector index: %d",pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i]));
-    if(jnt_to_pose_solver_->JntToCart(jnt_pos_in,p_out,pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i])) >=0)
+    if(jnt_to_pose_solver_->JntToCart(jnt_pos_in,p_out,pr2_arm_kinematics::getKDLSegmentIndex(kdl_chain_,link_names[i])) >= 0)
     {
       tf::poseKDLToMsg(p_out,poses[i]);
     }
