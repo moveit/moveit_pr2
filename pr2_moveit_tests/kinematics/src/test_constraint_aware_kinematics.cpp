@@ -66,7 +66,6 @@ TEST(ConstraintAwareKinematics, getIK)
 
   planning_scene.reset(new planning_scene::PlanningScene());
   planning_scene->configure(urdf_model, srdf, kinematic_model);    
-  //    solver_.reset(new kinematics_constraint_aware::KinematicsContraintAware(kinematic_model_, "right_arm"));
 
   const kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(group_name);
 
@@ -79,14 +78,18 @@ TEST(ConstraintAwareKinematics, getIK)
   ros::NodeHandle nh("~");
   int number_ik_tests;  
   nh.param("number_ik_tests", number_ik_tests, 1);  
-  unsigned int success = 0;
+
+  int acceptable_success_percentage;
+  nh.param("accepatable_success_percentage", acceptable_success_percentage, 95);  
+  
+  unsigned int num_success = 0;
 
   kinematics_constraint_aware::KinematicsRequest kinematics_request;
   kinematics_constraint_aware::KinematicsResponse kinematics_response;
   kinematics_response.solution_.reset(new kinematic_state::KinematicState(planning_scene->getCurrentState()));
   
   kinematics_request.group_name_ = group_name;
-  kinematics_request.timeout_ = ros::Duration(0.5);
+  kinematics_request.timeout_ = ros::Duration(5.0);
   kinematics_request.check_for_collisions_ = false;
   kinematics_request.robot_state_ = kinematic_state;
 
@@ -107,11 +110,20 @@ TEST(ConstraintAwareKinematics, getIK)
     goal.pose.orientation.z = quat.z();
     goal.pose.orientation.w = quat.w();
 
+    joint_state_group->setToRandomValues();
     kinematics_request.pose_stamped_vector_.clear();
     kinematics_request.pose_stamped_vector_.push_back(goal);    
-    solver.getIK(planning_scene, kinematics_request, kinematics_response);   
+    ros::WallTime start = ros::WallTime::now();    
+    if(solver.getIK(planning_scene, kinematics_request, kinematics_response))
+      num_success++;    
+    else
+      printf("Failed in %f\n", (ros::WallTime::now()-start).toSec());   
   }  
+  bool test_success = (((double)num_success)/number_ik_tests > acceptable_success_percentage/100.0);
+  printf("success ratio: %d of %d", num_success, number_ik_tests);  
+  EXPECT_TRUE(test_success);  
 }
+
 
 int main(int argc, char **argv)
 {

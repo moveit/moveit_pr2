@@ -265,7 +265,6 @@ TEST(ArmIKPlugin, searchIK)
   bool success_count = (success > 0.99 * number_ik_tests);
   EXPECT_TRUE(success_count);
   ROS_INFO("Elapsed time: %f", (ros::WallTime::now()-start_time).toSec());  
-  sleep(5.0);  
 }
 
 TEST(ArmIKPlugin, searchIKWithCallbacks)

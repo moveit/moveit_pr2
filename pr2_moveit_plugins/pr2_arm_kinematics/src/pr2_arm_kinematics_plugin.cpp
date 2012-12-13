@@ -179,50 +179,9 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               std::vector<double> &solution,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
 {
-  if(!active_)
-  {
-    ROS_ERROR("kinematics not active");
-    error_code.val = error_code.PLANNING_FAILED; 
-    return false;
-  }
-  KDL::Frame pose_desired;
-  tf::poseMsgToKDL(ik_pose, pose_desired);
-
-  //Do the IK
-  KDL::JntArray jnt_pos_in;
-  KDL::JntArray jnt_pos_out;
-  jnt_pos_in.resize(dimension_);
-  for(int i=0; i < dimension_; i++)
-  {
-    jnt_pos_in(i) = ik_seed_state[i];
-  }
-
-  int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
-                                                     pose_desired,
-                                                     jnt_pos_out,
-                                                     timeout);
-  if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)
-  {
-    error_code.val = error_code.NO_IK_SOLUTION; 
-    return false;
-  }
-
-  if(ik_valid >= 0)
-  {
-    solution.resize(dimension_);
-    for(int i=0; i < dimension_; i++)
-    {
-      solution[i] = jnt_pos_out(i);
-    }
-    error_code.val = error_code.SUCCESS;
-    return true;
-  }
-  else
-  {
-    ROS_DEBUG("An IK solution could not be found");   
-    error_code.val = error_code.NO_IK_SOLUTION; 
-    return false;
-  }
+  static IKCallbackFn solution_callback = 0;  
+  static std::vector<double> consistency_limits;  
+  return searchPositionIK(ik_pose, ik_seed_state, timeout, consistency_limits, solution, solution_callback, error_code);   
 }
 
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
@@ -232,59 +191,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               std::vector<double> &solution,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
 {
-  if(!active_)
-  {
-    ROS_ERROR("kinematics not active");
-    error_code.val = error_code.PLANNING_FAILED; 
-    return false;
-  }
-  if(!consistency_limits.empty() && consistency_limits.size() != dimension_)
-  {
-    ROS_ERROR("Consistency limits should be of size: %d",dimension_);    
-    error_code.val = error_code.PLANNING_FAILED; 
-    return false;
-  }
-
-  KDL::Frame pose_desired;
-  tf::poseMsgToKDL(ik_pose, pose_desired);
-
-  //Do the IK
-  KDL::JntArray jnt_pos_in;
-  KDL::JntArray jnt_pos_out;
-  jnt_pos_in.resize(dimension_);
-  for(int i=0; i < dimension_; i++)
-  {
-    jnt_pos_in(i) = ik_seed_state[i];
-  }
-
-  int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
-                                                     pose_desired,
-                                                     consistency_limits.size() > free_angle_ ? consistency_limits[free_angle_] : std::numeric_limits<float>::epsilon(),
-                                                     jnt_pos_out,
-                                                     timeout);
-
-  if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)
-  {
-    error_code.val = error_code.NO_IK_SOLUTION; 
-    return false;
-  }
-
-  if(ik_valid >= 0)
-  {
-    solution.resize(dimension_);
-    for(int i=0; i < dimension_; i++)
-    {
-      solution[i] = jnt_pos_out(i);
-    }
-    error_code.val = error_code.SUCCESS;
-    return true;
-  }
-  else
-  {
-    ROS_DEBUG("An IK solution could not be found");   
-    error_code.val = error_code.NO_IK_SOLUTION; 
-    return false;
-  }
+  static IKCallbackFn solution_callback = 0;  
+  return searchPositionIK(ik_pose, ik_seed_state, timeout, consistency_limits, solution, solution_callback, error_code);   
 }
 
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
@@ -294,44 +202,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               const IKCallbackFn &solution_callback,
                                               moveit_msgs::MoveItErrorCodes &error_code) const
 {
-  if(!active_)
-  {
-    ROS_ERROR("kinematics not active");
-    error_code.val = error_code.PLANNING_FAILED;
-    return false;
-  }
-  KDL::Frame pose_desired;
-  tf::poseMsgToKDL(ik_pose, pose_desired);
-
-  //Do the IK
-  KDL::JntArray jnt_pos_in;
-  KDL::JntArray jnt_pos_out;
-  jnt_pos_in.resize(dimension_);
-  for(int i=0; i < dimension_; i++)
-  {
-    jnt_pos_in(i) = ik_seed_state[i];
-  }
-
-  int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
-                                                     pose_desired,
-                                                     jnt_pos_out,
-                                                     timeout,
-                                                     error_code,
-                                                     boost::bind(solution_callback, _1, _2, _3));
-  if(ik_valid >= 0)
-  {
-    solution.resize(dimension_);
-    for(int i=0; i < dimension_; i++)
-    {
-      solution[i] = jnt_pos_out(i);
-    }
-    return true;
-  }
-  else
-  {
-    ROS_DEBUG("An IK solution could not be found");   
-    return false;
-  }
+  static std::vector<double> consistency_limits;  
+  return searchPositionIK(ik_pose, ik_seed_state, timeout, consistency_limits, solution, solution_callback, error_code);  
 }
 
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose,
@@ -367,13 +239,31 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
     jnt_pos_in(i) = ik_seed_state[i];
   }
 
-  int ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
-                                                     pose_desired,
-                                                     jnt_pos_out,
-                                                     timeout,
-                                                     consistency_limits.size() > free_angle_ ? consistency_limits[free_angle_] : std::numeric_limits<float>::epsilon(),
-                                                     error_code,
-                                                     boost::bind(solution_callback, _1, _2, _3));
+  int ik_valid;
+  if(consistency_limits.empty())
+  {
+    ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
+                                                   pose_desired,
+                                                   jnt_pos_out,
+                                                   timeout,
+                                                   error_code,
+                                                   solution_callback ? 
+                                                   boost::bind(solution_callback, _1, _2, _3):
+                                                   IKCallbackFn());      
+  }
+  else
+  {
+    ik_valid = pr2_arm_ik_solver_->CartToJntSearch(jnt_pos_in,
+                                                   pose_desired,
+                                                   jnt_pos_out,
+                                                   timeout,
+                                                   consistency_limits[free_angle_],
+                                                   error_code,
+                                                   solution_callback ? 
+                                                   boost::bind(solution_callback, _1, _2, _3):
+                                                   IKCallbackFn());    
+  }
+
   if(ik_valid == pr2_arm_kinematics::NO_IK_SOLUTION)
     return false;
 
