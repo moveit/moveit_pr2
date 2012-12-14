@@ -14,7 +14,8 @@
   <url type="bugtracker">https://github.com/ros-planning/moveit-ros/issues</url>
   <url type="repository">https://github.com/ros-planning/moveit-ros</url>
 
-  <build_depend>catkin</build_depend> 
+  <buildtool_depend>catkin</buildtool_depend> 
+
   <build_depend>moveit_core</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>kdl_parser</build_depend>
@@ -27,7 +28,6 @@
   <build_depend>actionlib</build_depend>
   <build_depend>angles</build_depend>
 
-  <run_depend>catkin</run_depend> 
   <run_depend>moveit_core</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>kdl_parser</run_depend>
