@@ -2,6 +2,9 @@
 
   <include file="$(find pr2_description)/robots/upload_pr2.launch"/>
 
+  <node pkg="tf" type="static_transform_publisher" name="odom_broadcaster" args="0 0 0 0 0 0 odom_combined base_link 100" />
+
+
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="false"/>
   </node>
