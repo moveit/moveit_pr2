@@ -82,6 +82,5 @@ public:
 
 }
 
-PLUGINLIB_DECLARE_CLASS(pr2_constraint_sampler, PR2ConstraintSamplerAllocator,
-                        pr2_constraint_sampler::PR2ConstraintSamplerAllocator,
-                        constraint_samplers::ConstraintSamplerAllocator);
+PLUGINLIB_EXPORT_CLASS(pr2_constraint_sampler::PR2ConstraintSamplerAllocator,
+                       constraint_samplers::ConstraintSamplerAllocator);

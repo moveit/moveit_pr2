@@ -122,7 +122,6 @@ protected:
   
 };
 
-PLUGINLIB_DECLARE_CLASS(pr2_moveit_sensor_manager, Pr2MoveItSensorManager,
-                        pr2_moveit_sensor_manager::Pr2MoveItSensorManager,
-                        moveit_sensor_manager::MoveItSensorManager);
+PLUGINLIB_EXPORT_CLASS(pr2_moveit_sensor_manager::Pr2MoveItSensorManager,
+                       moveit_sensor_manager::MoveItSensorManager);
 }

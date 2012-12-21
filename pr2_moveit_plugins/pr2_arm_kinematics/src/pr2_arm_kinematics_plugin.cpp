@@ -51,7 +51,7 @@ using namespace std;
 using namespace ros;
 
 //register PR2ArmKinematics as a KinematicsBase implementation
-PLUGINLIB_DECLARE_CLASS(pr2_arm_kinematics,PR2ArmKinematicsPlugin, pr2_arm_kinematics::PR2ArmKinematicsPlugin, kinematics::KinematicsBase)
+PLUGINLIB_EXPORT_CLASS(pr2_arm_kinematics::PR2ArmKinematicsPlugin, kinematics::KinematicsBase);
 
 namespace pr2_arm_kinematics {
 

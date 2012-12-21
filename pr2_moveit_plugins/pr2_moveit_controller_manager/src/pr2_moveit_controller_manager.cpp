@@ -464,6 +464,5 @@ protected:
 
 }
 
-PLUGINLIB_DECLARE_CLASS(pr2_moveit_controller_manager, Pr2MoveItControllerManager,
-                        pr2_moveit_controller_manager::Pr2MoveItControllerManager,
-                        moveit_controller_manager::MoveItControllerManager);
+PLUGINLIB_EXPORT_CLASS(pr2_moveit_controller_manager::Pr2MoveItControllerManager,
+                       moveit_controller_manager::MoveItControllerManager);
