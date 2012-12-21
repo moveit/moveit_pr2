@@ -18,6 +18,9 @@
     <group name="right_arm">
         <chain base_link="torso_lift_link" tip_link="r_wrist_roll_link" />
     </group>
+    <group name="right_arm_and_torso">
+        <chain base_link="base_link" tip_link="r_wrist_roll_link" />
+    </group>
     <group name="arms">
         <group name="left_arm" />
         <group name="right_arm" />
