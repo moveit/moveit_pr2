@@ -1,2 +1,0 @@
-add_executable(kinematic_model_tutorial src/kinematic_model_tutorial.cpp)
-target_link_libraries(kinematic_model_tutorial ${catkin_LIBRARIES} ${Boost_LIBRARIES})
