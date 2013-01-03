@@ -36,7 +36,6 @@
 *********************************************************************/
 
 #include <ros/ros.h>
-#include <ros/spinner.h>
 
 // MoveIt!
 #include <moveit/planning_models_loader/kinematic_model_loader.h>
@@ -77,10 +76,10 @@ int main(int argc, char **argv)
   joint_state_group->getVariableValues(joint_values);
   
   /* Get the names of the joints in the right_arm*/
-  const std::vector<std::string> joint_names = joint_state_group->getJointModelGroup()->getJointModelNames();
+  const std::vector<std::string> &joint_names = joint_state_group->getJointModelGroup()->getJointModelNames();
   
   /* Print joint names and values */
-  for(std::size_t i=0; i < joint_names.size(); ++i)
+  for(std::size_t i = 0; i < joint_names.size(); ++i)
   {
     ROS_INFO("Joint %s: %f", joint_names[i].c_str(), joint_values[i]);
   }
@@ -101,7 +100,7 @@ int main(int argc, char **argv)
   
   /* Get and print the joint values */
 
-  if(found_ik)
+  if (found_ik)
   {
     joint_state_group->getVariableValues(joint_values);
     for(std::size_t i=0; i < joint_names.size(); ++i)
