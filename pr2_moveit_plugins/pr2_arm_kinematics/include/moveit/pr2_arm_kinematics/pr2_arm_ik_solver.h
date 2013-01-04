@@ -30,6 +30,8 @@
 //ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //POSSIBILITY OF SUCH DAMAGE.
 
+/* Author: Sachin Chitta */
+
 #ifndef MOVEIT_PR2_ARM_IK_SOLVER_
 #define MOVEIT_PR2_ARM_IK_SOLVER_
 
@@ -53,12 +55,8 @@ static const int TIMED_OUT = -2;
   class PR2ArmIKSolver : public KDL::ChainIkSolverPos
   {
     public:
-
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     
-    /** @class
-     *  @brief ROS/KDL based interface for the inverse kinematics of the PR2 arm
-     *  @author Sachin Chitta <sachinc@willowgarage.com>
+    /** @brief ROS/KDL based interface for the inverse kinematics of the PR2 arm
      *
      *  This class provides a KDL based interface to the inverse kinematics of the PR2 arm. It inherits from the KDL::ChainIkSolverPos class
      *  but also exposes additional functionality to return multiple solutions from an inverse kinematics computation.
