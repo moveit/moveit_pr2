@@ -57,20 +57,21 @@
 
 #include <moveit/kinematics_base/kinematics_base.h>
 
+/** @brief Namespace for the PR2ArmKinematics*/
 namespace pr2_arm_kinematics
 {
 class PR2ArmKinematicsPlugin : public kinematics::KinematicsBase
 {
 public:
 
-  /** @class
+  /** 
    *  @brief Plugin-able interface to the PR2 arm kinematics
    */
   PR2ArmKinematicsPlugin();
 
   /** 
-   *  @brief Specifies if the node is active or not
-   *  @return True if the node is active, false otherwise.
+   *  @brief Specifies if the solver is active or not
+   *  @return True if the solver is active, false otherwise.
    */
   bool isActive();
 
