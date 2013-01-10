@@ -124,6 +124,4 @@ void Pr2GripperTrajectoryControllerHandler::controllerFeedbackCallback(const pr2
 
 }
 
-PLUGINLIB_DECLARE_CLASS(pr2_gripper_controller, Pr2GripperTrajectoryControllerHandler,
-                        pr2_gripper_controller::Pr2GripperTrajectoryControllerHandler,
-                        trajectory_execution::TrajectoryControllerHandler);
+PLUGINLIB_EXPORT_CLASS( pr2_gripper_controller::Pr2GripperTrajectoryControllerHandler, trajectory_execution::TrajectoryControllerHandler);
