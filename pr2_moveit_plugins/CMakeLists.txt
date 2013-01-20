@@ -32,10 +32,7 @@ link_directories(${catkin_LIBRARY_DIRS})
 
 catkin_package(
   LIBRARIES
-    pr2_moveit_arm_kinematics
-    pr2_moveit_controller_manager
   INCLUDE_DIRS
-    pr2_arm_kinematics/include
   DEPENDS
     moveit_core
     )
