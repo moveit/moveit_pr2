@@ -59,13 +59,13 @@ public:
   {
   }
   
-  virtual void getSensorsList(std::vector<std::string> &names)
+  virtual void getSensorsList(std::vector<std::string> &names) const
   {
     names.resize(1);
     names[0] = "head";
   }
   
-  virtual moveit_sensor_manager::SensorInfo getSensorInfo(const std::string &name)
+  virtual moveit_sensor_manager::SensorInfo getSensorInfo(const std::string &name) const
   {
     // I made this up.
     moveit_sensor_manager::SensorInfo si;
@@ -80,6 +80,11 @@ public:
     else
       ROS_ERROR("Unknown sensor: '%s'", name.c_str());
     return si;
+  }
+
+  virtual bool hasSensors(void) const
+  {
+    return true;
   }
   
   virtual bool pointSensorTo(const std::string &name, const geometry_msgs::PointStamped &target, moveit_msgs::RobotTrajectory &sensor_trajectory)
