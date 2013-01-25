@@ -25,6 +25,7 @@ find_package(catkin COMPONENTS
   eigen_conversions
   control_msgs
   pr2_mechanism_msgs
+  pr2_controllers_msgs
   REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
@@ -39,20 +40,19 @@ catkin_package(
 
 include_directories(pr2_arm_kinematics/include)
 include_directories(pr2_moveit_controller_manager/include)
-#include_directories(pr2_moveit_sensor_manager/include)
+include_directories(pr2_moveit_sensor_manager/include)
 #include_directories(pr2_moveit_constraint_sampler/include)
 
 add_subdirectory(pr2_arm_kinematics)
 add_subdirectory(pr2_moveit_controller_manager)
-#add_subdirectory(pr2_moveit_sensor_manager)
+add_subdirectory(pr2_moveit_sensor_manager)
 #add_subdirectory(pr2_moveit_constraint_sampler)
-#add_subdirectory(pr2_gripper_controller)
 
 install(
   FILES
     pr2_moveit_kinematics_plugin_description.xml
     pr2_moveit_controller_manager_plugin_description.xml
-#    pr2_moveit_sensor_manager_plugin_description.xml
+    pr2_moveit_sensor_manager_plugin_description.xml
 #    pr2_moveit_constraint_sampler_plugin_description.xml
   DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}
