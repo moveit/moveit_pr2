@@ -27,3 +27,21 @@ controller_list:
     default: true
     joints:
       - torso_lift_joint
+  - name: r_gripper_controller
+    ns: gripper_action
+    default: true
+    joints:
+      - r_gripper_motor_slider_joint
+      - r_gripper_joint
+      - r_gripper_l_parallel_root_joint
+      - r_gripper_r_parallel_tip_joint
+      - r_gripper_motor_screw_joint
+  - name: l_gripper_controller
+    ns: gripper_action
+    default: true
+    joints:
+      - l_gripper_motor_slider_joint
+      - l_gripper_joint
+      - l_gripper_l_parallel_root_joint
+      - l_gripper_r_parallel_tip_joint
+      - l_gripper_motor_screw_joint
