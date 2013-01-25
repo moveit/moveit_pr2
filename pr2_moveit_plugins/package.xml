@@ -43,7 +43,7 @@
   <run_depend>angles</run_depend>
 
   <export>
-<!--    <moveit_core plugin="${prefix}/pr2_moveit_sensor_manager_plugin_description.xml"/> -->
+    <moveit_core plugin="${prefix}/pr2_moveit_sensor_manager_plugin_description.xml"/>
     <moveit_core plugin="${prefix}/pr2_moveit_controller_manager_plugin_description.xml"/> 
     <moveit_core plugin="${prefix}/pr2_moveit_kinematics_plugin_description.xml"/>
   </export>
