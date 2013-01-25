@@ -44,70 +44,53 @@
 #include <pr2_mechanism_msgs/SwitchController.h>
 #include <pr2_mechanism_msgs/LoadController.h>
 #include <pr2_mechanism_msgs/UnloadController.h>
+#include <pr2_controllers_msgs/Pr2GripperCommandAction.h>
 #include <algorithm>
 #include <map>
 
 namespace pr2_moveit_controller_manager
 {
 
-class Pr2FollowJointTrajectoryControllerHandle : public moveit_controller_manager::MoveItControllerHandle
+static const double DEFAULT_MAX_GRIPPER_EFFORT = 10000.0;
+static const double GRIPPER_OPEN = 0.086;
+static const double GRIPPER_CLOSED = 0.0;
+
+template<typename T>
+class ActionBasedControllerHandle : public moveit_controller_manager::MoveItControllerHandle
 {
 public:
-  
-  Pr2FollowJointTrajectoryControllerHandle(const std::string &name, const std::string &ns = "follow_joint_trajectory") :
-    moveit_controller_manager::MoveItControllerHandle(name), namespace_(ns), done_(true)
-  {  
-    follow_joint_trajectory_action_client_.reset(new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>(name_ + "/" + namespace_, true));
+  ActionBasedControllerHandle(const std::string &name, const std::string &ns) :
+    moveit_controller_manager::MoveItControllerHandle(name),
+    namespace_(ns),
+    done_(true)
+  {
+    controller_action_client_.reset(new actionlib::SimpleActionClient<T>(name_ +"/" + namespace_, true));
     unsigned int attempts = 0;
-    while (ros::ok() && !follow_joint_trajectory_action_client_->waitForServer(ros::Duration(5.0)) && ++attempts < 3)
-      ROS_INFO_STREAM("Waiting for the follow joint trajectory action for controller " << name_ + "/" + namespace_ << " to come up");
+    while (ros::ok() && !controller_action_client_->waitForServer(ros::Duration(5.0)) && ++attempts < 3)
+      ROS_INFO_STREAM("Waiting for " << name_ + "/" + namespace_ << " to come up");
 
-    if (!follow_joint_trajectory_action_client_->isServerConnected())
+    if (!controller_action_client_->isServerConnected())
     {
-      ROS_ERROR_STREAM("Action client not connected for joint trajectory controller " << name_ + "/" + namespace_);
-      follow_joint_trajectory_action_client_.reset();
+      ROS_ERROR_STREAM("Action client not connected: " << name_ + "/" + namespace_);
+      controller_action_client_.reset();
     }
     
     last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
   }
-  
+
   bool isConnected(void) const
   {
-    return follow_joint_trajectory_action_client_;
+    return controller_action_client_;
   }
-  
-  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory &trajectory)
-  {
-    if (!follow_joint_trajectory_action_client_)
-      return false;
-    if (!trajectory.multi_dof_joint_trajectory.points.empty())
-    {
-      ROS_ERROR("The PR2 FollowJointTrajectory controller cannot execute multi-dof trajectories.");
-      return false;
-    }
-    if (done_)
-      ROS_DEBUG_STREAM("Sending trajectory to FollowJointTrajectory action for controller " << name_);
-    else
-      ROS_DEBUG_STREAM("Sending continuation for the currently executed trajectory to FollowJointTrajectory action for controller " << name_);
-    control_msgs::FollowJointTrajectoryGoal goal;
-    goal.trajectory = trajectory.joint_trajectory;
-    follow_joint_trajectory_action_client_->sendGoal(goal,
-                                                     boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerDoneCallback, this, _1, _2),
-                                                     boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerActiveCallback, this),
-                                                     boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerFeedbackCallback, this, _1));
-    done_ = false;
-    last_exec_ = moveit_controller_manager::ExecutionStatus::RUNNING;
-    return true;
-  }
-  
+
   virtual bool cancelExecution(void) 
   {   
-    if (!follow_joint_trajectory_action_client_)
+    if (!controller_action_client_)
       return false;
     if (!done_)
     {
-      ROS_INFO_STREAM("Cancelling execution of trajectory on controller " << name_);
-      follow_joint_trajectory_action_client_->cancelGoal();
+      ROS_INFO_STREAM("Cancelling execution for " << name_);
+      controller_action_client_->cancelGoal();
       last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
       done_ = true;
     }
@@ -116,8 +99,8 @@ public:
   
   virtual bool waitForExecution(const ros::Duration &timeout = ros::Duration(0))
   { 
-    if (follow_joint_trajectory_action_client_ && !done_)
-      return follow_joint_trajectory_action_client_->waitForResult(timeout);
+    if (controller_action_client_ && !done_)
+      return controller_action_client_->waitForResult(timeout);
     return true;
   }
 
@@ -125,9 +108,10 @@ public:
   {
     return last_exec_;
   }
-  
-  void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
-                              const control_msgs::FollowJointTrajectoryResultConstPtr& result)
+
+protected:
+
+  void finishControllerExecution(const actionlib::SimpleClientGoalState& state)
   {
     ROS_DEBUG_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
     if (state == actionlib::SimpleClientGoalState::SUCCEEDED)
@@ -142,6 +126,128 @@ public:
           last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
     done_ = true;
   }
+
+  moveit_controller_manager::ExecutionStatus last_exec_;
+  std::string namespace_;
+  bool done_;
+  boost::shared_ptr<actionlib::SimpleActionClient<T> > controller_action_client_;
+};
+
+class Pr2GripperControllerHandle : public ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>
+{
+public:
+  Pr2GripperControllerHandle(const std::string &name, const std::string &ns  = "gripper_action") :
+    ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>(name, ns)
+  {
+  }
+
+  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory &trajectory)
+  {
+    if (!controller_action_client_)
+      return false;
+    if (!trajectory.multi_dof_joint_trajectory.points.empty())
+    {
+      ROS_ERROR("The PR2 gripper controller cannot execute multi-dof trajectories.");
+      return false;
+    }
+    
+    if (trajectory.joint_trajectory.points.size() != 1)
+    {
+      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point only, but %u provided)", (unsigned int)trajectory.joint_trajectory.points.size());
+      return false;
+    }
+
+    if (trajectory.joint_trajectory.points[0].positions.size() != 1)
+    {
+      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point that specifies one position, but %u positions provided)",
+		(unsigned int)trajectory.joint_trajectory.points[0].positions.size());
+      return false;
+    }
+
+    pr2_controllers_msgs::Pr2GripperCommandGoal goal;
+    goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
+    if (!trajectory.joint_trajectory.points[0].velocities.empty())
+      goal.command.max_effort = trajectory.joint_trajectory.points[0].velocities[0];
+    
+    if (trajectory.joint_trajectory.points[0].positions[0] > 0.5)
+    {
+      goal.command.position = GRIPPER_OPEN;
+      ROS_DEBUG_STREAM("Sending gripper open command");
+    }
+    else
+    {
+      goal.command.position = GRIPPER_CLOSED;
+      ROS_DEBUG_STREAM("Sending gripper close command");
+    }
+
+    controller_action_client_->sendGoal(goal,
+					boost::bind(&Pr2GripperControllerHandle::controllerDoneCallback, this, _1, _2),
+					boost::bind(&Pr2GripperControllerHandle::controllerActiveCallback, this),
+					boost::bind(&Pr2GripperControllerHandle::controllerFeedbackCallback, this, _1));
+    done_ = false;
+    last_exec_ = moveit_controller_manager::ExecutionStatus::RUNNING;
+    return true;
+  }
+  
+private:
+
+  void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
+                              const pr2_controllers_msgs::Pr2GripperCommandResultConstPtr& result)
+  {
+    finishControllerExecution(state);
+  }
+  
+  void controllerActiveCallback(void) 
+  {
+    ROS_DEBUG_STREAM("Controller " << name_ << " started execution");
+  }
+  
+  void controllerFeedbackCallback(const pr2_controllers_msgs::Pr2GripperCommandFeedbackConstPtr& feedback)
+  {
+  }
+
+};
+
+class Pr2FollowJointTrajectoryControllerHandle : public ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>
+{
+public:
+  
+  Pr2FollowJointTrajectoryControllerHandle(const std::string &name, const std::string &ns = "follow_joint_trajectory") :
+    ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>(name, ns)
+  {  
+  }
+  
+  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory &trajectory)
+  {
+    if (!controller_action_client_)
+      return false;
+    if (!trajectory.multi_dof_joint_trajectory.points.empty())
+    {
+      ROS_ERROR("The PR2 FollowJointTrajectory controller cannot execute multi-dof trajectories.");
+      return false;
+    }
+    if (done_)
+      ROS_DEBUG_STREAM("Sending trajectory to FollowJointTrajectory action for controller " << name_);
+    else
+      ROS_DEBUG_STREAM("Sending continuation for the currently executed trajectory to FollowJointTrajectory action for controller " << name_);
+    control_msgs::FollowJointTrajectoryGoal goal;
+    goal.trajectory = trajectory.joint_trajectory;
+    controller_action_client_->sendGoal(goal,
+					boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerDoneCallback, this, _1, _2),
+					boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerActiveCallback, this),
+					boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerFeedbackCallback, this, _1));
+    done_ = false;
+    last_exec_ = moveit_controller_manager::ExecutionStatus::RUNNING;
+    return true;
+  }
+  
+protected:
+
+  void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
+                              const control_msgs::FollowJointTrajectoryResultConstPtr& result)
+  {
+    finishControllerExecution(state);
+  }
   
   void controllerActiveCallback(void) 
   {
@@ -151,13 +257,6 @@ public:
   void controllerFeedbackCallback(const control_msgs::FollowJointTrajectoryFeedbackConstPtr& feedback)
   {
   }
-  
-protected:
-  
-  moveit_controller_manager::ExecutionStatus last_exec_;  
-  std::string namespace_;
-  boost::shared_ptr<actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> > follow_joint_trajectory_action_client_;
-  bool done_;
 };
 
 class Pr2MoveItControllerManager : public moveit_controller_manager::MoveItControllerManager
@@ -277,13 +376,13 @@ public:
     if (possibly_unloaded_controllers_.find(name) != possibly_unloaded_controllers_.end())
     {
       const std::string &ns = possibly_unloaded_controllers_.at(name).ns_;
-      if (!ns.empty())
-        new_handle.reset(new Pr2FollowJointTrajectoryControllerHandle(name, ns));
+      new_handle = getControllerHandleHelper(name, ns);
     }
-    if (!new_handle)
-      new_handle.reset(new Pr2FollowJointTrajectoryControllerHandle(name));
-    if (new_handle && static_cast<Pr2FollowJointTrajectoryControllerHandle*>(new_handle.get())->isConnected())
-      handle_cache_[name] = new_handle;
+    else
+      new_handle = getControllerHandleHelper(name, "");
+
+    if (new_handle)
+      handle_cache_[name] = new_handle;  
     return new_handle;
   }
   
@@ -432,6 +531,24 @@ protected:
       }
     }
     return cached_lister_response_;
+  }
+
+  moveit_controller_manager::MoveItControllerHandlePtr getControllerHandleHelper(const std::string &name, const std::string &ns)
+  {
+    moveit_controller_manager::MoveItControllerHandlePtr new_handle;
+    if (name == "l_gripper_controller" || name == "r_gripper_controller")
+    {
+      new_handle.reset(ns.empty() ? new Pr2GripperControllerHandle(name) : new Pr2GripperControllerHandle(name, ns));
+      if (!static_cast<Pr2GripperControllerHandle*>(new_handle.get())->isConnected())
+	new_handle.reset();
+    }
+    else
+    {
+      new_handle.reset(ns.empty() ? new Pr2FollowJointTrajectoryControllerHandle(name) : new Pr2FollowJointTrajectoryControllerHandle(name, ns));
+      if (!static_cast<Pr2FollowJointTrajectoryControllerHandle*>(new_handle.get())->isConnected())
+	new_handle.reset();
+    }
+    return new_handle;
   }
   
   ros::NodeHandle node_handle_;    
