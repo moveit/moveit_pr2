@@ -11,12 +11,8 @@ find_package(Eigen REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
 pkg_check_modules(FCL REQUIRED fcl)
-include_directories(${FCL_INCLUDE_DIRS})
-link_directories(${FCL_LIBRARY_DIRS})
-
 pkg_check_modules(OCTOMAP REQUIRED octomap)
-include_directories(${OCTOMAP_INCLUDE_DIRS})
-link_directories(${OCTOMAP_LIBRARY_DIRS})
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -69,8 +65,15 @@ catkin_package(
 ## Build ##
 ###########
 
-## Specify additional locations of header files
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+
+include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${EIGEN_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS})
+
+include_directories(${OCTOMAP_INCLUDE_DIRS})
+link_directories(${OCTOMAP_LIBRARY_DIRS})
+
+include_directories(${FCL_INCLUDE_DIRS})
+link_directories(${FCL_LIBRARY_DIRS})
 
 ## Declare a cpp library
 # add_library(pr2_moveit_tutorials
@@ -88,7 +91,8 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 #   ${catkin_LIBRARIES}
 # )
 
-#add_subdirectory(kinematics)
+add_subdirectory(kinematics)
+add_subdirectory(planning)
 
 #############
 ## Install ##
