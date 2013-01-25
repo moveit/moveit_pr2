@@ -25,6 +25,7 @@ find_package(catkin COMPONENTS
   eigen_conversions
   control_msgs
   pr2_mechanism_msgs
+  pr2_controllers_msgs
   REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
