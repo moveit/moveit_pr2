@@ -64,12 +64,13 @@ bool PR2ArmKinematicsPlugin::isActive()
   return false;
 }
 
-bool PR2ArmKinematicsPlugin::initialize(const std::string& group_name,
+bool PR2ArmKinematicsPlugin::initialize(const std::string& robot_description,
+                                        const std::string& group_name,
                                         const std::string& base_name,
                                         const std::string& tip_name,
                                         double search_discretization)
 {
-  setValues(group_name, base_name, tip_name,search_discretization);
+  setValues(robot_description, group_name, base_name, tip_name,search_discretization);
   urdf::Model robot_model;
   std::string xml_string;
   ros::NodeHandle private_handle("~/"+group_name);
