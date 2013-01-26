@@ -53,7 +53,7 @@ int main(int argc, char **argv)
   /* Get a shared pointer to the model */
   kinematic_model::KinematicModelPtr kinematic_model = kinematic_model_loader.getModel();
 
-  /* Construct a planning scene - NOTE: this is for illustration purposes only
+  /* Construct a planning scene - NOTE: this is for illustration purposes only.
      The recommended way to construct a planning scene is to use the planning_scene_monitor 
      to construct it for you.*/
   planning_scene::PlanningScene planning_scene;
@@ -67,23 +67,23 @@ int main(int argc, char **argv)
   /* Let's check if the current state is in self-collision. All self-collision checks use an unpadded version of the 
      robot collision model, i.e. no extra padding is applied to the robot.*/
   collision_detection::CollisionRequest collision_request;
-  collision_detection::CollisionResult collision_response;
-  planning_scene.checkSelfCollision(collision_request, collision_response);
-  ROS_INFO_STREAM("Test 1 : Current state is " << (collision_response.collision ? "in" : "not in") << " self collision");  
+  collision_detection::CollisionResult collision_result;
+  planning_scene.checkSelfCollision(collision_request, collision_result);
+  ROS_INFO_STREAM("Test 1 : Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
 
   /* Let's change the current state that the planning scene has and check if that is in self-collision*/
   current_state.setToRandomValues();
-  collision_response.clear();
-  planning_scene.checkSelfCollision(collision_request, collision_response);
-  ROS_INFO_STREAM("Test 2 : Current state is " << (collision_response.collision ? "in" : "not in") << " self collision");  
+  collision_result.clear();
+  planning_scene.checkSelfCollision(collision_request, collision_result);
+  ROS_INFO_STREAM("Test 2 : Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
   
   /* Now, we will do collision checking only for the right_arm of the PR2, i.e. we will check whether 
    there are any collisions between the right arm and other parts of the body of the robot.*/
   collision_request.group_name = "right_arm";  
   current_state.setToRandomValues();
-  collision_response.clear();
-  planning_scene.checkSelfCollision(collision_request, collision_response);
-  ROS_INFO_STREAM("Test 3: Current state is " << (collision_response.collision ? "in" : "not in") << " self collision");  
+  collision_result.clear();
+  planning_scene.checkSelfCollision(collision_request, collision_result);
+  ROS_INFO_STREAM("Test 3: Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
 
   /* We will first manually set the right arm to a position where we know internal (self) collisions 
      do happen.*/
@@ -101,11 +101,11 @@ int main(int argc, char **argv)
   collision_request.contacts = true;
   collision_request.max_contacts = 1000;
 
-  collision_response.clear();
-  planning_scene.checkSelfCollision(collision_request, collision_response);
-  ROS_INFO_STREAM("Test 4: Current state is " << (collision_response.collision ? "in" : "not in") << " self collision");  
-  for(collision_detection::CollisionResult::ContactMap::const_iterator it = collision_response.contacts.begin(); 
-      it != collision_response.contacts.end(); 
+  collision_result.clear();
+  planning_scene.checkSelfCollision(collision_request, collision_result);
+  ROS_INFO_STREAM("Test 4: Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
+  for(collision_detection::CollisionResult::ContactMap::const_iterator it = collision_result.contacts.begin(); 
+      it != collision_result.contacts.end(); 
       ++it)
   {
     ROS_INFO("Contact between: %s and %s", it->first.first.c_str(), it->first.second.c_str());    
@@ -115,24 +115,27 @@ int main(int argc, char **argv)
   collision_detection::AllowedCollisionMatrix acm = planning_scene.getAllowedCollisionMatrix();  
   kinematic_state::KinematicState copied_state = planning_scene.getCurrentState();  
   
-  for(collision_detection::CollisionResult::ContactMap::const_iterator it = collision_response.contacts.begin(); 
-      it != collision_response.contacts.end(); 
+  for(collision_detection::CollisionResult::ContactMap::const_iterator it = collision_result.contacts.begin(); 
+      it != collision_result.contacts.end(); 
       ++it)
   {
     acm.setEntry(it->first.first, it->first.second, true);    
   }
-  collision_response.clear();
-  planning_scene.checkSelfCollision(collision_request, collision_response, copied_state, acm);
-  ROS_INFO_STREAM("Test 5: Current state is " << (collision_response.collision ? "in" : "not in") << " self collision");  
+  collision_result.clear();
+  planning_scene.checkSelfCollision(collision_request, collision_result, copied_state, acm);
+  ROS_INFO_STREAM("Test 5: Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
 
   /* While we have been checking for self-collisions, we can use the checkCollision functions instead which will 
      check for both self-collisions and for collisions with the environment (which is currently empty). 
      This is the set of collision checking functions that you will use most often in a planner. Note that collision checks 
      with the environment will use the padded version of the robot. Padding helps in keeping the robot further away from 
-     obstacles in the environment. */
-  collision_response.clear();
-  planning_scene.checkCollision(collision_request, collision_response, copied_state, acm);
-  ROS_INFO_STREAM("Test 6: Current state is " << (collision_response.collision ? "in" : "not in") << " self collision");  
+     obstacles in the environment.*/
+  collision_result.clear();
+  planning_scene.checkCollision(collision_request, collision_result, copied_state, acm);
+  ROS_INFO_STREAM("Test 6: Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
+
+
+
 
   ros::shutdown(); 
   return 0;
