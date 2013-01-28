@@ -40,13 +40,23 @@
 // MoveIt!
 #include <moveit/planning_models_loader/kinematic_model_loader.h>
 #include <moveit/planning_scene/planning_scene.h>
+
+#include <moveit/kinematic_constraints/utils.h>
+#include <eigen_conversions/eigen_msg.h>
+
+bool userCallback(const kinematic_state::KinematicState &kinematic_state, bool verbose)
+{
+  // get the joint value for the right shoulder pan of the PR2 robot
+  const std::vector<double>& joint_state_values = kinematic_state.getJointState("r_shoulder_pan_joint")->getVariableValues();
+  return (joint_state_values.front() > 0.0);
+}
  
 int main(int argc, char **argv)
 {
   ros::init (argc, argv, "right_arm_kinematics");
   ros::AsyncSpinner spinner(1);
   spinner.start();
- 
+  
   /* Load the robot model */
   planning_models_loader::KinematicModelLoader kinematic_model_loader("robot_description");
 
@@ -135,7 +145,46 @@ int main(int argc, char **argv)
   ROS_INFO_STREAM("Test 6: Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");  
 
 
+  /* CONSTRAINT CHECKING*/
+  /* Let's first create a constraint for the end-effector of the right arm of the PR2 */
+  const kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("right_arm");
+  std::string end_effector_name = joint_model_group->getLinkModelNames().back();
+  
+  geometry_msgs::PoseStamped desired_pose;
+  desired_pose.pose.orientation.w = 1.0;
+  desired_pose.pose.position.x = 0.75;
+  desired_pose.pose.position.y = -0.185;
+  desired_pose.pose.position.z = 1.3;
+  desired_pose.header.frame_id = "base_footprint";
+  
+  moveit_msgs::Constraints goal_constraint = kinematic_constraints::constructGoalConstraints(end_effector_name, desired_pose);
+  
+  /* Now, we can directly check it for a state using the PlanningScene class*/
+  copied_state.setToRandomValues();  
+  bool state_constrained = planning_scene.isStateConstrained(copied_state, goal_constraint);
+  ROS_INFO_STREAM("Test 7: Random state is " << (state_constrained ? "constrained" : "not constrained"));
 
+  /* There's a more efficient way of checking constraints (when you want to check the same constraint over 
+     and over again, e.g. inside a planner). We first construct a KinematicConstraintSet which pre-processes 
+     the ROS Constraints messages and sets it up for quick processing. */
+  kinematic_constraints::KinematicConstraintSet kinematic_constraint_set(kinematic_model, planning_scene.getTransforms());
+  kinematic_constraint_set.add(goal_constraint);
+  
+  bool state_constrained_2 = planning_scene.isStateConstrained(copied_state, kinematic_constraint_set);
+  ROS_INFO_STREAM("Test 8: Random state is " << (state_constrained_2 ? "constrained" : "not constrained"));
+  
+  /* There's an even more efficient way to do this using the KinematicConstraintSet class directly.*/
+  kinematic_constraints::ConstraintEvaluationResult constraint_eval_result = kinematic_constraint_set.decide(copied_state);
+  ROS_INFO_STREAM("Test 9: Random state is " << (constraint_eval_result.satisfied ? "constrained" : "not constrained"));
+
+  /* Now, lets try a user-defined callback. This is done by specifying the callback using the setStateFeasibilityPredicate function to which you pass the desired callback. Now, whenever anyone calls isStateFeasible, the callback will be checked.*/
+  planning_scene.setStateFeasibilityPredicate(userCallback);  
+  bool state_feasible = planning_scene.isStateFeasible(copied_state);  
+  ROS_INFO_STREAM("Test 10: Random state is " << (state_feasible ? "feasible" : "not feasible"));
+
+  /* Whenever anyone calls isStateValid, three checks are conducted: (a) collision checking (b) constraint checking and (c) feasibility checking using the user-defined callback */
+  bool state_valid = planning_scene.isStateValid(copied_state, kinematic_constraint_set, "right_arm");  
+  ROS_INFO_STREAM("Test 10: Random state is " << (state_valid ? "valid" : "not valid"));
 
   ros::shutdown(); 
   return 0;
