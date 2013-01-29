@@ -3,6 +3,6 @@
   <include file="$(find pr2_description)/robots/upload_pr2.launch"/>
 
   <node name="kinematic_model_tutorial" pkg="pr2_moveit_tutorials" type="kinematic_model_tutorial" respawn="false" output="screen">
-    <rosparam command="load" file="$(find pr2_moveit_config_new)/config/kinematics.yaml"/>
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
   </node>
 </launch>
