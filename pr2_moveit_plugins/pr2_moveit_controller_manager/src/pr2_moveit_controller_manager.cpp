@@ -157,13 +157,12 @@ public:
       return false;
     }
 
-    if (trajectory.joint_trajectory.points[0].positions.size() != 1)
+    if (trajectory.joint_trajectory.points[0].positions.empty())
     {
-      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point that specifies one position, but %u positions provided)",
-		(unsigned int)trajectory.joint_trajectory.points[0].positions.size());
+      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point that specifies at least one position, but 0 positions provided)");
       return false;
     }
-
+    
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
     if (!trajectory.joint_trajectory.points[0].velocities.empty())
