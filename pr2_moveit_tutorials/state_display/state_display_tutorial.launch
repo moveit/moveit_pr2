@@ -1,0 +1,8 @@
+<launch>
+
+  <include file="$(find pr2_description)/robots/upload_pr2.launch"/>
+
+  <node name="state_display_tutorial" pkg="pr2_moveit_tutorials" type="state_display_tutorial" respawn="false" output="screen">
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+  </node>
+</launch>
