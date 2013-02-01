@@ -73,7 +73,7 @@ protected:
 
 TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
 {
-  planning_models::KinematicState ks(kmodel_);
+  planning_models::RobotState *ks(kmodel_);
   ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
   
@@ -157,7 +157,7 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
 
 TEST_F(ConstraintSamplerTestBase, OrientationConstraintsSampler)
 {
-  planning_models::KinematicState ks(kmodel_);
+  planning_models::RobotState *ks(kmodel_);
   ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
   
@@ -194,7 +194,7 @@ TEST_F(ConstraintSamplerTestBase, OrientationConstraintsSampler)
 
 TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
 {
-  planning_models::KinematicState ks(kmodel_);
+  planning_models::RobotState *ks(kmodel_);
   ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
   
@@ -341,7 +341,7 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
   
-  planning_models::KinematicState ks(kmodel_);
+  planning_models::RobotState *ks(kmodel_);
   ks.setToDefaultValues();  
   static const int NT = 1000;
   int succ = 0;
@@ -382,7 +382,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples1)
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
   
-  planning_models::KinematicState ks(kmodel_);
+  planning_models::RobotState *ks(kmodel_);
   ks.setToDefaultValues();
 
   ros::WallTime start = ros::WallTime::now();
@@ -490,7 +490,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
   
-  planning_models::KinematicState ks(kmodel_);
+  planning_models::RobotState *ks(kmodel_);
   ks.setToDefaultValues();
 
   ros::WallTime start = ros::WallTime::now();
@@ -573,7 +573,7 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
   vcm.sensor.primitive_poses[0].orientation.w = 1;
   vcm.weight = 1.0;
   
-  planning_models::KinematicState &ks = psm_->getPlanningScene()->getCurrentState();
+  planning_models::RobotState& ks = psm_->getPlanningScene()->getCurrentState();
   
   double distance;
   EXPECT_TRUE(vc.configure(vcm));

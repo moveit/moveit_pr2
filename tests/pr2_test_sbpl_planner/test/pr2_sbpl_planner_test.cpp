@@ -183,7 +183,7 @@ protected:
 //   ASSERT_TRUE(ps->isConfigured());
 //   ps->getAllowedCollisionMatrix() = *acm_;
 
-//   planning_models::KinematicState::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
+//   planning_models::RobotState *::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
 //   std::vector<double> start_vals(7);
 //   start_vals[0] = -1.2851;
 //   start_vals[1] = 0.439296;
@@ -236,7 +236,7 @@ TEST_F(Pr2SBPLPlannerTester, HardPlan3)
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
 
-  planning_models::KinematicState::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
+  planning_models::RobotState *::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
   std::vector<double> start_vals(7);
   start_vals[0] = -.785163;
   start_vals[1] = -.346628;
@@ -301,9 +301,9 @@ TEST_F(Pr2SBPLPlannerTester, ManyPlan)
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
 
-  planning_models::KinematicState::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
-  planning_models::KinematicState goal_state(ps->getCurrentState());
-  planning_models::KinematicState::JointStateGroup* goal_jsg = goal_state.getJointStateGroup("right_arm");
+  planning_models::RobotState *::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
+  planning_models::RobotState *goal_state(ps->getCurrentState());
+  planning_models::RobotState *::JointStateGroup* goal_jsg = goal_state.getJointStateGroup("right_arm");
   
   sbpl_interface::SBPLInterface sbpl_planner(ps->getKinematicModel());
 

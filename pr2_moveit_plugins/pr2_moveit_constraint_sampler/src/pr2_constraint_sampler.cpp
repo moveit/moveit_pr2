@@ -54,7 +54,7 @@ public:
     return false;
   }
   
-  virtual bool sample(planning_models::KinematicState::JointStateGroup *jsg, const planning_models::KinematicState &reference_state, unsigned int max_attempts)
+  virtual bool sample(planning_models::RobotState *::JointStateGroup *jsg, const planning_models::RobotState& reference_state, unsigned int max_attempts)
   {
     return false;
   }

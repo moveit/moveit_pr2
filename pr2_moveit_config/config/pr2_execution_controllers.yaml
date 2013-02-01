@@ -33,13 +33,19 @@ controller_list:
     joints:
       - r_gripper_joint
       - r_gripper_l_finger_joint
+      - r_gripper_r_finger_joint
+      - r_gripper_l_finger_tip_joint
+      - r_gripper_r_finger_tip_joint
       - r_gripper_motor_screw_joint
-      - r_gripper_motor_slider_joint 
+      - r_gripper_motor_slider_joint
   - name: l_gripper_controller
     ns: gripper_action
     default: true
     joints:
       - l_gripper_joint
       - l_gripper_l_finger_joint
+      - l_gripper_r_finger_joint
+      - l_gripper_l_finger_tip_joint
+      - l_gripper_r_finger_tip_joint
       - l_gripper_motor_screw_joint
-      - l_gripper_motor_slider_joint 
+      - l_gripper_motor_slider_joint

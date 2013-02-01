@@ -42,8 +42,8 @@
 // MoveIt!
 #include <moveit/kinematics_constraint_aware/kinematics_constraint_aware.h>
 #include <moveit/kinematic_model/kinematic_model.h>
-#include <moveit/kinematic_state/kinematic_state.h>
-#include <moveit/kinematic_state/joint_state_group.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit/robot_state/joint_state_group.h>
 #include <moveit/planning_scene/planning_scene.h>
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/planning_models_loader/kinematic_model_loader.h>
@@ -69,8 +69,8 @@ TEST(ConstraintAwareKinematics, getIK)
 
   const kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(group_name);
 
-  kinematic_state::KinematicStatePtr kinematic_state(new kinematic_state::KinematicState(kinematic_model));
-  kinematic_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup(group_name);
+  robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
+  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup(group_name);
   kinematic_state->setToDefaultValues();  
 
   kinematics_constraint_aware::KinematicsConstraintAware solver(kinematic_model, "right_arm");  
@@ -86,7 +86,7 @@ TEST(ConstraintAwareKinematics, getIK)
 
   kinematics_constraint_aware::KinematicsRequest kinematics_request;
   kinematics_constraint_aware::KinematicsResponse kinematics_response;
-  kinematics_response.solution_.reset(new kinematic_state::KinematicState(planning_scene->getCurrentState()));
+  kinematics_response.solution_.reset(new robot_state::RobotState(planning_scene->getCurrentState()));
   
   kinematics_request.group_name_ = group_name;
   kinematics_request.timeout_ = ros::Duration(5.0);
@@ -99,7 +99,7 @@ TEST(ConstraintAwareKinematics, getIK)
   for(std::size_t i = 0; i < (unsigned int) number_ik_tests; ++i)
   {
     joint_state_group->setToRandomValues();
-    const Eigen::Affine3d &end_effector_state = joint_state_group->getKinematicState()->getLinkState(ik_link_name)->getGlobalLinkTransform();    
+    const Eigen::Affine3d &end_effector_state = joint_state_group->getRobotState()->getLinkState(ik_link_name)->getGlobalLinkTransform();    
     Eigen::Quaterniond quat(end_effector_state.rotation());
     Eigen::Vector3d point(end_effector_state.translation());
     goal.pose.position.x = point.x();

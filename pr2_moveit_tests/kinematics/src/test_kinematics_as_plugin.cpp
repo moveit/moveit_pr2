@@ -42,7 +42,7 @@
 // MoveIt!
 #include <moveit/kinematics_base/kinematics_base.h>
 #include <moveit/kinematic_model/kinematic_model.h>
-#include <moveit/kinematic_state/kinematic_state.h>
+#include <moveit/robot_state/robot_state.h>
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <urdf/model.h>
 #include <srdfdom/model.h>
@@ -176,8 +176,8 @@ TEST(ArmIKPlugin, getFK)
   std::vector<std::string> fk_names;
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
-  kinematic_state::KinematicState kinematic_state(kinematic_model);
-  kinematic_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
+  robot_state::RobotState kinematic_state(kinematic_model);
+  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_fk_tests;  
@@ -216,8 +216,8 @@ TEST(ArmIKPlugin, searchIK)
   std::vector<std::string> fk_names;
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
-  kinematic_state::KinematicState kinematic_state(kinematic_model);
-  kinematic_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
+  robot_state::RobotState kinematic_state(kinematic_model);
+  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_ik_tests;  
@@ -285,8 +285,8 @@ TEST(ArmIKPlugin, searchIKWithCallbacks)
   std::vector<std::string> fk_names;
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
-  kinematic_state::KinematicState kinematic_state(kinematic_model);
-  kinematic_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
+  robot_state::RobotState kinematic_state(kinematic_model);
+  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_ik_tests;  

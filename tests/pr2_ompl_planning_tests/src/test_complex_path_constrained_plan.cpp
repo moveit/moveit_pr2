@@ -162,7 +162,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   kset.add(c);
   
   bool found = false;
-  planning_models::KinematicState ks(scene.getKinematicModel());
+  planning_models::RobotState *ks(scene.getKinematicModel());
   ks.setToDefaultValues();
   for (int i = 0 ; i < 100 ; ++i)
   {

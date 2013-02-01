@@ -78,8 +78,8 @@ protected:
 
 TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
 {
-  planning_models::KinematicState kstate(planning_scene_monitor_->getPlanningScene()->getCurrentState());
-  planning_models::KinematicState::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
+  planning_models::RobotState *kstate(planning_scene_monitor_->getPlanningScene()->getCurrentState());
+  planning_models::RobotState *::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
 
   Eigen::Affine3d id = Eigen::Affine3d::Identity();
   id.translation().x() = .5;
@@ -156,8 +156,8 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
 
 TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
 {
-  planning_models::KinematicState kstate(planning_scene_monitor_->getPlanningScene()->getCurrentState());
-  planning_models::KinematicState::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
+  planning_models::RobotState *kstate(planning_scene_monitor_->getPlanningScene()->getCurrentState());
+  planning_models::RobotState *::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
 
   Eigen::Affine3d id = Eigen::Affine3d::Identity();
   id.translation().x() = .5;

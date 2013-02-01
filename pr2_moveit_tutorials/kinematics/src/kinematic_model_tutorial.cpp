@@ -40,8 +40,8 @@
 // MoveIt!
 #include <moveit/planning_models_loader/kinematic_model_loader.h>
 #include <moveit/kinematic_model/kinematic_model.h>
-#include <moveit/kinematic_state/kinematic_state.h>
-#include <moveit/kinematic_state/joint_state_group.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit/robot_state/joint_state_group.h>
   
 int main(int argc, char **argv)
 {
@@ -60,13 +60,13 @@ int main(int argc, char **argv)
   
   /* WORKING WITH THE KINEMATIC STATE */
   /* Create a kinematic state - this represents the configuration for the robot represented by kinematic_model */
-  kinematic_state::KinematicStatePtr kinematic_state(new kinematic_state::KinematicState(kinematic_model));
+  robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
 
   /* Set all joints in this state to their default values */
   kinematic_state->setToDefaultValues();  
 
   /* Get the configuration for the joints in the right arm of the PR2*/
-  kinematic_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
+  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
 
   /* Get the names of the joints in the right_arm*/
   const std::vector<std::string> &joint_names = joint_state_group->getJointModelGroup()->getJointModelNames();
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
   /* FORWARD KINEMATICS */
   /* Compute FK for a set of random joint values*/
   joint_state_group->setToRandomValues();
-  const Eigen::Affine3d &end_effector_state = joint_state_group->getKinematicState()->getLinkState("r_wrist_roll_link")->getGlobalLinkTransform();        
+  const Eigen::Affine3d &end_effector_state = joint_state_group->getRobotState()->getLinkState("r_wrist_roll_link")->getGlobalLinkTransform();        
   
   /* Print end-effector pose. Remember that this is in the model frame */
   ROS_INFO_STREAM("Translation: " << end_effector_state.translation()); 

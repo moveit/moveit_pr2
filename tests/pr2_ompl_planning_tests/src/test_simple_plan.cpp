@@ -66,7 +66,7 @@ TEST(OmplPlanning, SimplePlan)
     mplan_req.motion_plan_request.group_name = "whole_body";
     mplan_req.motion_plan_request.num_planning_attempts = 1;
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-    planning_models::KinematicState start = scene.getCurrentState();
+    planning_models::RobotState *start = scene.getCurrentState();
     planning_models::kinematicStateToRobotState(start, mplan_req.motion_plan_request.start_state);
 
     start.getJointStateGroup("right_arm")->setToRandomValues();

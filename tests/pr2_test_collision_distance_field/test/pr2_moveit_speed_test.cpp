@@ -129,10 +129,10 @@ protected:
 
 TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
 {
-  planning_models::KinematicState kstate(kmodel_);
+  planning_models::RobotState *kstate(kmodel_);
   kstate.setToDefaultValues();
 
-  planning_models::KinematicState::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
+  planning_models::RobotState *::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
 
   ros::WallDuration total_speed_df;
   ros::WallDuration total_speed_fcl;

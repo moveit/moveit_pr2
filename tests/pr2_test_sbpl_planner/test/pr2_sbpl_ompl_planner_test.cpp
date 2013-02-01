@@ -158,9 +158,9 @@ TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan)
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
 
-  planning_models::KinematicState::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
-  planning_models::KinematicState goal_state(ps->getCurrentState());
-  planning_models::KinematicState::JointStateGroup* goal_jsg = goal_state.getJointStateGroup("right_arm");
+  planning_models::RobotState *::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
+  planning_models::RobotState *goal_state(ps->getCurrentState());
+  planning_models::RobotState *::JointStateGroup* goal_jsg = goal_state.getJointStateGroup("right_arm");
   
   sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getKinematicModel());
   ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getKinematicModel());

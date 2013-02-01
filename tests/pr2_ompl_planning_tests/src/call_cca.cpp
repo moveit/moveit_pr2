@@ -40,7 +40,7 @@
 static const std::string ROBOT_DESCRIPTION="robot_description";
 static const std::string CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME="ompl_planning/construct_constraint_approximation";
 
-moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint(void)
+moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint()
 {  
   moveit_msgs::Constraints c;
   moveit_msgs::PositionConstraint pcm2;

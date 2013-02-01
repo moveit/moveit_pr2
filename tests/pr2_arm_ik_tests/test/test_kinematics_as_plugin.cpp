@@ -43,7 +43,7 @@
 
 // MoveIt!
 #include <kinematic_model/kinematic_model.h>
-#include <kinematic_state/kinematic_state.h>
+#include <robot_state/robot_state.h>
 #include <robot_model_loader/robot_model_loader.h>
 #include <urdf_interface/model.h>
 #include <urdf/model.h>
@@ -185,8 +185,8 @@ TEST(ArmIKPlugin, getFK)
   std::vector<std::string> fk_names;
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
-  kinematic_model::KinematicState kinematic_state(kinematic_model);
-  kinematic_state::KinematicState::JointStateGroup joint_state_group(&kinematic_state, 
+  kinematic_model::RobotState *kinematic_state(kinematic_model);
+  robot_state::RobotState::JointStateGroup joint_state_group(&kinematic_state, 
                                                                      (const planning_models::KinematicModel::JointModelGroup*) joint_model_group);
 
   ros::NodeHandle nh("~");
@@ -226,8 +226,8 @@ TEST(ArmIKPlugin, searchIK)
   std::vector<std::string> fk_names;
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
-  planning_models::KinematicState kinematic_state(kinematic_model);
-  planning_models::KinematicState::JointStateGroup joint_state_group(&kinematic_state, (const planning_models::KinematicModel::JointModelGroup*) joint_model_group);
+  planning_models::RobotState *kinematic_state(kinematic_model);
+  planning_models::RobotState *::JointStateGroup joint_state_group(&kinematic_state, (const planning_models::KinematicModel::JointModelGroup*) joint_model_group);
 
   ros::NodeHandle nh("~");
   unsigned int number_ik_tests;  
@@ -296,8 +296,8 @@ TEST(ArmIKPlugin, searchIKWithCallbacks)
   std::vector<std::string> fk_names;
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
-  planning_models::KinematicState kinematic_state(kinematic_model);
-  planning_models::KinematicState::JointStateGroup joint_state_group(&kinematic_state,
+  planning_models::RobotState *kinematic_state(kinematic_model);
+  planning_models::RobotState *::JointStateGroup joint_state_group(&kinematic_state,
                                                                      (const planning_models::KinematicModel::JointModelGroup*) joint_model_group);
 
   unsigned int num_tests = 0;

@@ -72,11 +72,11 @@ TEST(JacobianSolver, solver)
  planning_models::KinematicModelPtr kinematic_model;
  kinematic_model.reset(new planning_models::KinematicModel(model_loader.getURDF(),model_loader.getSRDF()));
 
- planning_models::KinematicStatePtr kinematic_state;
- kinematic_state.reset(new planning_models::KinematicState(kinematic_model));
+ planning_models::RobotState *Ptr kinematic_state;
+ kinematic_state.reset(new planning_models::RobotState(kinematic_model));
  kinematic_state->setToDefaultValues();
 
- planning_models::KinematicState::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
+ planning_models::RobotState *::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
  
  std::string link_name = "r_wrist_roll_link";
  std::vector<double> joint_angles(7,0.0); 
@@ -132,11 +132,11 @@ TEST(JacobianSolver, solver2)
  planning_models::KinematicModelPtr kinematic_model;
  kinematic_model.reset(new planning_models::KinematicModel(model_loader.getURDF(),model_loader.getSRDF()));
 
- planning_models::KinematicStatePtr kinematic_state;
- kinematic_state.reset(new planning_models::KinematicState(kinematic_model));
+ planning_models::RobotState *Ptr kinematic_state;
+ kinematic_state.reset(new planning_models::RobotState(kinematic_model));
  kinematic_state->setToDefaultValues();
 
- planning_models::KinematicState::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
+ planning_models::RobotState *::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
  
  std::string link_name = "l_wrist_roll_link";
  std::vector<double> joint_angles(7,0.0); 

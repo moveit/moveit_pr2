@@ -78,12 +78,12 @@ public:
     last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
   }
 
-  bool isConnected(void) const
+  bool isConnected() const
   {
     return controller_action_client_;
   }
 
-  virtual bool cancelExecution(void) 
+  virtual bool cancelExecution() 
   {   
     if (!controller_action_client_)
       return false;
@@ -104,7 +104,7 @@ public:
     return true;
   }
 
-  virtual moveit_controller_manager::ExecutionStatus getLastExecutionStatus(void)
+  virtual moveit_controller_manager::ExecutionStatus getLastExecutionStatus()
   {
     return last_exec_;
   }
@@ -196,7 +196,7 @@ private:
     finishControllerExecution(state);
   }
   
-  void controllerActiveCallback(void) 
+  void controllerActiveCallback() 
   {
     ROS_DEBUG_STREAM("Controller " << name_ << " started execution");
   }
@@ -248,7 +248,7 @@ protected:
     finishControllerExecution(state);
   }
   
-  void controllerActiveCallback(void) 
+  void controllerActiveCallback() 
   {
     ROS_DEBUG_STREAM("Controller " << name_ << " started execution");
   }
@@ -262,7 +262,7 @@ class Pr2MoveItControllerManager : public moveit_controller_manager::MoveItContr
 {
 public:
   
-  Pr2MoveItControllerManager(void) : node_handle_("~")
+  Pr2MoveItControllerManager() : node_handle_("~")
   { 
     node_handle_.param("controller_manager_name", controller_manager_name_, std::string("pr2_controller_manager"));
     node_handle_.param("use_controller_manager", use_controller_manager_, true);
@@ -361,7 +361,7 @@ public:
     }
   }
   
-  virtual ~Pr2MoveItControllerManager(void)
+  virtual ~Pr2MoveItControllerManager()
   {
   }
   
@@ -516,7 +516,7 @@ public:
   
 protected: 
 
-  const pr2_mechanism_msgs::ListControllers::Response &getListControllerServiceResponse(void)
+  const pr2_mechanism_msgs::ListControllers::Response &getListControllerServiceResponse()
   {
     if (use_controller_manager_)
     {
@@ -567,7 +567,7 @@ protected:
   
   struct ControllerInformation
   {
-    ControllerInformation(void) : default_(false)
+    ControllerInformation() : default_(false)
     {
     }
     

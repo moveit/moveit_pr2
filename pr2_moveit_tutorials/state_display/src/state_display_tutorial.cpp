@@ -40,11 +40,11 @@
 // MoveIt!
 #include <moveit/planning_models_loader/kinematic_model_loader.h>
 #include <moveit/kinematic_model/kinematic_model.h>
-#include <moveit/kinematic_state/kinematic_state.h>
-#include <moveit/kinematic_state/joint_state_group.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit/robot_state/joint_state_group.h>
 
 // Robot state publishing
-#include <moveit/kinematic_state/conversions.h>
+#include <moveit/robot_state/conversions.h>
 #include <moveit_msgs/DisplayRobotState.h>
 
 // PI
@@ -70,10 +70,10 @@ int main(int argc, char **argv)
   kinematic_model::KinematicModelPtr kinematic_model = kinematic_model_loader.getModel();
 
   /* Create a kinematic state - this represents the configuration for the robot represented by kinematic_model */
-  kinematic_state::KinematicStatePtr kinematic_state(new kinematic_state::KinematicState(kinematic_model));
+  robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
 
   /* Get the configuration for the joints in the right arm of the PR2*/
-  kinematic_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
+  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
 
 
 
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
-    kinematic_state::kinematicStateToRobotState(*kinematic_state, msg.state);
+    robot_state::kinematicStateToRobotState(*kinematic_state, msg.state);
 
     /* send the message to the RobotState display */
     robot_state_publisher.publish( msg );
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
     
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
-    kinematic_state::kinematicStateToRobotState(*kinematic_state, msg.state);
+    robot_state::kinematicStateToRobotState(*kinematic_state, msg.state);
 
     /* send the message to the RobotState display */
     robot_state_publisher.publish( msg );

@@ -50,14 +50,14 @@ TEST(OmplInterface, JointModelStateConversion)
   EXPECT_TRUE(scene->isConfigured());
   ompl_interface_ros::OMPLInterfaceROS oi(scene->getKinematicModel());
   ompl_interface::ModelBasedPlanningContextPtr pc = oi.getPlanningContext("arms", "JointModel");
-  planning_models::KinematicState kstate(scene->getKinematicModel());
+  planning_models::RobotState *kstate(scene->getKinematicModel());
   ompl::base::ScopedState<> ostate1(pc->getOMPLStateSpace());
   ompl::base::ScopedState<> ostate2(ostate1.getSpace());
   for (int i = 0 ; i < 100 ; ++i)
   {
     ostate1.random();
     kstate.setToRandomValues();
-    pc->getOMPLStateSpace()->copyToKinematicState(kstate, ostate1.get());
+    pc->getOMPLStateSpace()->copyToRobotState(kstate, ostate1.get());
     pc->getOMPLStateSpace()->copyToOMPLState(ostate2.get(), kstate);
     EXPECT_EQ(ostate1, ostate2);
   }

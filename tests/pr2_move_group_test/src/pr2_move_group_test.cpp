@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
   //  goal.request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
 
-  planning_models::KinematicState start = scene.getCurrentState();
+  planning_models::RobotState *start = scene.getCurrentState();
 
   for (int i = 0 ; i < 50 ; ++i){
   start.getJointStateGroup("right_arm")->setToRandomValues();

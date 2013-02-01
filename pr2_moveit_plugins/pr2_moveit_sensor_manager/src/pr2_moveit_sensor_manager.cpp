@@ -49,13 +49,13 @@ class Pr2MoveItSensorManager : public moveit_sensor_manager::MoveItSensorManager
 {
 public:
   
-  Pr2MoveItSensorManager(void) : node_handle_("~")
+  Pr2MoveItSensorManager() : node_handle_("~")
   {     
     node_handle_.param("head_pointing_frame", head_pointing_frame_, std::string("/camera"));
     head_action_client_.reset(new actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction>("/head_traj_controller/point_head_action", true));
   }
   
-  virtual ~Pr2MoveItSensorManager(void)
+  virtual ~Pr2MoveItSensorManager()
   {
   }
   
@@ -82,7 +82,7 @@ public:
     return si;
   }
 
-  virtual bool hasSensors(void) const
+  virtual bool hasSensors() const
   {
     return true;
   }

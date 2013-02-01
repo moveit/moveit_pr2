@@ -44,7 +44,7 @@
 #include <moveit/kinematic_constraints/utils.h>
 #include <eigen_conversions/eigen_msg.h>
 
-bool userCallback(const kinematic_state::KinematicState &kinematic_state, bool verbose)
+bool userCallback(const robot_state::RobotState &kinematic_state, bool verbose)
 {
   // get the joint value for the right shoulder pan of the PR2 robot
   const std::vector<double>& joint_state_values = kinematic_state.getJointState("r_shoulder_pan_joint")->getVariableValues();
@@ -69,9 +69,9 @@ int main(int argc, char **argv)
   planning_scene::PlanningScene planning_scene;
   planning_scene.configure(kinematic_model);
 
-  /* The planning scene contains a KinematicState representation of the robot configuration
+  /* The planning scene contains a RobotState *representation of the robot configuration
    We can get a reference to it.*/
-  kinematic_state::KinematicState& current_state = planning_scene.getCurrentState();
+  robot_state::RobotState& current_state = planning_scene.getCurrentState();
 
   /* COLLISION CHECKING */
   /* Let's check if the current state is in self-collision. All self-collision checks use an unpadded version of the 
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
   /* We will first manually set the right arm to a position where we know internal (self) collisions 
      do happen.*/
   std::vector<double> joint_values;  
-  kinematic_state::JointStateGroup* joint_state_group = current_state.getJointStateGroup("right_arm");
+  robot_state::JointStateGroup* joint_state_group = current_state.getJointStateGroup("right_arm");
   joint_state_group->getVariableValues(joint_values);
   joint_values[0] = 1.57; //hard-coded since we know collisions will happen here
   joint_state_group->setVariableValues(joint_values);
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
 
   /* We will pass in a changed collision matrix to allow the particular set of contacts that just happened*/
   collision_detection::AllowedCollisionMatrix acm = planning_scene.getAllowedCollisionMatrix();  
-  kinematic_state::KinematicState copied_state = planning_scene.getCurrentState();  
+  robot_state::RobotState copied_state = planning_scene.getCurrentState();  
   
   for(collision_detection::CollisionResult::ContactMap::const_iterator it = collision_result.contacts.begin(); 
       it != collision_result.contacts.end(); 
