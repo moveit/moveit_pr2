@@ -93,6 +93,7 @@ link_directories(${FCL_LIBRARY_DIRS})
 
 add_subdirectory(kinematics)
 add_subdirectory(planning)
+add_subdirectory(state_display)
 
 #############
 ## Install ##
