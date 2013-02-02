@@ -512,7 +512,7 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
       {
         moveit_msgs::DisplayTrajectory d;
         d.model_id = kmodel_->getName();
-        planning_models::kinematicStateToRobotState(ks, d.trajectory_start);
+        planning_models::robotStateToRobotStateMsg(ks, d.trajectory_start);
         pub_state.publish(d);
         ros::WallDuration(1.0).sleep();
       }

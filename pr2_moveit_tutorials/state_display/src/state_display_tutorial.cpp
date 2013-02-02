@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
-    robot_state::kinematicStateToRobotState(*kinematic_state, msg.state);
+    robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
 
     /* send the message to the RobotState display */
     robot_state_publisher.publish( msg );
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
     
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
-    robot_state::kinematicStateToRobotState(*kinematic_state, msg.state);
+    robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
 
     /* send the message to the RobotState display */
     robot_state_publisher.publish( msg );

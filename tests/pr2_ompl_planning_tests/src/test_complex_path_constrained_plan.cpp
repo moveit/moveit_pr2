@@ -170,7 +170,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
     if (s->sample(values, ks, 10))
     {
       ks.getJointStateGroup("arms")->setStateValues(values);
-      planning_models::kinematicStateToRobotState(ks, mplan_req.motion_plan_request.start_state); 
+      planning_models::robotStateToRobotStateMsg(ks, mplan_req.motion_plan_request.start_state); 
       moveit_msgs::DisplayTrajectory d;
       d.model_id = scene.getKinematicModel()->getName();
       d.trajectory_start = mplan_req.motion_plan_request.start_state;
