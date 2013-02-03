@@ -37,6 +37,8 @@ catkin_package(
     moveit_core
     )
 
+include_directories(hack_for_groovy)
+
 include_directories(pr2_arm_kinematics/include)
 include_directories(pr2_moveit_controller_manager/include)
 include_directories(pr2_moveit_sensor_manager/include)
