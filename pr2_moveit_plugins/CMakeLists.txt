@@ -39,20 +39,23 @@ catkin_package(
 
 include_directories(pr2_arm_kinematics/include)
 include_directories(pr2_moveit_controller_manager/include)
-#include_directories(pr2_moveit_sensor_manager/include)
+include_directories(pr2_moveit_sensor_manager/include)
 #include_directories(pr2_moveit_constraint_sampler/include)
 
 add_subdirectory(pr2_arm_kinematics)
 add_subdirectory(pr2_moveit_controller_manager)
-#add_subdirectory(pr2_moveit_sensor_manager)
+add_subdirectory(pr2_moveit_sensor_manager)
 #add_subdirectory(pr2_moveit_constraint_sampler)
 
 install(
   FILES
     pr2_moveit_kinematics_plugin_description.xml
     pr2_moveit_controller_manager_plugin_description.xml
-#    pr2_moveit_sensor_manager_plugin_description.xml
+    pr2_moveit_sensor_manager_plugin_description.xml
 #    pr2_moveit_constraint_sampler_plugin_description.xml
   DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}
     )
+
+# HACK
+install(DIRECTORY hack_for_groovy/ DESTINATION include)
