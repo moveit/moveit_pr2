@@ -125,6 +125,15 @@ int main(int argc, char **argv)
     ROS_INFO("Did not find IK solution");
   }
 
+  /* DIFFERENTIAL KINEMATICS */
+  /* Get and print the Jacobian for the right arm*/
+  Eigen::Vector3d reference_point_position(0.0,0.0,0.0);
+  Eigen::MatrixXd jacobian;  
+  joint_state_group->getJacobian(joint_state_group->getJointModelGroup()->getLinkModelNames().back(),
+                                 reference_point_position,
+                                 jacobian);
+  ROS_INFO_STREAM("Jacobian: " << jacobian);   
+
   ros::shutdown();  
   return 0;
 }
