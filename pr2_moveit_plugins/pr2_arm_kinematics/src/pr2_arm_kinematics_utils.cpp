@@ -325,7 +325,7 @@ bool checkIKService(moveit_msgs::GetPositionIK::Request &request,
     response.error_code.val = response.error_code.INVALID_ROBOT_STATE;
     return false;
   }
-  if(request.timeout <= ros::Duration(0.0))
+  if(request.ik_request.timeout <= ros::Duration(0.0))
   {
     response.error_code.val = response.error_code.TIMED_OUT;
     return false;
