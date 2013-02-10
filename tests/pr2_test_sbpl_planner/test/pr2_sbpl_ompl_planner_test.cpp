@@ -43,7 +43,7 @@
 #include <planning_models/conversions.h>
 #include <collision_distance_field/hybrid_collision_world.h>
 #include <collision_distance_field_ros/hybrid_collision_robot_ros.h>
-#include <robot_model_loader/robot_model_loader.h>
+#include <rdf_loader/rdf_loader.h>
 #include <ompl_interface_ros/ompl_interface_ros.h>
   
 class Pr2SBPLOMPLPlannerTester : public testing::Test{
@@ -53,7 +53,7 @@ protected:
   virtual void SetUp() 
   {
     
-    rml_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
+    rml_.reset(new rdf_loader::RDFLoader("robot_description"));
 
     acm_.reset(new collision_detection::AllowedCollisionMatrix());
 
@@ -92,7 +92,7 @@ protected:
 
 protected:
 
-  boost::shared_ptr<robot_model_loader::RobotModelLoader> rml_;
+  boost::shared_ptr<rdf_loader::RDFLoader> rml_;
   collision_detection::AllowedCollisionMatrixPtr acm_;
 
 };
@@ -105,15 +105,15 @@ TEST_F(Pr2SBPLOMPLPlannerTester, SimplePlan)
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
   
-  sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getKinematicModel());
-  ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getKinematicModel());
+  sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getRobotModel());
+  ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getRobotModel());
 
   moveit_msgs::GetMotionPlan::Request mplan_req;
   moveit_msgs::GetMotionPlan::Response mplan_res_sbpl;
   mplan_req.motion_plan_request.group_name = "right_arm";
   mplan_req.motion_plan_request.num_planning_attempts = 5;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-  const std::vector<std::string>& joint_names = ps->getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names = ps->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
   for(unsigned int i = 0; i < joint_names.size(); i++)
@@ -162,8 +162,8 @@ TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan)
   planning_models::RobotState *goal_state(ps->getCurrentState());
   planning_models::RobotState *::JointStateGroup* goal_jsg = goal_state.getJointStateGroup("right_arm");
   
-  sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getKinematicModel());
-  ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getKinematicModel());
+  sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getRobotModel());
+  ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getRobotModel());
 
   moveit_msgs::GetMotionPlan::Request mplan_req;
   moveit_msgs::GetMotionPlan::Response mplan_res_sbpl;
@@ -171,7 +171,7 @@ TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan)
   mplan_req.motion_plan_request.group_name = "right_arm";
   mplan_req.motion_plan_request.num_planning_attempts = 5;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-  const std::vector<std::string>& joint_names = ps->getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names = ps->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
   for(unsigned int i = 0; i < joint_names.size(); i++)

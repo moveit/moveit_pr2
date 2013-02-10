@@ -59,7 +59,7 @@ void getRunningControllerMap(std::map<std::string, bool>& controller_map) {
 
 TEST(TrajectoryExecutionTests, loadUnload) {
 
-  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getKinematicModel()));
+  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getRobotModel()));
   std::map<std::string, bool> initial_map = emon->getOriginalControllerConfiguration();
   emon.reset();
   std::map<std::string, bool> after_map;
@@ -75,7 +75,7 @@ TEST(TrajectoryExecutionTests, loadUnload) {
 }
 
 TEST(TrajectoryExecutionTests, switchRestore) {
-  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getKinematicModel()));
+  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getRobotModel()));
   std::map<std::string, bool> initial_map = emon->getOriginalControllerConfiguration();
 
   EXPECT_TRUE(emon->getCurrentController("arms") == "r_arm_controller" ||

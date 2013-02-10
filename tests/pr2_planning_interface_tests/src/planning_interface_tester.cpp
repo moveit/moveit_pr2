@@ -57,7 +57,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   std::vector<std::string> classes;
   std::vector<boost::shared_ptr<planning_interface::Planner> > planners;
   planning_scene::PlanningSceneConstPtr scene = g_psm->getPlanningScene();
-  planning_models::KinematicModelConstPtr model = scene->getKinematicModel();
+  planning_models::RobotModelConstPtr model = scene->getRobotModel();
 
   classes = planner_loader->getDeclaredClasses();
   // Must have some planners

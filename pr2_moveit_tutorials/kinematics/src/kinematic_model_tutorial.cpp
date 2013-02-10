@@ -38,8 +38,8 @@
 #include <ros/ros.h>
 
 // MoveIt!
-#include <moveit/planning_models_loader/kinematic_model_loader.h>
-#include <moveit/kinematic_model/kinematic_model.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/robot_state/joint_state_group.h>
   
@@ -50,10 +50,10 @@ int main(int argc, char **argv)
   spinner.start();
   
   /* Load the robot model */
-  planning_models_loader::KinematicModelLoader kinematic_model_loader("robot_description"); 
+  robot_model_loader::RDFLoader robot_model_loader("robot_description"); 
 
   /* Get a shared pointer to the model */
-  kinematic_model::KinematicModelPtr kinematic_model = kinematic_model_loader.getModel();
+  robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
 
   /* Get and print the name of the coordinate frame in which the transforms for this model are computed*/
   ROS_INFO("Model frame: %s", kinematic_model->getModelFrame().c_str());  

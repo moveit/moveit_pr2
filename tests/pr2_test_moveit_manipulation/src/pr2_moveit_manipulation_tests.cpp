@@ -21,17 +21,17 @@ protected:
 
     kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_plugin_loader->getLoaderFunction();
 
-    const planning_models::KinematicModel::JointModelGroup* right_arm_group 
-      = planning_scene_diff_->getKinematicModel()->getJointModelGroup("right_arm"); 
+    const planning_models::RobotModel::JointModelGroup* right_arm_group 
+      = planning_scene_diff_->getRobotModel()->getJointModelGroup("right_arm"); 
 
-    const planning_models::KinematicModel::JointModelGroup* left_arm_group 
-      = planning_scene_diff_->getKinematicModel()->getJointModelGroup("left_arm"); 
+    const planning_models::RobotModel::JointModelGroup* left_arm_group 
+      = planning_scene_diff_->getRobotModel()->getJointModelGroup("left_arm"); 
 
     std::map<std::string, kinematics::KinematicsBasePtr> solver_map;
     solver_map["right_arm"] = kinematics_allocator(right_arm_group);
     solver_map["left_arm"] = kinematics_allocator(left_arm_group);
 
-    grasp_evaluator_fast_.reset(new grasp_place_evaluation::GraspEvaluatorFast(planning_scene_diff_->getKinematicModel(),
+    grasp_evaluator_fast_.reset(new grasp_place_evaluation::GraspEvaluatorFast(planning_scene_diff_->getRobotModel(),
                                                                                solver_map));
 
     moveit_msgs::CollisionObject obj;

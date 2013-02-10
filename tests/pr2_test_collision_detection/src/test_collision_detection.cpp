@@ -134,7 +134,7 @@ void testSimple()
 
 	/*
 	moveit_msgs::DisplayTrajectory d;
-	d.model_id = scene->getKinematicModel()->getName();
+	d.model_id = scene->getRobotModel()->getName();
 	planning_models::robotStateToRobotStateMsg(scene->getCurrentState(), d.robot_state);
 	pub_state.publish(d);
 	for (int j = 0 ; j < 10 ; ++j)

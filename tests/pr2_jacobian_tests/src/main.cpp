@@ -35,9 +35,9 @@
 /* Author: Sachin Chitta */
 
 #include <ros/ros.h>
-#include <robot_model_loader/robot_model_loader.h>
+#include <rdf_loader/rdf_loader.h>
 
-#include <planning_models/kinematic_model.h>
+#include <planning_models/robot_model.h>
 #include <planning_models/kinematic_state.h>
 
 // KDL
@@ -67,10 +67,10 @@ bool NOT_NEAR(const double &v1, const double &v2, const double &NEAR)
 TEST(JacobianSolver, solver)
 {
  srand ( time(NULL) ); // initialize random seed: 
- robot_model_loader::RobotModelLoader model_loader("robot_description");
+ rdf_loader::RDFLoader model_loader("robot_description");
 
- planning_models::KinematicModelPtr kinematic_model;
- kinematic_model.reset(new planning_models::KinematicModel(model_loader.getURDF(),model_loader.getSRDF()));
+ planning_models::RobotModelPtr kinematic_model;
+ robot_model.reset(new planning_models::RobotModel(model_loader.getURDF(),model_loader.getSRDF()));
 
  planning_models::RobotState *Ptr kinematic_state;
  kinematic_state.reset(new planning_models::RobotState(kinematic_model));
@@ -127,10 +127,10 @@ TEST(JacobianSolver, solver)
 TEST(JacobianSolver, solver2)
 {
  srand ( time(NULL) ); // initialize random seed: 
- robot_model_loader::RobotModelLoader model_loader("robot_description");
+ rdf_loader::RDFLoader model_loader("robot_description");
 
- planning_models::KinematicModelPtr kinematic_model;
- kinematic_model.reset(new planning_models::KinematicModel(model_loader.getURDF(),model_loader.getSRDF()));
+ planning_models::RobotModelPtr kinematic_model;
+ robot_model.reset(new planning_models::RobotModel(model_loader.getURDF(),model_loader.getSRDF()));
 
  planning_models::RobotState *Ptr kinematic_state;
  kinematic_state.reset(new planning_models::RobotState(kinematic_model));

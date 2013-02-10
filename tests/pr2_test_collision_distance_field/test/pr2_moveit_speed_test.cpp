@@ -34,13 +34,13 @@
 
 /** \author E. Gil Jones */
 
-#include <planning_models/kinematic_model.h>
+#include <planning_models/robot_model.h>
 #include <planning_models/kinematic_state.h>
 #include <gtest/gtest.h>
 #include <sstream>
 #include <algorithm>
 #include <ctype.h>
-#include <planning_models/kinematic_model.h>
+#include <planning_models/robot_model.h>
 #include <planning_models/kinematic_state.h>
 #include <planning_models/transforms.h>
 #include <geometric_shapes/shape_operations.h>
@@ -49,7 +49,7 @@
 #include <collision_distance_field/collision_world_distance_field.h>
 #include <collision_detection_fcl/collision_world.h>
 #include <collision_detection_fcl/collision_robot.h>
-#include <robot_model_loader/robot_model_loader.h>
+#include <rdf_loader/rdf_loader.h>
 
 #include <boost/filesystem.hpp>
 #include <ros/console.h>
@@ -63,8 +63,8 @@ protected:
   virtual void SetUp() 
   {
     
-    rml_.reset(new robot_model_loader::RobotModelLoader("robot_description"));
-    kmodel_.reset(new planning_models::KinematicModel(rml_->getURDF(), rml_->getSRDF()));
+    rml_.reset(new rdf_loader::RDFLoader("robot_description"));
+    kmodel_.reset(new planning_models::RobotModel(rml_->getURDF(), rml_->getSRDF()));
 
     acm_.reset(new collision_detection::AllowedCollisionMatrix());
 
@@ -109,9 +109,9 @@ protected:
 
 protected:
 
-  boost::shared_ptr<robot_model_loader::RobotModelLoader> rml_;
+  boost::shared_ptr<rdf_loader::RDFLoader> rml_;
   
-  planning_models::KinematicModelPtr             kmodel_;
+  planning_models::RobotModelPtr             kmodel_;
   
   planning_models::TransformsPtr                 ftf_;
   planning_models::TransformsConstPtr            ftf_const_;

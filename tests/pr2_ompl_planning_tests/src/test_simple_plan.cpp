@@ -79,7 +79,7 @@ TEST(OmplPlanning, SimplePlan)
     EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
     
     moveit_msgs::DisplayTrajectory d;
-    d.model_id = scene.getKinematicModel()->getName();
+    d.model_id = scene.getRobotModel()->getName();
     d.trajectory_start = mplan_res.trajectory_start;
     d.trajectory = mplan_res.trajectory;
     pub.publish(d);

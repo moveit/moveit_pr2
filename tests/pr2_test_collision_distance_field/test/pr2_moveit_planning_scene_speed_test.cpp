@@ -38,7 +38,7 @@
 #include <sstream>
 #include <algorithm>
 #include <ctype.h>
-#include <planning_models/kinematic_model.h>
+#include <planning_models/robot_model.h>
 #include <planning_models/kinematic_state.h>
 #include <planning_models/transforms.h>
 #include <geometric_shapes/shape_operations.h>
@@ -58,11 +58,11 @@ protected:
   virtual void SetUp() 
   {
     
-    kinematic_model_loader_.reset(new planning_models_loader::KinematicModelLoader("robot_description"));
+    robot_model_loader_.reset(new robot_model_loader::RDFLoader("robot_description"));
 
     planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
     ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
-    planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor(ps, kinematic_model_loader_));
+    planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor(ps, robot_model_loader_));
   }
 
   virtual void TearDown()
@@ -72,7 +72,7 @@ protected:
 
 protected:
 
-  boost::shared_ptr<planning_models_loader::KinematicModelLoader> kinematic_model_loader_;
+  boost::shared_ptr<robot_model_loader::RDFLoader> robot_model_loader_;
   boost::shared_ptr<planning_scene_monitor::PlanningSceneMonitor> planning_scene_monitor_;
 };
 

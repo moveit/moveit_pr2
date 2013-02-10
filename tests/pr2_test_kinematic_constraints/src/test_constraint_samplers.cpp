@@ -56,7 +56,7 @@ protected:
   virtual void SetUp()
   {
     psm_.reset(new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION));
-    kmodel_ = psm_->getPlanningScene()->getKinematicModel();
+    kmodel_ = psm_->getPlanningScene()->getRobotModel();
   };
   
   virtual void TearDown()
@@ -67,7 +67,7 @@ protected:
   
   ros::NodeHandle nh_;
   planning_scene_monitor::PlanningSceneMonitorPtr psm_;
-  planning_models::KinematicModelConstPtr kmodel_;
+  planning_models::RobotModelConstPtr kmodel_;
 };
 
 

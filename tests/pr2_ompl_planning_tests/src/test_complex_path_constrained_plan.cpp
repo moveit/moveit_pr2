@@ -80,7 +80,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   pcm.constraint_region_shape.dimensions.push_back(0.001);
   pcm.constraint_region_shape.dimensions.push_back(0.001);
   
-  pcm.constraint_region_pose.header.frame_id = scene.getKinematicModel()->getModelFrame();
+  pcm.constraint_region_pose.header.frame_id = scene.getRobotModel()->getModelFrame();
   pcm.constraint_region_pose.pose.position.x = 0.5;
   pcm.constraint_region_pose.pose.position.y = 0.4;
   pcm.constraint_region_pose.pose.position.z = 0.7;
@@ -120,7 +120,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
 
   moveit_msgs::OrientationConstraint ocm;
   ocm.link_name = "l_wrist_roll_link";
-  ocm.orientation.header.frame_id = scene.getKinematicModel()->getModelFrame();
+  ocm.orientation.header.frame_id = scene.getRobotModel()->getModelFrame();
   ocm.orientation.quaternion.x = 0.5;
   ocm.orientation.quaternion.y = 0.5;
   ocm.orientation.quaternion.z = 0.5;
@@ -150,19 +150,19 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
   kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
   kinematic_constraints::KinematicsSubgroupAllocator sa;
-  sa[scene.getKinematicModel()->getJointModelGroup("left_arm")] = kinematics_allocator;
-  sa[scene.getKinematicModel()->getJointModelGroup("right_arm")] = kinematics_allocator;
+  sa[scene.getRobotModel()->getJointModelGroup("left_arm")] = kinematics_allocator;
+  sa[scene.getRobotModel()->getJointModelGroup("right_arm")] = kinematics_allocator;
 
   kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
-    (scene.getKinematicModel()->getJointModelGroup("arms"), c, scene.getKinematicModel(), scene.getTransforms(), kinematic_constraints::KinematicsAllocator(), sa);
+    (scene.getRobotModel()->getJointModelGroup("arms"), c, scene.getRobotModel(), scene.getTransforms(), kinematic_constraints::KinematicsAllocator(), sa);
   
   EXPECT_TRUE(s.get() != NULL);
   
-  kinematic_constraints::KinematicConstraintSet kset(scene.getKinematicModel(), scene.getTransforms());
+  kinematic_constraints::KinematicConstraintSet kset(scene.getRobotModel(), scene.getTransforms());
   kset.add(c);
   
   bool found = false;
-  planning_models::RobotState *ks(scene.getKinematicModel());
+  planning_models::RobotState *ks(scene.getRobotModel());
   ks.setToDefaultValues();
   for (int i = 0 ; i < 100 ; ++i)
   {
@@ -172,7 +172,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
       ks.getJointStateGroup("arms")->setStateValues(values);
       planning_models::robotStateToRobotStateMsg(ks, mplan_req.motion_plan_request.start_state); 
       moveit_msgs::DisplayTrajectory d;
-      d.model_id = scene.getKinematicModel()->getName();
+      d.model_id = scene.getRobotModel()->getName();
       d.trajectory_start = mplan_req.motion_plan_request.start_state;
       pub.publish(d);
       ros::Duration(0.5).sleep();
@@ -190,7 +190,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   
   
   moveit_msgs::DisplayTrajectory d;
-  d.model_id = scene.getKinematicModel()->getName();
+  d.model_id = scene.getRobotModel()->getName();
   d.trajectory_start = mplan_res.trajectory_start;
   d.trajectory = mplan_res.trajectory;
   pub.publish(d);

@@ -65,7 +65,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.group_name = "right_arm";
   mplan_req.motion_plan_request.num_planning_attempts = 1;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
-  const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
 
   mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.21044517893021499);
@@ -119,7 +119,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   
   
   moveit_msgs::DisplayTrajectory d;
-  d.model_id = scene.getKinematicModel()->getName();
+  d.model_id = scene.getRobotModel()->getName();
   d.trajectory_start = mplan_res.trajectory_start;
   d.trajectory = mplan_res.trajectory;
   pub.publish(d);

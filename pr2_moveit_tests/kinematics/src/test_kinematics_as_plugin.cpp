@@ -41,9 +41,9 @@
 
 // MoveIt!
 #include <moveit/kinematics_base/kinematics_base.h>
-#include <moveit/kinematic_model/kinematic_model.h>
+#include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
-#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/rdf_loader/rdf_loader.h>
 #include <urdf/model.h>
 #include <srdfdom/model.h>
 
@@ -162,12 +162,12 @@ TEST(ArmIKPlugin, initialize)
 
 TEST(ArmIKPlugin, getFK)
 {
-  robot_model_loader::RobotModelLoader robot_model_loader_;
-  kinematic_model::KinematicModelPtr kinematic_model;
-  const boost::shared_ptr<srdf::Model> &srdf = robot_model_loader_.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = robot_model_loader_.getURDF();
-  kinematic_model.reset(new kinematic_model::KinematicModel(urdf_model, srdf));
-  kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
+  rdf_loader::RDFLoader rdf_loader_;
+  robot_model::RobotModelPtr kinematic_model;
+  const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
+  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
+  robot_model.reset(new robot_model::RobotModel(urdf_model, srdf));
+  robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
 
   std::vector<double> seed, fk_values, solution;
   moveit_msgs::MoveItErrorCodes error_code;
@@ -200,12 +200,12 @@ TEST(ArmIKPlugin, getFK)
 
 TEST(ArmIKPlugin, searchIK)
 {
-  robot_model_loader::RobotModelLoader robot_model_loader_;
-  kinematic_model::KinematicModelPtr kinematic_model;
-  const boost::shared_ptr<srdf::Model> &srdf_model = robot_model_loader_.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = robot_model_loader_.getURDF();
-  kinematic_model.reset(new kinematic_model::KinematicModel(urdf_model, srdf_model));
-  kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
+  rdf_loader::RDFLoader rdf_loader_;
+  robot_model::RobotModelPtr kinematic_model;
+  const boost::shared_ptr<srdf::Model> &srdf_model = rdf_loader_.getSRDF();
+  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
+  robot_model.reset(new robot_model::RobotModel(urdf_model, srdf_model));
+  robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
 
   //Test inverse kinematics
   std::vector<double> seed, fk_values, solution;
@@ -269,12 +269,12 @@ TEST(ArmIKPlugin, searchIK)
 
 TEST(ArmIKPlugin, searchIKWithCallbacks)
 {
-  robot_model_loader::RobotModelLoader robot_model_loader_;
-  kinematic_model::KinematicModelPtr kinematic_model;
-  const boost::shared_ptr<srdf::Model> &srdf = robot_model_loader_.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = robot_model_loader_.getURDF();
-  kinematic_model.reset(new kinematic_model::KinematicModel(urdf_model, srdf));
-  kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
+  rdf_loader::RDFLoader rdf_loader_;
+  robot_model::RobotModelPtr kinematic_model;
+  const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
+  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
+  robot_model.reset(new robot_model::RobotModel(urdf_model, srdf));
+  robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
 
   //Test inverse kinematics
   std::vector<double> seed,fk_values,solution;

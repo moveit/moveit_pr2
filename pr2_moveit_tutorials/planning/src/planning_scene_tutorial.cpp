@@ -38,7 +38,7 @@
 #include <ros/ros.h>
 
 // MoveIt!
-#include <moveit/planning_models_loader/kinematic_model_loader.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/planning_scene/planning_scene.h>
 
 #include <moveit/kinematic_constraints/utils.h>
@@ -58,10 +58,10 @@ int main(int argc, char **argv)
   spinner.start();
   
   /* Load the robot model */
-  planning_models_loader::KinematicModelLoader kinematic_model_loader("robot_description");
+  robot_model_loader::RDFLoader robot_model_loader("robot_description");
 
   /* Get a shared pointer to the model */
-  kinematic_model::KinematicModelPtr kinematic_model = kinematic_model_loader.getModel();
+  robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
 
   /* Construct a planning scene - NOTE: this is for illustration purposes only.
      The recommended way to construct a planning scene is to use the planning_scene_monitor 
@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 
   /* CONSTRAINT CHECKING*/
   /* Let's first create a constraint for the end-effector of the right arm of the PR2 */
-  const kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("right_arm");
+  const robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("right_arm");
   std::string end_effector_name = joint_model_group->getLinkModelNames().back();
   
   geometry_msgs::PoseStamped desired_pose;

@@ -58,7 +58,7 @@ void benchmarkSimplePlan(const std::string &config)
     mplan_req.motion_plan_request.planner_id = config;
     mplan_req.motion_plan_request.group_name = "right_arm";
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-    const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+    const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
     for(unsigned int i = 0; i < joint_names.size(); i++)
@@ -93,7 +93,7 @@ void benchmarkPathConstrained(const std::string &config)
   mplan_req.motion_plan_request.group_name = "right_arm"; 
 
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
-  const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
   

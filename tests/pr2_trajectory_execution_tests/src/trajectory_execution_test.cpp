@@ -48,7 +48,7 @@ int main(int argc, char **argv)
   boost::shared_ptr<planning_scene_monitor::PlanningSceneMonitor> planning_scene_monitor_;
   planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor("robot_description"));
 
-  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getKinematicModel()));
+  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getRobotModel()));
 
   ROS_INFO_STREAM("Current for arms is " << emon->getCurrentController("arms"));
 

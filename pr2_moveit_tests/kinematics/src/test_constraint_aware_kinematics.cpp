@@ -41,12 +41,12 @@
 
 // MoveIt!
 #include <moveit/kinematics_constraint_aware/kinematics_constraint_aware.h>
-#include <moveit/kinematic_model/kinematic_model.h>
+#include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/robot_state/joint_state_group.h>
 #include <moveit/planning_scene/planning_scene.h>
+#include <moveit/rdf_loader/rdf_loader.h>
 #include <moveit/robot_model_loader/robot_model_loader.h>
-#include <moveit/planning_models_loader/kinematic_model_loader.h>
 #include <eigen_conversions/eigen_msg.h>
 #include <urdf/model.h>
 #include <srdfdom/model.h>
@@ -58,16 +58,16 @@ TEST(ConstraintAwareKinematics, getIK)
 
   ROS_INFO("Initializing IK solver");      
   planning_scene::PlanningScenePtr planning_scene;  
-  planning_models_loader::KinematicModelLoader kinematic_model_loader("robot_description"); /** Used to load the robot model */  
-  kinematic_model::KinematicModelPtr kinematic_model = kinematic_model_loader.getModel();
+  robot_model_loader::RDFLoader robot_model_loader("robot_description"); /** Used to load the robot model */  
+  robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   
-  const boost::shared_ptr<srdf::Model> &srdf = kinematic_model_loader.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = kinematic_model_loader.getURDF();
+  const boost::shared_ptr<srdf::Model> &srdf = robot_model_loader.getSRDF();
+  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = robot_model_loader.getURDF();
 
   planning_scene.reset(new planning_scene::PlanningScene());
   planning_scene->configure(urdf_model, srdf, kinematic_model);    
 
-  const kinematic_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(group_name);
+  const robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(group_name);
 
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
   robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup(group_name);

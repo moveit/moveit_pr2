@@ -66,7 +66,7 @@ TEST(OmplPlanning, SimplePlan)
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
 
     geometry_msgs::PoseStamped pose;
-    pose.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    pose.header.frame_id = scene.getRobotModel()->getModelFrame();
     pose.pose.position.x = 0.55;
     pose.pose.position.y = 0.2;
     pose.pose.position.z = 1.25;
@@ -94,7 +94,7 @@ TEST(OmplPlanning, SimplePlan)
     EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
 
     moveit_msgs::DisplayTrajectory d;
-    d.model_id = scene.getKinematicModel()->getName();
+    d.model_id = scene.getRobotModel()->getName();
     d.trajectory_start = mplan_res.trajectory_start;
     d.trajectory = mplan_res.trajectory;
     pub.publish(d);

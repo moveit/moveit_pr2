@@ -73,7 +73,7 @@ int main(int argc, char **argv)
   req.motion_plan_request.num_planning_attempts = 1;
   req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
 
-  const std::vector<std::string>& joint_names = psm.getPlanningScene()->getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names = psm.getPlanningScene()->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   req.motion_plan_request.goal_constraints.resize(1);
   req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
   for(unsigned int i = 0; i < joint_names.size(); i++)
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   /*
 
   geometry_msgs::PoseStamped pose;
-  pose.header.frame_id = psm.getPlanningScene()->getKinematicModel()->getModelFrame();
+  pose.header.frame_id = psm.getPlanningScene()->getRobotModel()->getModelFrame();
   pose.pose.position.x = 0.55;
   pose.pose.position.y = 0.2;
   pose.pose.position.z = 1.25;

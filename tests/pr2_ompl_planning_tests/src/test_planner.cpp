@@ -48,9 +48,9 @@ TEST(OmplInterface, JointModelStateConversion)
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
   planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
   EXPECT_TRUE(scene->isConfigured());
-  ompl_interface_ros::OMPLInterfaceROS oi(scene->getKinematicModel());
+  ompl_interface_ros::OMPLInterfaceROS oi(scene->getRobotModel());
   ompl_interface::ModelBasedPlanningContextPtr pc = oi.getPlanningContext("arms", "JointModel");
-  planning_models::RobotState *kstate(scene->getKinematicModel());
+  planning_models::RobotState *kstate(scene->getRobotModel());
   ompl::base::ScopedState<> ostate1(pc->getOMPLStateSpace());
   ompl::base::ScopedState<> ostate2(ostate1.getSpace());
   for (int i = 0 ; i < 100 ; ++i)
@@ -84,7 +84,7 @@ TEST(OmplPlanning, JointGoal)
     mplan_req.motion_plan_request.group_name = "right_arm";
     mplan_req.motion_plan_request.num_planning_attempts = 5;
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-    const std::vector<std::string>& joint_names = scene.getKinematicModel()->getJointModelGroup("right_arm")->getJointModelNames();
+    const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
     for(unsigned int i = 0; i < joint_names.size(); i++)
@@ -126,7 +126,7 @@ TEST(OmplPlanning, PositionGoal)
 
     moveit_msgs::PositionConstraint pcm;
     pcm.link_name = "r_wrist_roll_link";
-    pcm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    pcm.header.frame_id = scene.getRobotModel()->getModelFrame();
     pcm.target_point_offset.x = 0;
     pcm.target_point_offset.y = 0;
     pcm.target_point_offset.z = 0;
@@ -175,7 +175,7 @@ TEST(OmplPlanning, OrientationGoal)
 
     moveit_msgs::OrientationConstraint ocm;
     ocm.link_name = "l_wrist_roll_link";
-    ocm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    ocm.header.frame_id = scene.getRobotModel()->getModelFrame();
     ocm.orientation.x = 0.0;
     ocm.orientation.y = 0.0;
     ocm.orientation.z = 0.0;
@@ -217,7 +217,7 @@ TEST(OmplPlanning, PoseGoal)
 
     moveit_msgs::OrientationConstraint ocm;
     ocm.link_name = "l_wrist_roll_link";
-    ocm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    ocm.header.frame_id = scene.getRobotModel()->getModelFrame();
     ocm.orientation.x = 0.0;
     ocm.orientation.y = 0.0;
     ocm.orientation.z = 0.0;
@@ -239,7 +239,7 @@ TEST(OmplPlanning, PoseGoal)
     pcm.constraint_region.primitives[0].type = shape_msgs::SolidPrimitive::SPHERE;
     pcm.constraint_region.primitives[0].dimensions.x = 0.001;
 
-    pcm.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    pcm.header.frame_id = scene.getRobotModel()->getModelFrame();
     pcm.constraint_region.primitive_poses.resize(1);
     pcm.constraint_region.primitive_poses[0].position.x = 0.55;
     pcm.constraint_region.primitive_poses[0].position.y = 0.2;
@@ -263,7 +263,7 @@ TEST(OmplPlanning, SimplePoseGoal)
     EXPECT_TRUE(scene.isConfigured());
 
     geometry_msgs::PoseStamped pose;
-    pose.header.frame_id = scene.getKinematicModel()->getModelFrame();
+    pose.header.frame_id = scene.getRobotModel()->getModelFrame();
     pose.pose.position.x = 0.55;
     pose.pose.position.y = 0.2;
     pose.pose.position.z = 1.25;
