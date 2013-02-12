@@ -64,6 +64,7 @@ public:
 
   /** set which group to manipulate */
   void setGroup(const std::string& name);
+  const std::string& getGroupName() const;
 
   /** Set the pose of the group we are manipulating */
   bool setGroupPose(const Eigen::Affine3d& pose);
@@ -81,6 +82,9 @@ public:
   robot_model::RobotModelPtr& robotModel() { return robot_model_; }
   /** access RobotState */
   robot_state::RobotStatePtr& robotState() { return robot_state_; }
+
+  /** return size and pose of world object cube */
+  void getWorldGeometry(Eigen::Affine3d& pose, double& size);
 
   /** exception thrown when a problem occurs */
   class RobotLoadException : std::exception

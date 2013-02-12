@@ -274,6 +274,12 @@ void InteractiveRobot::setGroup(const std::string& name)
   }
 }
 
+// return current group name
+const std::string& InteractiveRobot::getGroupName() const
+{
+  return group_->getName();
+}
+
 /* remember new desired robot pose and schedule an update */
 bool InteractiveRobot::setGroupPose(const Eigen::Affine3d& pose)
 {
@@ -313,8 +319,16 @@ void InteractiveRobot::publishWorldState()
   marker.color.r = 1.0f;
   marker.color.g = 1.0f;
   marker.color.b = 0.0f;
-  marker.color.a = 1.0f;
+  marker.color.a = 0.4f;
   marker.lifetime = ros::Duration();
   tf::poseEigenToMsg(desired_world_object_pose_, marker.pose);
   world_state_publisher_.publish(marker);
 }
+
+/* get world object pose and size */
+void InteractiveRobot::getWorldGeometry(Eigen::Affine3d& pose, double& size)
+{
+  pose = desired_world_object_pose_;
+  size = WORLD_BOX_SIZE_;
+}
+
