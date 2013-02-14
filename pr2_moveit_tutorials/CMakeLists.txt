@@ -58,6 +58,7 @@ catkin_package(
   CATKIN_DEPENDS 
   moveit_core
   moveit_ros_planning
+  interactive_markers
 #  DEPENDS system_lib
 )
 
@@ -94,6 +95,7 @@ link_directories(${FCL_LIBRARY_DIRS})
 add_subdirectory(kinematics)
 add_subdirectory(planning)
 add_subdirectory(state_display)
+add_subdirectory(interactivity)
 
 #############
 ## Install ##

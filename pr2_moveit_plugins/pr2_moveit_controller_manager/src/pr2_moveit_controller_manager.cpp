@@ -137,7 +137,8 @@ class Pr2GripperControllerHandle : public ActionBasedControllerHandle<pr2_contro
 {
 public:
   Pr2GripperControllerHandle(const std::string &name, const std::string &ns  = "gripper_action") :
-    ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>(name, ns)
+    ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>(name, ns),
+    closing_(false)
   {
   }
 
@@ -171,11 +172,13 @@ public:
     if (trajectory.joint_trajectory.points[0].positions[0] > 0.5)
     {
       goal.command.position = GRIPPER_OPEN;
+      closing_ = false;
       ROS_DEBUG_STREAM("Sending gripper open command");
     }
     else
     {
       goal.command.position = GRIPPER_CLOSED;
+      closing_ = true;
       ROS_DEBUG_STREAM("Sending gripper close command");
     }
 
@@ -193,7 +196,11 @@ private:
   void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
                               const pr2_controllers_msgs::Pr2GripperCommandResultConstPtr& result)
   {
-    finishControllerExecution(state);
+    // the gripper action reports failure when closing the gripper and an object is inside
+    if (state == actionlib::SimpleClientGoalState::ABORTED && closing_)
+      finishControllerExecution(actionlib::SimpleClientGoalState::SUCCEEDED);
+    else
+      finishControllerExecution(state);
   }
   
   void controllerActiveCallback() 
@@ -204,7 +211,8 @@ private:
   void controllerFeedbackCallback(const pr2_controllers_msgs::Pr2GripperCommandFeedbackConstPtr& feedback)
   {
   }
-
+  
+  bool closing_;
 };
 
 class Pr2FollowJointTrajectoryControllerHandle : public ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>
