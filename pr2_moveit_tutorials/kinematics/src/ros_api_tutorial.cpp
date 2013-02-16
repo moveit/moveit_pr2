@@ -65,12 +65,10 @@ int main(int argc, char **argv)
   moveit_msgs::GetPositionIK::Request service_request;
   moveit_msgs::GetPositionIK::Response service_response;
   
-  service_request.ik_request.group_name = "right_arm";
-  service_request.ik_request.timeout = ros::Duration(5.0);
-  service_request.ik_request.attempts = 1;  
+  service_request.ik_request.group_name = "left_arm";
   service_request.ik_request.pose_stamped.header.frame_id = "torso_lift_link";  
   service_request.ik_request.pose_stamped.pose.position.x = 0.75;
-  service_request.ik_request.pose_stamped.pose.position.y = -0.188;
+  service_request.ik_request.pose_stamped.pose.position.y = 0.188;
   service_request.ik_request.pose_stamped.pose.position.z = 0.0;
   
   service_request.ik_request.pose_stamped.pose.orientation.x = 0.0;
@@ -78,27 +76,31 @@ int main(int argc, char **argv)
   service_request.ik_request.pose_stamped.pose.orientation.z = 0.0;
   service_request.ik_request.pose_stamped.pose.orientation.w = 1.0;
 
-  /* Load the robot model */
+  /* Call the service */
+  service_client.call(service_request, service_response);
+  ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
+
+  /* Filling in a seed state */
   robot_model_loader::RDFLoader robot_model_loader("robot_description"); 
-
-  /* Get a shared pointer to the model */
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
-
-  /* WORKING WITH THE KINEMATIC STATE */
-  /* Create a kinematic state - this represents the configuration for the robot represented by kinematic_model */
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
-
-  /* Get the configuration for the joints in the right arm of the PR2*/
   robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
 
   /* Get the names of the joints in the right_arm*/
   service_request.ik_request.robot_state.joint_state.name = joint_state_group->getJointModelGroup()->getJointModelNames();
 
-  /* Get the joint values and put them into the message*/
+  /* Get the joint values and put them into the message, this is where you could put in your own set of values as well.*/
   joint_state_group->setToRandomValues();
   joint_state_group->getVariableValues(service_request.ik_request.robot_state.joint_state.position);
 
-  /* Call the service */
+  /* Call the service again*/
+  service_client.call(service_request, service_response);
+  ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
+
+  /* Check for collisions*/
+  service_request.ik_request.avoid_collisions = true;  
+
+  /* Call the service again*/
   service_client.call(service_request, service_response);
   
   ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);

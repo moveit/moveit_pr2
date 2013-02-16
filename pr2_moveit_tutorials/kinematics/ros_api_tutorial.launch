@@ -1,7 +1,4 @@
 <launch>
-
   <include file="$(find pr2_moveit_config)/launch/demo.launch"/>
-
   <node name="ros_api_tutorial" pkg="pr2_moveit_tutorials" type="ros_api_tutorial" respawn="false" output="screen"/>
-
 </launch>
