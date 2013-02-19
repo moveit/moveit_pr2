@@ -43,6 +43,11 @@
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/robot_state/joint_state_group.h>
 
+// Robot state publishing
+#include <moveit/robot_state/conversions.h>
+#include <moveit_msgs/DisplayRobotState.h>
+
+// Kinematics
 #include <moveit_msgs/GetPositionIK.h>
   
 int main(int argc, char **argv)
@@ -55,6 +60,7 @@ int main(int argc, char **argv)
 
   // Start a service client
   ros::ServiceClient service_client = node_handle.serviceClient<moveit_msgs::GetPositionIK> ("compute_ik");
+  ros::Publisher robot_state_publisher = node_handle.advertise<moveit_msgs::DisplayRobotState>( "tutorial_robot_state", 1 );
 
   while(!service_client.exists())
   {
@@ -84,7 +90,7 @@ int main(int argc, char **argv)
   robot_model_loader::RDFLoader robot_model_loader("robot_description"); 
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
-  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
+  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
 
   /* Get the names of the joints in the right_arm*/
   service_request.ik_request.robot_state.joint_state.name = joint_state_group->getJointModelGroup()->getJointModelNames();
@@ -104,6 +110,15 @@ int main(int argc, char **argv)
   service_client.call(service_request, service_response);
   
   ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
+
+  /* Visualize the result*/
+  moveit_msgs::DisplayRobotState msg;
+  joint_state_group->setVariableValues(service_response.solution.joint_state);  
+  robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
+  robot_state_publisher.publish(msg);
+
+  //Sleep to let the message go through
+  ros::Duration(2.0).sleep();  
   
   ros::shutdown();  
   return 0;
