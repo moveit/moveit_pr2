@@ -122,13 +122,13 @@ TEST_F(MoveitManipulationTester, GraspCollideAttachedObject) {
   //low enough that box should be in collision with the gripper
   EXPECT_EQ(execution_info[0].result_.result_code, moveit_manipulation_msgs::GraspResult::LIFT_IN_COLLISION);
 
-  collision_detection::CollisionWorld::ObjectConstPtr obj_ptr = planning_scene_diff_->getCollisionWorld()->getObject("box");
+  collision_detection::CollisionWorld::ObjectConstPtr obj_ptr = planning_scene_diff_->getWorld()->getObject("box");
 
   //out of the way altogether
   obj.poses[0].position.z = 2.0;
   Eigen::Affine3d np;
   planning_models::poseFromMsg(obj.poses[0], np);
-  planning_scene_diff_->getCollisionWorld()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
+  planning_scene_diff_->getWorld()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
 
   grasp_evaluator_fast_->testGrasps(planning_scene_diff_,
                                     &planning_scene_diff_->getCurrentState(),
@@ -143,7 +143,7 @@ TEST_F(MoveitManipulationTester, GraspCollideAttachedObject) {
   //only in contact with attached object
   obj.poses[0].position.z = 1.15;
   planning_models::poseFromMsg(obj.poses[0], np);
-  planning_scene_diff_->getCollisionWorld()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
+  planning_scene_diff_->getWorld()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
 
   grasp_evaluator_fast_->testGrasps(planning_scene_diff_,
                                     &planning_scene_diff_->getCurrentState(),

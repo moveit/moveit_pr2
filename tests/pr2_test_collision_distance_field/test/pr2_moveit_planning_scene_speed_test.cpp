@@ -84,7 +84,7 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
   Eigen::Affine3d id = Eigen::Affine3d::Identity();
   id.translation().x() = .5;
   id.translation().z() = .7;
-  planning_scene_monitor_->getPlanningScene()->getCollisionWorld()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
+  planning_scene_monitor_->getPlanningScene()->getWorld()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
 
   const collision_detection::CollisionWorldHybrid* hy_world 
     = dynamic_cast<const collision_detection::CollisionWorldHybrid*>(planning_scene_monitor_->getPlanningScene()->getCollisionWorld().get());
@@ -162,7 +162,7 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
   Eigen::Affine3d id = Eigen::Affine3d::Identity();
   id.translation().x() = .5;
   id.translation().z() = .7;
-  planning_scene_monitor_->getPlanningScene()->getCollisionWorld()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
+  planning_scene_monitor_->getPlanningScene()->getWorld()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
 
   const collision_detection::CollisionWorldHybrid* hy_world 
     = dynamic_cast<const collision_detection::CollisionWorldHybrid*>(planning_scene_monitor_->getPlanningScene()->getCollisionWorld().get());
