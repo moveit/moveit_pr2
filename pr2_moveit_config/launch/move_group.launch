@@ -2,11 +2,11 @@
 
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch" />
 
-  <arg name="debug" default="false" />
+  <arg name="debug" default="true" />
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-  <arg unless="$(arg debug)" name="command_args" value="" />
+  <arg unless="$(arg debug)" name="command_args" value="--debug" />
   <arg     if="$(arg debug)" name="command_args" value="--debug" />
 
   <arg name="allow_trajectory_execution" default="true"/>
