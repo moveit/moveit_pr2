@@ -166,9 +166,7 @@ public:
     
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
-    if (!trajectory.joint_trajectory.points[0].velocities.empty())
-      goal.command.max_effort = trajectory.joint_trajectory.points[0].velocities[0];
-    
+
     if (trajectory.joint_trajectory.points[0].positions[0] > 0.5)
     {
       goal.command.position = GRIPPER_OPEN;

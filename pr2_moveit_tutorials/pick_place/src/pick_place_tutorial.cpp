@@ -40,39 +40,16 @@
 // MoveIt!
 #include <moveit/planning_scene_monitor/planning_scene_monitor.h>
 #include <moveit/move_group_interface/move_group.h>
+#include <shape_tools/solid_primitive_dims.h>
 
 static const std::string ROBOT_DESCRIPTION="robot_description";
-
-void constructScene(const planning_scene::PlanningScenePtr &scene)
-{
-  // set the scene name
-  scene->setName("pole_blocking_right_arm_pan");
-  scene->getCurrentState().setToDefaultValues();
-  
-  // add a pole in front of the robot (an obstacle)
-  Eigen::Affine3d t;
-  t = Eigen::Translation3d(0.7, -0.5, 0.7);
-  scene->getCollisionWorld()->addToObject("pole", shapes::ShapeConstPtr(new shapes::Box(0.1, 0.1, 1.4)), t);
-
-  // add a part to pick
-  t = Eigen::Translation3d(0.5, -0.7, 0.5);
-  scene->getCollisionWorld()->addToObject("part", shapes::ShapeConstPtr(new shapes::Box(0.2, 0.01, 0.3)), t);
-  
-  // set a color for the scene object
-  std_msgs::ColorRGBA cl;
-  cl.r = 1.0f; cl.g = 0.0f; cl.b = 0.0f; cl.a = 1.0f;
-  scene->setColor("pole", cl);
-
-  cl.r = 0.5f; cl.g = 0.0f; cl.b = 1.0f; cl.a = 1.0f;
-  scene->setColor("part", cl);
-}
 
 void pick(move_group_interface::MoveGroup &group)
 {
   std::vector<manipulation_msgs::Grasp> grasps;
   
   geometry_msgs::PoseStamped p;
-  p.header.frame_id = "odom_combined";
+  p.header.frame_id = "base_footprint";
   p.pose.position.x = 0.22;
   p.pose.position.y = -0.7;
   p.pose.position.z = 0.5;
@@ -84,8 +61,8 @@ void pick(move_group_interface::MoveGroup &group)
   g.grasp_pose = p;
   g.approach.direction.vector.x = 1.0;
   g.retreat.direction.vector.z = 1.0;
-  g.approach.direction.header.frame_id = "odom_combined";
-  g.retreat.direction.header.frame_id = "odom_combined";
+  g.approach.direction.header.frame_id = "r_wrist_roll_link";
+  g.retreat.direction.header.frame_id = "base_footprint";
   g.approach.min_distance = 0.2;
   g.approach.desired_distance = 0.4;
   g.retreat.min_distance = 0.1;
@@ -117,8 +94,8 @@ void place(move_group_interface::MoveGroup &group)
     g.place_pose = p;
     g.approach.direction.vector.x = 1.0;
     g.retreat.direction.vector.z = 1.0;
-    g.retreat.direction.header = p.header;
-    g.approach.direction.header = p.header;
+    g.retreat.direction.header.frame_id = "base_footprint";
+    g.approach.direction.header.frame_id = "r_wrist_roll_link";
     g.approach.min_distance = 0.2;
     g.approach.desired_distance = 0.4;
     g.retreat.min_distance = 0.1;
@@ -126,7 +103,7 @@ void place(move_group_interface::MoveGroup &group)
     
     g.post_place_posture.name.resize(1, "r_gripper_joint");
     g.post_place_posture.position.resize(1);
-    g.post_place_posture.position[0] = 0;
+    g.post_place_posture.position[0] = 1;
     
     loc.push_back(g);
   }
@@ -140,21 +117,45 @@ int main(int argc, char **argv)
   spinner.start();
   
   ros::NodeHandle nh;
-  ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
+  ros::Publisher pub_co = nh.advertise<moveit_msgs::CollisionObject>("collision_object", 10);
+
+  ros::WallDuration(1.0).sleep();
   
-  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-  constructScene(psm.getPlanningScene());
-  moveit_msgs::PlanningScene psmsg;
-  psm.getPlanningScene()->getPlanningSceneMsg(psmsg);
+  move_group_interface::MoveGroup group("right_arm");
+  
+  
+  moveit_msgs::CollisionObject co;
+  co.id = "pole";
+  co.header.stamp = ros::Time::now();
+  co.header.frame_id = "base_footprint";
+  co.operation = moveit_msgs::CollisionObject::ADD;
+  co.primitives.resize(1);
+  co.primitives[0].type = shape_msgs::SolidPrimitive::BOX;
+  co.primitives[0].dimensions.resize(shape_tools::SolidPrimitiveDimCount<shape_msgs::SolidPrimitive::BOX>::value);
+  co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_X] = 0.1;
+  co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_Y] = 0.1;
+  co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_Z] = 1.4;
+  co.primitive_poses.resize(1);
+  co.primitive_poses[0].position.x = 0.7;
+  co.primitive_poses[0].position.y = -0.5;  
+  co.primitive_poses[0].position.z = 0.7;
+  co.primitive_poses[0].orientation.w = 1.0;
+  pub_co.publish(co);
+  
+  
+  co.id = "part";
+  
+  co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_X] = 0.2;
+  co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_Y] = 0.01;
+  co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_Z] = 0.3;
+  
+  co.primitive_poses[0].position.x = 0.5;
+  co.primitive_poses[0].position.y = -0.7;  
+  co.primitive_poses[0].position.z = 0.5;
+  pub_co.publish(co);
   
   // wait a bit for ros things to initialize
-  ros::WallDuration(0.5).sleep();
-  
-  // publish a planning scene to the move_group node; now the scene has two objects
-  pub_scene.publish(psmsg);
-  ros::WallDuration(0.5).sleep();
-
-  move_group_interface::MoveGroup group("right_arm");
+  ros::WallDuration(1.0).sleep();
   
   pick(group);
   
