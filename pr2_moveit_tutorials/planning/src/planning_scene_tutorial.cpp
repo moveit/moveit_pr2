@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
   /* The planning scene contains a RobotState *representation of the robot configuration
    We can get a reference to it.*/
-  robot_state::RobotState& current_state = planning_scene.getCurrentState();
+  robot_state::RobotState& current_state = planning_scene.getCurrentStateNonConst();
 
   /* COLLISION CHECKING */
   /* Let's check if the current state is in self-collision. All self-collision checks use an unpadded version of the 
