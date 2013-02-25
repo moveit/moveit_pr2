@@ -98,7 +98,7 @@ protected:
 // TEST_F(Pr2SBPLPlannerTester, SimplePlan) 
 // {
 //   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-//   ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+//   ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
 //   ps->configure(rml_->getURDF(), rml_->getSRDF());
 //   ASSERT_TRUE(ps->isConfigured());
 //   ps->getAllowedCollisionMatrix() = *acm_;
@@ -136,7 +136,7 @@ protected:
 // TEST_F(Pr2SBPLPlannerTester, DiscretizePlan) 
 // {
 //   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-//   ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+//   ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
 //   ps->configure(rml_->getURDF(), rml_->getSRDF());
 //   ASSERT_TRUE(ps->isConfigured());
 //   ps->getAllowedCollisionMatrix() = *acm_;
@@ -178,7 +178,7 @@ protected:
 // TEST_F(Pr2SBPLPlannerTester, HardPlan) 
 // {
 //   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-//   ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+//   ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
 //   ps->configure(rml_->getURDF(), rml_->getSRDF());
 //   ASSERT_TRUE(ps->isConfigured());
 //   ps->getAllowedCollisionMatrix() = *acm_;
@@ -231,7 +231,7 @@ protected:
 TEST_F(Pr2SBPLPlannerTester, HardPlan3) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+  ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
@@ -296,7 +296,7 @@ static const unsigned int NUM_TRIALS = 100;
 TEST_F(Pr2SBPLPlannerTester, ManyPlan) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+  ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;

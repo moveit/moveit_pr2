@@ -61,7 +61,7 @@ protected:
     robot_model_loader_.reset(new robot_model_loader::RDFLoader("robot_description"));
 
     planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-    ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+    ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
     planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor(ps, robot_model_loader_));
   }
 

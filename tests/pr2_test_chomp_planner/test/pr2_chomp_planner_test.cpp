@@ -99,7 +99,7 @@ protected:
 TEST_F(Pr2ChompPlannerTester, SimplePlan) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setCollisionDetectionTypes<collision_distance_field::CollisionWorldDistanceField, collision_distance_field::CollisionRobotDistanceField>();
+  ps->setActiveCollisionDetector<collision_distance_field::CollisionWorldDistanceField, collision_distance_field::CollisionRobotDistanceField>();
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrix() = *acm_;
