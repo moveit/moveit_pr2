@@ -40,7 +40,7 @@
 #include <moveit_msgs/GetMotionPlan.h>
 #include <kinematic_constraints/utils.h>
 #include <planning_models/conversions.h>
-#include <collision_distance_field/hybrid_collision_world.h>
+#include <collision_distance_field/collision_world_hybrid.h>
 #include <collision_distance_field_ros/hybrid_collision_robot_ros.h>
 #include <rdf_loader/rdf_loader.h>
   

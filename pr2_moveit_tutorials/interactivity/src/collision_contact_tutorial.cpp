@@ -46,8 +46,8 @@
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/planning_scene/planning_scene.h>
-#include <moveit/collision_detection_fcl/collision_world.h>
-#include <moveit/collision_detection_fcl/collision_robot.h>
+#include <moveit/collision_detection_fcl/collision_world_fcl.h>
+#include <moveit/collision_detection_fcl/collision_robot_fcl.h>
 #include <moveit/collision_detection/collision_tools.h>
 
 

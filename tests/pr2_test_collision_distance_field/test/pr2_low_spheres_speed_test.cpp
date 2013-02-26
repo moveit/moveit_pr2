@@ -48,8 +48,8 @@
 #include <collision_distance_field/collision_robot_distance_field.h>
 #include <collision_distance_field/collision_world_distance_field.h>
 #include <collision_distance_field_ros/collision_distance_field_ros_helpers.h>
-#include <collision_detection_fcl/collision_world.h>
-#include <collision_detection_fcl/collision_robot.h>
+#include <collision_detection_fcl/collision_world_fcl.h>
+#include <collision_detection_fcl/collision_robot_fcl.h>
 #include <rdf_loader/rdf_loader.h>
 
 #include <boost/filesystem.hpp>

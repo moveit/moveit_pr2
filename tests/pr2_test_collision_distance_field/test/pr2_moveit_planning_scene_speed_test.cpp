@@ -44,7 +44,7 @@
 #include <geometric_shapes/shape_operations.h>
 #include <planning_scene_monitor/planning_scene_monitor.h>
 #include <collision_distance_field_ros/hybrid_collision_robot_ros.h>
-#include <collision_distance_field/hybrid_collision_world.h>
+#include <collision_distance_field/collision_world_hybrid.h>
 
 #include <boost/filesystem.hpp>
 #include <ros/console.h>
