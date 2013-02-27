@@ -102,7 +102,7 @@ void userCallback(InteractiveRobot& robot)
   Eigen::Affine3d world_cube_pose;
   double world_cube_size;
   robot.getWorldGeometry(world_cube_pose, world_cube_size);
-  g_planning_scene->getWorld()->moveShapeInObject("world_cube", g_world_cube_shape, world_cube_pose);
+  g_planning_scene->getWorldNonConst()->moveShapeInObject("world_cube", g_world_cube_shape, world_cube_pose);
 
   // prepare to check collisions
   collision_detection::CollisionRequest c_req;
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
   double world_cube_size;
   robot.getWorldGeometry(world_cube_pose, world_cube_size);
   g_world_cube_shape.reset(new shapes::Box(world_cube_size, world_cube_size, world_cube_size));
-  g_planning_scene->getWorld()->addToObject("world_cube", g_world_cube_shape, world_cube_pose);
+  g_planning_scene->getWorldNonConst()->addToObject("world_cube", g_world_cube_shape, world_cube_pose);
   
   // Create a marker array publisher for publishing contact points
   g_marker_array_publisher = new ros::Publisher(nh.advertise<visualization_msgs::MarkerArray>("interactive_robot_marray",100));

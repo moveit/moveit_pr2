@@ -128,7 +128,7 @@ TEST_F(MoveitManipulationTester, GraspCollideAttachedObject) {
   obj.poses[0].position.z = 2.0;
   Eigen::Affine3d np;
   planning_models::poseFromMsg(obj.poses[0], np);
-  planning_scene_diff_->getWorld()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
+  planning_scene_diff_->getWorldNonConst()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
 
   grasp_evaluator_fast_->testGrasps(planning_scene_diff_,
                                     &planning_scene_diff_->getCurrentState(),
@@ -143,7 +143,7 @@ TEST_F(MoveitManipulationTester, GraspCollideAttachedObject) {
   //only in contact with attached object
   obj.poses[0].position.z = 1.15;
   planning_models::poseFromMsg(obj.poses[0], np);
-  planning_scene_diff_->getWorld()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
+  planning_scene_diff_->getWorldNonConst()->moveShapeInObject("box", obj_ptr->shapes_[0], np);
 
   grasp_evaluator_fast_->testGrasps(planning_scene_diff_,
                                     &planning_scene_diff_->getCurrentState(),

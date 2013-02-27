@@ -43,7 +43,7 @@
 #include <planning_models/transforms.h>
 #include <geometric_shapes/shape_operations.h>
 #include <planning_scene_monitor/planning_scene_monitor.h>
-#include <collision_distance_field_ros/hybrid_collision_robot_ros.h>
+#include <collision_distance_field_ros/collision_robot_hybrid_ros.h>
 #include <collision_distance_field/collision_world_hybrid.h>
 
 #include <boost/filesystem.hpp>
@@ -61,7 +61,7 @@ protected:
     robot_model_loader_.reset(new robot_model_loader::RDFLoader("robot_description"));
 
     planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-    ps->setActiveCollisionDetector<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+    ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorHybridROS::create());
     planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor(ps, robot_model_loader_));
   }
 
@@ -84,7 +84,7 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
   Eigen::Affine3d id = Eigen::Affine3d::Identity();
   id.translation().x() = .5;
   id.translation().z() = .7;
-  planning_scene_monitor_->getPlanningScene()->getWorld()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
+  planning_scene_monitor_->getPlanningScene()->getWorldNonConst()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
 
   const collision_detection::CollisionWorldHybrid* hy_world 
     = dynamic_cast<const collision_detection::CollisionWorldHybrid*>(planning_scene_monitor_->getPlanningScene()->getCollisionWorld().get());
@@ -162,7 +162,7 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
   Eigen::Affine3d id = Eigen::Affine3d::Identity();
   id.translation().x() = .5;
   id.translation().z() = .7;
-  planning_scene_monitor_->getPlanningScene()->getWorld()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
+  planning_scene_monitor_->getPlanningScene()->getWorldNonConst()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
 
   const collision_detection::CollisionWorldHybrid* hy_world 
     = dynamic_cast<const collision_detection::CollisionWorldHybrid*>(planning_scene_monitor_->getPlanningScene()->getCollisionWorld().get());

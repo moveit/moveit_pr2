@@ -41,8 +41,7 @@
 #include <moveit_msgs/GetMotionPlan.h>
 #include <kinematic_constraints/utils.h>
 #include <planning_models/conversions.h>
-#include <collision_distance_field/collision_world_distance_field.h>
-#include <collision_distance_field/collision_robot_distance_field.h>
+#include <collision_distance_field/collision_detector_allocator_distance_field.h>
 #include <rdf_loader/rdf_loader.h>
 
 class Pr2ChompPlannerTester : public testing::Test{
@@ -99,10 +98,10 @@ protected:
 TEST_F(Pr2ChompPlannerTester, SimplePlan) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setActiveCollisionDetector<collision_distance_field::CollisionWorldDistanceField, collision_distance_field::CollisionRobotDistanceField>();
+  ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorDistanceField::create());
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
-  ps->getAllowedCollisionMatrix() = *acm_;
+  ps->getAllowedCollisionMatrixNonConst() = *acm_;
   
   chomp::ChompPlanner chomp_planner(ps->getRobotModel());
 
