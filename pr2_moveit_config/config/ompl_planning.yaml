@@ -5,6 +5,7 @@
 
 right_arm:
   planner_configs:
+    - PRMkConfigDefault
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
@@ -70,6 +71,9 @@ arms:
 
 
 planner_configs:
+
+  PRMkConfigDefault:
+    type: geometric::PRM
 
   SBLkConfigDefault:
     type: geometric::SBL
