@@ -425,9 +425,32 @@ public:
     if (it != possibly_unloaded_controllers_.end())
       joints = it->second.joints_;
     else
-    {
-      ROS_WARN("The joints for controller '%s' are not known. Perhaps the controller configuration is not loaded on the param server?", name.c_str());
+    {     
       joints.clear();
+      std::string param_name;
+      if (node_handle_.searchParam(name + "/joints", param_name))
+      {
+        XmlRpc::XmlRpcValue joints_list;
+        node_handle_.getParam(param_name, joints_list);
+        if (joints_list.getType() == XmlRpc::XmlRpcValue::TypeArray)
+          for (int i = 0 ; i < joints_list.size() ; ++i)
+            joints.push_back((std::string)joints_list[i]);
+      }  
+      else
+        if (node_handle_.searchParam(name + "/joint", param_name))
+        {
+          std::string joint_name;
+          if (node_handle_.getParam(param_name, joint_name))
+            joints.push_back(joint_name);
+        }
+      if (joints.empty())
+        ROS_WARN("The joints for controller '%s' are not known and were not found on the ROS param server under '%s/joints'or '%s/joint'."
+                 "Perhaps the controller configuration is not loaded on the param server?", name.c_str(), name.c_str(), name.c_str());
+      else
+      {
+        ControllerInformation &ci = possibly_unloaded_controllers_[name];
+        ci.joints_ = joints;
+      }
     }
   }
   
