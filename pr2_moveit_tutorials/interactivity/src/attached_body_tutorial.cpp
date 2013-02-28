@@ -159,8 +159,7 @@ int main(int argc, char **argv)
   InteractiveRobot robot;
 
   // create a PlanningScene
-  g_planning_scene = new planning_scene::PlanningScene();
-  g_planning_scene->configure(robot.robotModel());
+  g_planning_scene = new planning_scene::PlanningScene(robot.robotModel());
 
   // Add the world geometry to the PlanningScene's collision detection world 
   Eigen::Affine3d world_cube_pose;

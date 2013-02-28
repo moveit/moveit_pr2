@@ -66,8 +66,7 @@ int main(int argc, char **argv)
   /* Construct a planning scene - NOTE: this is for illustration purposes only.
      The recommended way to construct a planning scene is to use the planning_scene_monitor 
      to construct it for you.*/
-  planning_scene::PlanningScene planning_scene;
-  planning_scene.configure(kinematic_model);
+  planning_scene::PlanningScene planning_scene(kinematic_model);
 
   /* The planning scene contains a RobotState *representation of the robot configuration
    We can get a reference to it.*/
