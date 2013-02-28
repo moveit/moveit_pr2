@@ -196,17 +196,11 @@ int main(int argc, char **argv)
   const robot_model::JointModelGroup* r_gripper_group = robot.robotModel()->getJointModelGroup("right_gripper");
   const std::vector<std::string>& touch_links = r_gripper_group->getLinkModelNames();
 
-  link->attachBody("bar",
-                   shapes,
-                   poses,
-                   touch_links);
-        
-
-
-
-
-
-
+  robot.robotState()->attachBody("bar",
+                                 shapes,
+                                 poses,
+                                 touch_links,
+                                 "r_gripper_palm_link");
 
 
   robot.setUserCallback(userCallback);
