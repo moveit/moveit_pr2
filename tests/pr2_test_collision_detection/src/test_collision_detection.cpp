@@ -154,14 +154,14 @@ void testSimple()
     for (int i = 0 ; i < 100000 ; ++i)
     {
 	t.translation() = Eigen::Vector3d(rng.uniformReal(-1, 1), rng.uniformReal(-1, 1), rng.uniformReal(0, 2));
-	scene->getCollisionWorld()->clearObjects();
-	scene->getCollisionWorld()->addToObject("spere1", shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
+	scene->getWorldNonConst()->clearObjects();
+	scene->getWorldNonConst()->addToObject("spere1", shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
 	collision_detection::CollisionResult res;
 	scene->checkCollision(req, res);
 	if (!res.collision)
 	{
-	    int x = colliding->getCollisionWorld()->getObjectIds().size();
-	    colliding->getCollisionWorld()->addToObject("speres" + boost::lexical_cast<std::string>(x),
+	    int x = colliding->getWorld()->getObjectIds().size();
+	    colliding->getWorldNonConst()->addToObject("speres" + boost::lexical_cast<std::string>(x),
                                                         shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
 	    std::cout << x << "\n";
 	    if (x == 100)

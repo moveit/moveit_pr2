@@ -35,8 +35,8 @@
 * Author: Acorn Pooley
 *********************************************************************/
 
-// This code goes with the Collision Contact Visualization tutorial
-//    http://moveit.ros.org/wiki/index.php/Groovy/InteractiveRobot/CollisionContact
+// This code goes with the Attached Body tutorial
+//    http://moveit.ros.org/wiki/index.php/Groovy/InteractiveRobot/AttachedBody
 
 #include <ros/ros.h>
 #include "interactive_robot.h"
@@ -107,11 +107,12 @@ void userCallback(InteractiveRobot& robot)
   // prepare to check collisions
   collision_detection::CollisionRequest c_req;
   collision_detection::CollisionResult c_res;
-  c_req.group_name = robot.getGroupName();
+  c_req.group_name = "right_gripper";
+  //c_req.group_name = "right_arm";
   c_req.contacts = true;
   c_req.max_contacts = 100;
   c_req.max_contacts_per_pair = 5;
-  c_req.verbose = false;
+  c_req.verbose = true;
 
   // check for collisions between robot and itself or the world
   g_planning_scene->checkCollision(c_req, c_res, *robot.robotState());
@@ -169,6 +170,38 @@ int main(int argc, char **argv)
   
   // Create a marker array publisher for publishing contact points
   g_marker_array_publisher = new ros::Publisher(nh.advertise<visualization_msgs::MarkerArray>("interactive_robot_marray",100));
+
+
+
+
+
+
+
+  // Attach a bar object to the right gripper
+  robot_state::LinkState *link = robot.robotState()->getLinkState("r_gripper_palm_link");
+  //robot_state::LinkState *link = robot.robotState()->getLinkState("r_gripper_r_finger_link");
+  //robot_state::LinkState *link = robot.robotState()->getLinkState("r_wrist_roll_link");
+  //
+
+  std::vector<shapes::ShapeConstPtr> shapes;
+  EigenSTL::vector_Affine3d poses;
+
+  shapes::ShapePtr bar_shape;
+  bar_shape.reset(new shapes::Cylinder(0.02,1.0));
+  //bar_shape.reset(new shapes::Box(0.02,.02,1));
+  
+  shapes.push_back(bar_shape);
+  poses.push_back(Eigen::Affine3d(Eigen::Translation3d(0.12,0,0)));
+
+  const robot_model::JointModelGroup* r_gripper_group = robot.robotModel()->getJointModelGroup("right_gripper");
+  const std::vector<std::string>& touch_links = r_gripper_group->getLinkModelNames();
+
+  robot.robotState()->attachBody("bar",
+                                 shapes,
+                                 poses,
+                                 touch_links,
+                                 "r_gripper_palm_link");
+
 
   robot.setUserCallback(userCallback);
 

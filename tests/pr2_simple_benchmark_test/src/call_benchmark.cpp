@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
   Eigen::Affine3d t;
   t = Eigen::Translation3d(0.45, -0.45, 0.7);
-  psm.getPlanningScene()->getCollisionWorld()->addToObject("pole", shapes::ShapePtr(new shapes::Box(0.1, 0.1, 1.4)), t);
+  psm.getPlanningScene()->getWorldNonConst()->addToObject("pole", shapes::ShapePtr(new shapes::Box(0.1, 0.1, 1.4)), t);
 
   if (psm.getPlanningScene()->isConfigured())
     psm.getPlanningScene()->getPlanningSceneMsg(req.scene);

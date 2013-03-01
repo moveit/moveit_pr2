@@ -22,8 +22,21 @@ target_link_libraries(collision_contact_tutorial
   interactive_markers
 )
 
+add_executable(attached_body_tutorial
+  src/attached_body_tutorial.cpp
+  src/interactive_robot.cpp
+  src/imarker.cpp
+  src/pose_string.cpp
+)
+target_link_libraries(attached_body_tutorial
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  interactive_markers
+)
+
 install(
   TARGETS
   interactivity_tutorial
   collision_contact_tutorial
+  attached_body_tutorial
   DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})

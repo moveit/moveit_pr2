@@ -41,8 +41,8 @@
 #include <moveit_msgs/GetMotionPlan.h>
 #include <kinematic_constraints/utils.h>
 #include <planning_models/conversions.h>
-#include <collision_distance_field/hybrid_collision_world.h>
-#include <collision_distance_field_ros/hybrid_collision_robot_ros.h>
+#include <collision_distance_field/collision_world_hybrid.h>
+#include <collision_distance_field_ros/collision_robot_hybrid_ros.h>
 #include <rdf_loader/rdf_loader.h>
 #include <ompl_interface_ros/ompl_interface_ros.h>
   
@@ -100,10 +100,10 @@ protected:
 TEST_F(Pr2SBPLOMPLPlannerTester, SimplePlan) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+  ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorHybridROS::create());
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
-  ps->getAllowedCollisionMatrix() = *acm_;
+  ps->getAllowedCollisionMatrixNonConst() = *acm_;
   
   sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getRobotModel());
   ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getRobotModel());
@@ -153,10 +153,10 @@ static const unsigned int NUM_TRIALS = 10;
 TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan) 
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
-  ps->setCollisionDetectionTypes<collision_detection::CollisionWorldHybrid, collision_detection::CollisionRobotHybridROS>();
+  ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorHybridROS::create());
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
-  ps->getAllowedCollisionMatrix() = *acm_;
+  ps->getAllowedCollisionMatrixNonConst() = *acm_;
 
   planning_models::RobotState *::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
   planning_models::RobotState *goal_state(ps->getCurrentState());
