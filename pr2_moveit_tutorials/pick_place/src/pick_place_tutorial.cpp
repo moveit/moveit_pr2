@@ -146,7 +146,7 @@ int main(int argc, char **argv)
   ros::WallDuration(1.0).sleep();
   
   move_group_interface::MoveGroup group("right_arm");
-  group.setPlanningTime(15.0);
+  group.setPlanningTime(30.0);
   
   moveit_msgs::CollisionObject co;
   co.header.stamp = ros::Time::now();
