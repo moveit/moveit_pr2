@@ -407,16 +407,32 @@ public:
   virtual void getActiveControllers(std::vector<std::string> &names)
   {
     names.clear();
-    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
-    for (std::size_t i = 0; i < res.controllers.size(); ++i)
-      if (res.state[i] == "running")
-        names.push_back(res.controllers[i]);
+    if (use_controller_manager_)
+    {
+      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+      for (std::size_t i = 0; i < res.controllers.size(); ++i)
+        if (res.state[i] == "running")
+          names.push_back(res.controllers[i]);
+    }
+    else 
+      // we assume best case scenario if we can't test whether the controller is active or not
+      for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
+        names.push_back(it->first);
   }
   
   virtual void getLoadedControllers(std::vector<std::string> &names)
-  {  
-    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
-    names = res.controllers;
+  {
+    if (use_controller_manager_)
+    {
+      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+      names = res.controllers;
+    }
+    else
+    {
+      names.clear();
+      for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
+        names.push_back(it->first);
+    }
   }
   
   virtual void getControllerJoints(const std::string &name, std::vector<std::string> &joints)
@@ -457,17 +473,27 @@ public:
   virtual moveit_controller_manager::MoveItControllerManager::ControllerState getControllerState(const std::string &name)
   {
     moveit_controller_manager::MoveItControllerManager::ControllerState state;
-    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
-    for (std::size_t i = 0; i < res.controllers.size(); ++i)
+    if (use_controller_manager_)
     {
-      if (res.controllers[i] == name)
+      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+      for (std::size_t i = 0; i < res.controllers.size(); ++i)
       {
-        state.loaded_ = true;
-        if (res.state[i] == "running")
-          state.active_ = true;
-        break;
+        if (res.controllers[i] == name)
+        {
+          state.loaded_ = true;
+          if (res.state[i] == "running")
+            state.active_ = true;
+          break;
+        }
       }
     }
+    else
+    {
+      // if we cannot test, assume best case scenario. 
+      state.loaded_ = true;
+      state.active_ = true;
+    }
+    
     std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.find(name);
     if (it != possibly_unloaded_controllers_.end())
       if (it->second.default_)
