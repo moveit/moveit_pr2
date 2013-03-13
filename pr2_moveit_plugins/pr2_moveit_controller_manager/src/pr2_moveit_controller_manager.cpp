@@ -444,7 +444,7 @@ public:
             joints.push_back(joint_name);
         }
       if (joints.empty())
-        ROS_WARN("The joints for controller '%s' are not known and were not found on the ROS param server under '%s/joints'or '%s/joint'."
+        ROS_DEBUG("The joints for controller '%s' are not known and were not found on the ROS param server under '%s/joints'or '%s/joint'. "
                  "Perhaps the controller configuration is not loaded on the param server?", name.c_str(), name.c_str(), name.c_str());
       else
       {

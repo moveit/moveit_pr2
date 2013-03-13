@@ -61,13 +61,15 @@ void pick(move_group_interface::MoveGroup &group)
   g.grasp_pose = p;
   
   g.approach.direction.vector.x = 1.0;
-  g.retreat.direction.vector.z = 1.0;
   g.approach.direction.header.frame_id = "r_wrist_roll_link";
-  g.retreat.direction.header.frame_id = "base_footprint";
   g.approach.min_distance = 0.2;
   g.approach.desired_distance = 0.4;
+
+  g.retreat.direction.header.frame_id = "base_footprint";
+  g.retreat.direction.vector.z = 1.0;
   g.retreat.min_distance = 0.1;
   g.retreat.desired_distance = 0.25;
+
   g.pre_grasp_posture.name.resize(1, "r_gripper_joint");
   g.pre_grasp_posture.position.resize(1);
   g.pre_grasp_posture.position[0] = 1;
