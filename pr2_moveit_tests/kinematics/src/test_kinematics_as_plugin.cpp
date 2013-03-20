@@ -109,7 +109,7 @@ class MyTest
     if(!done)
       return false;
     
-    if(kinematics_solver->initialize("right_arm",root_name,tip_name,search_discretization))
+    if(kinematics_solver->initialize("robot_description","right_arm",root_name,tip_name,search_discretization))
       return true;
     else
     {
@@ -166,7 +166,7 @@ TEST(ArmIKPlugin, getFK)
   robot_model::RobotModelPtr kinematic_model;
   const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
-  robot_model.reset(new robot_model::RobotModel(urdf_model, srdf));
+  kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
 
   std::vector<double> seed, fk_values, solution;
@@ -204,7 +204,7 @@ TEST(ArmIKPlugin, searchIK)
   robot_model::RobotModelPtr kinematic_model;
   const boost::shared_ptr<srdf::Model> &srdf_model = rdf_loader_.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
-  robot_model.reset(new robot_model::RobotModel(urdf_model, srdf_model));
+  kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf_model));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
 
   //Test inverse kinematics
@@ -273,7 +273,7 @@ TEST(ArmIKPlugin, searchIKWithCallbacks)
   robot_model::RobotModelPtr kinematic_model;
   const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
-  robot_model.reset(new robot_model::RobotModel(urdf_model, srdf));
+  kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver->getGroupName());
 
   //Test inverse kinematics

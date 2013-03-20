@@ -64,8 +64,7 @@ TEST(ConstraintAwareKinematics, getIK)
   const boost::shared_ptr<srdf::Model> &srdf = robot_model_loader.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = robot_model_loader.getURDF();
 
-  planning_scene.reset(new planning_scene::PlanningScene());
-  planning_scene->configure(urdf_model, srdf, kinematic_model);    
+  planning_scene.reset(new planning_scene::PlanningScene(kinematic_model));
 
   const robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(group_name);
 
