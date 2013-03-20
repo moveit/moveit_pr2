@@ -1,0 +1,19 @@
+<launch>
+
+  <!-- How often (seconds) to trigger object recognition -->
+  <arg name="trigger_period" default="1.0" />  
+
+  <!-- Minimum confidence to require for publishing objects to the planning scene -->	
+  <arg name="min_confidence" default="0.5" />  
+
+  <!-- Start the recognition pipeline -->
+  <include file="$(find object_recognition_tabletop)/launch/tabletop.launch" />
+
+  <!-- Start the service that can answer questions about object types -->
+  <include file="$(find object_recognition_ros)/launch/object_information_server.launch" />
+
+  <!-- Start the node that publishes updates to the planning scene based on detected objects -->
+  <node name="populate_moveit_planning_scene_from_ork" pkg="moveit_commander" type="moveit_planning_scene_from_ork.py" respawn="true" output="screen" args="--min-confidence $(arg min_confidence) --auto-trigger $(arg trigger_period)">
+  </node>
+  
+</launch>
