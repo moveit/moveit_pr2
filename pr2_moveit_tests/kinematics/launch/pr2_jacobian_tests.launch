@@ -1,0 +1,19 @@
+<launch>
+    <arg name="kinect" default="true"/>
+    <!-- send pr2 urdf to param server -->
+    <group if="$(arg kinect)">
+      <param name="robot_description" command="$(find xacro)/xacro.py '$(find pr2_description)/robots/pr2.urdf.xacro'" />
+    </group>
+    <group unless="$(arg kinect)">
+      <param name="robot_description" command="$(find xacro)/xacro.py '$(find pr2_description)/robots/pr2_no_kinect.urdf.xacro'" />
+    </group>
+
+    <!-- the semantic description that corresponds to the URDF -->
+    <param name="robot_description_semantic" textfile="$(find pr2_jacobian_tests)/pr2.srdf" />
+
+    <!-- test -->
+    <test test-name="pr2_jacobian_test"  pkg="pr2_moveit_tests" type="pr2_jacobian_test"  name="jacobian_test" time-limit="180" >
+    </test>
+
+</launch>
+
