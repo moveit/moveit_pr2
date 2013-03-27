@@ -148,7 +148,7 @@ int main(int argc, char **argv)
   ros::WallDuration(1.0).sleep();
   
   move_group_interface::MoveGroup group("right_arm");
-  group.setPlanningTime(30.0);
+  group.setPlanningTime(45.0);
   
   moveit_msgs::CollisionObject co;
   co.header.stamp = ros::Time::now();
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
   co.primitive_poses[0].position.y = -0.4;  
   co.primitive_poses[0].position.z = 0.85;
   co.primitive_poses[0].orientation.w = 1.0;
-  pub_co.publish(co);
+  //  pub_co.publish(co);
 
 
   

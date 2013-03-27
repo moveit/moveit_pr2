@@ -152,22 +152,27 @@ public:
       return false;
     }
     
-    if (trajectory.joint_trajectory.points.size() != 1)
-    {
-      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point only, but %u provided)", (unsigned int)trajectory.joint_trajectory.points.size());
-      return false;
-    }
-
-    if (trajectory.joint_trajectory.points[0].positions.empty())
+    if (trajectory.joint_trajectory.points.back().positions.empty())
     {
       ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point that specifies at least one position, but 0 positions provided)");
       return false;
     }
-    
+
+    if (trajectory.joint_trajectory.points.size() > 1)
+      ROS_DEBUG("The PR2 gripper controller expects a joint trajectory with one point only, but %u provided. Using last point only.", (unsigned int)trajectory.joint_trajectory.points.size());
+
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
 
-    if (trajectory.joint_trajectory.points[0].positions[0] > 0.5)
+    bool open = false;
+    for (std::size_t i = 0 ; i < trajectory.joint_trajectory.points.back().positions.size() ; ++i)
+      if (trajectory.joint_trajectory.points.back().positions[i] > 0.5)
+      {
+	open = true;
+	break;
+      }
+
+    if (open)
     {
       goal.command.position = GRIPPER_OPEN;
       closing_ = false;
