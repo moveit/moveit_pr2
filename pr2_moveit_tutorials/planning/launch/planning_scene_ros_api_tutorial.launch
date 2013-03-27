@@ -1,0 +1,5 @@
+<launch>
+  <node name="planning_scene_tutorial" pkg="pr2_moveit_tutorials" type="planning_scene_ros_api_tutorial" respawn="false" output="screen">
+    <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
+  </node>
+</launch>

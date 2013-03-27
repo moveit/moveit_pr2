@@ -176,12 +176,15 @@ int main(int argc, char **argv)
   kinematic_constraints::ConstraintEvaluationResult constraint_eval_result = kinematic_constraint_set.decide(copied_state);
   ROS_INFO_STREAM("Test 9: Random state is " << (constraint_eval_result.satisfied ? "constrained" : "not constrained"));
 
-  /* Now, lets try a user-defined callback. This is done by specifying the callback using the setStateFeasibilityPredicate function to which you pass the desired callback. Now, whenever anyone calls isStateFeasible, the callback will be checked.*/
+  /* Now, lets try a user-defined callback. This is done by specifying the callback using the 
+     setStateFeasibilityPredicate function to which you pass the desired callback. 
+     Now, whenever anyone calls isStateFeasible, the callback will be checked.*/
   planning_scene.setStateFeasibilityPredicate(userCallback);  
   bool state_feasible = planning_scene.isStateFeasible(copied_state);  
   ROS_INFO_STREAM("Test 10: Random state is " << (state_feasible ? "feasible" : "not feasible"));
 
-  /* Whenever anyone calls isStateValid, three checks are conducted: (a) collision checking (b) constraint checking and (c) feasibility checking using the user-defined callback */
+  /* Whenever anyone calls isStateValid, three checks are conducted: (a) collision checking (b) constraint checking and 
+     (c) feasibility checking using the user-defined callback */
   bool state_valid = planning_scene.isStateValid(copied_state, kinematic_constraint_set, "right_arm");  
   ROS_INFO_STREAM("Test 10: Random state is " << (state_valid ? "valid" : "not valid"));
 
