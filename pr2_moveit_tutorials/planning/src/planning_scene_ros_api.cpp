@@ -36,17 +36,22 @@
 *********************************************************************/
 
 #include <ros/ros.h>
+#include <geometry_msgs/Pose.h>
 
 // MoveIt!
 #include <moveit_msgs/PlanningScene.h>
 #include <moveit_msgs/AttachedCollisionObject.h>
-#include <eigen_conversions/eigen_msg.h>
+#include <moveit_msgs/GetStateValidity.h>
+#include <moveit_msgs/DisplayRobotState.h>
 
-#include <geometry_msgs/Pose.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit/robot_state/conversions.h>
+
  
 int main(int argc, char **argv)
 {
-  ros::init (argc, argv, "attached_object");
+  ros::init (argc, argv, "planning_scene_ros_api_tutorial");
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
@@ -89,7 +94,7 @@ int main(int argc, char **argv)
 
   /* Publish and sleep (to view the visualized results)*/
   attached_object_publisher.publish(attached_object);  
-  ros::WallDuration sleep_time(3.0);
+  ros::WallDuration sleep_time(1.0);
   sleep_time.sleep();    
 
   /* DETACH THE OBJECT*/
@@ -118,7 +123,6 @@ int main(int argc, char **argv)
   ROS_INFO("Removing the object");  
   collision_object_publisher.publish(remove_object);  
   sleep_time.sleep();    
-
   
   /* USE THE PLANNING SCENE MESSAGE FOR THE SAME SET OF OPERATIONS*/
   /* Advertise the planning scene message publisher*/
