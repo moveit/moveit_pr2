@@ -132,7 +132,7 @@ private:
   IMarker *imarker_world_;
 
   /* robot info */
-  robot_model_loader::RDFLoader rdf_loader_;
+  robot_model_loader::RobotModelLoader rm_loader_;
   robot_model::RobotModelPtr robot_model_;
   robot_state::RobotStatePtr robot_state_;
 

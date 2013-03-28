@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
 
   /* Filling in a seed state */
-  robot_model_loader::RDFLoader robot_model_loader("robot_description"); 
+  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); 
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
   robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
