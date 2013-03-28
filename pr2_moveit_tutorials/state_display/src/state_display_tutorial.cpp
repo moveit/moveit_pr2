@@ -64,7 +64,7 @@ int main(int argc, char **argv)
   spinner.start();
   
   /* Load the robot model */
-  robot_model_loader::RDFLoader robot_model_loader("robot_description"); 
+  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); 
 
   /* Get a shared pointer to the model */
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();

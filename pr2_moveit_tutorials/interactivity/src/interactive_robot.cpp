@@ -69,13 +69,13 @@ InteractiveRobot::InteractiveRobot(
   imarker_robot_(0),
   imarker_world_(0),
   // load the robot description
-  rdf_loader_(robot_description),
+  rm_loader_(robot_description),
   group_(0),
   user_data_(0),
   user_callback_(0)
 {
   // get the RobotModel loaded from urdf and srdf files
-  robot_model_ = rdf_loader_.getModel();
+  robot_model_ = rm_loader_.getModel();
   if (!robot_model_) {
     ROS_ERROR("Could not load robot description");
     throw RobotLoadException();
