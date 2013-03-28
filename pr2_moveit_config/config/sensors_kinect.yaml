@@ -1,13 +1,13 @@
 sensors:
-  - sensor_type: ~depth_image_sensor
+  - sensor_type: depth_image_sensor
     image_topic: /head_mount_kinect/depth_registered/image_raw
     queue_size: 5
     near_clipping_plane_distance: 0.3
     far_clipping_plane_distance: 5.0
-    shadow_threshold: 0.5
-    padding_scale: 2.0
-    padding_offset: 0.01
-  - sensor_type: point_cloud_sensor
+    shadow_threshold: 0.8
+    padding_scale: 4.0
+    padding_offset: 0.03
+  - sensor_type: ~point_cloud_sensor
     point_cloud_topic: /head_mount_kinect/depth_registered/points
     max_range: 5.0
     frame_subsample: 1
