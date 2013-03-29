@@ -29,8 +29,8 @@
         <group name="right_arm" />
     </group>
     <group name="head">
-      <joint name="head_pan_joint"/>
-      <joint name="head_tilt_joint"/>
+        <joint name="head_pan_joint" />
+        <joint name="head_tilt_joint" />
     </group>
     <group name="torso">
         <joint name="torso_lift_joint" />
@@ -66,32 +66,31 @@
         <link name="l_gripper_r_finger_tip_link" />
         <link name="l_gripper_l_finger_tip_frame" />
     </group>
-
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="tuck_right_arm" group="right_arm">
-      <joint name="r_shoulder_pan_joint" value="-0.023593" />
-      <joint name="r_shoulder_lift_joint" value="1.107280" />
-      <joint name="r_upper_arm_roll_joint" value="-1.5566882" />
-      <joint name="r_elbow_flex_joint" value="-2.124408" />
-      <joint name="r_forearm_roll_joint" value="-1.4175" />
-      <joint name="r_wrist_flex_joint" value="-1.8417" />
-      <joint name="r_wrist_roll_joint" value="0.21436" />
-   </group_state>
-
-   <group_state name="tuck_left_arm" group="left_arm">
-      <joint name="l_shoulder_pan_joint" value="0.06024" />
-      <joint name="l_shoulder_lift_joint" value="1.248526" />
-      <joint name="l_upper_arm_roll_joint" value="1.789070" />
-      <joint name="l_elbow_flex_joint" value="-1.683386" />
-      <joint name="l_forearm_roll_joint" value="-1.7343417" />
-      <joint name="l_wrist_flex_joint" value="-0.0962141" />
-      <joint name="l_wrist_roll_joint" value="-0.0864407" />
-   </group_state>
-
+        <joint name="r_elbow_flex_joint" value="-2.12441" />
+        <joint name="r_forearm_roll_joint" value="-1.4175" />
+        <joint name="r_shoulder_lift_joint" value="1.10728" />
+        <joint name="r_shoulder_pan_joint" value="-0.023593" />
+        <joint name="r_upper_arm_roll_joint" value="-1.55669" />
+        <joint name="r_wrist_flex_joint" value="-1.8417" />
+        <joint name="r_wrist_roll_joint" value="0.21436" />
+    </group_state>
+    <group_state name="tuck_left_arm" group="left_arm">
+        <joint name="l_elbow_flex_joint" value="-1.68339" />
+        <joint name="l_forearm_roll_joint" value="-1.73434" />
+        <joint name="l_shoulder_lift_joint" value="1.24853" />
+        <joint name="l_shoulder_pan_joint" value="0.06024" />
+        <joint name="l_upper_arm_roll_joint" value="1.78907" />
+        <joint name="l_wrist_flex_joint" value="-0.0962141" />
+        <joint name="l_wrist_roll_joint" value="-0.0864407" />
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="right_eef" parent_link="r_wrist_roll_link" group="right_gripper" />
     <end_effector name="left_eef" parent_link="l_wrist_roll_link" group="left_gripper" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="world_joint" type="planar" parent_frame="odom_combined" child_link="base_footprint" />
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="world_joint" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_bellow_link" link2="base_footprint" reason="Never" />
