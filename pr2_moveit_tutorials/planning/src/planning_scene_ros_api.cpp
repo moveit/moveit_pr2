@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 
   /* Publish and sleep (to view the visualized results)*/
   attached_object_publisher.publish(attached_object);  
-  ros::WallDuration sleep_time(1.0);
+  ros::WallDuration sleep_time(10.0);
   sleep_time.sleep();    
 
   /* DETACH THE OBJECT*/
@@ -105,6 +105,7 @@ int main(int argc, char **argv)
   detach_object.object.operation = attached_object.object.REMOVE;
   ROS_INFO("Detaching the object");  
   attached_object_publisher.publish(detach_object);  
+  sleep_time.sleep();    
 
 
   /* REMOVE OBJECT FROM COLLISION WORLD*/
