@@ -40,6 +40,7 @@
 
 // MoveIt!
 #include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/planning_pipeline/planning_pipeline.h>
 #include <moveit/planning_interface/planning_interface.h>
 #include <moveit/kinematic_constraints/utils.h>
 #include <moveit_msgs/DisplayTrajectory.h>
@@ -64,40 +65,8 @@ int main(int argc, char **argv)
      to construct it for you.*/
   planning_scene::PlanningScenePtr planning_scene(new planning_scene::PlanningScene(robot_model));
 
-  /* SETUP THE PLANNER*/
-  boost::scoped_ptr<pluginlib::ClassLoader<planning_interface::Planner> > planner_plugin_loader;
-  planning_interface::PlannerPtr planner_instance;
-  std::string planner_plugin_name;
-
-  /* Get the name of the planner we want to use */
-  if (!node_handle.getParam("planning_plugin", planner_plugin_name))
-    ROS_FATAL_STREAM("Could not find planner plugin name");  
-
-  /* Make sure to catch all exceptions */
-  try
-  {
-    planner_plugin_loader.reset(new pluginlib::ClassLoader<planning_interface::Planner>("moveit_core", "planning_interface::Planner"));
-  }
-  catch(pluginlib::PluginlibException& ex)
-  {
-    ROS_FATAL_STREAM("Exception while creating planning plugin loader " << ex.what());
-  }
-  try
-  {
-    planner_instance.reset(planner_plugin_loader->createUnmanagedInstance(planner_plugin_name));
-    if (!planner_instance->initialize(robot_model))
-      ROS_FATAL_STREAM("Could not initialize planner instance");    
-    ROS_INFO_STREAM("Using planning interface '" << planner_instance->getDescription() << "'");
-  }
-  catch(pluginlib::PluginlibException& ex)
-  {
-    const std::vector<std::string> &classes = planner_plugin_loader->getDeclaredClasses();
-    std::stringstream ss;
-    for (std::size_t i = 0 ; i < classes.size() ; ++i)
-      ss << classes[i] << " ";
-    ROS_ERROR_STREAM("Exception while loading planner '" << planner_plugin_name << "': " << ex.what() << std::endl
-                     << "Available plugins: " << ss.str());
-  }
+  /* SETUP THE PLANNING PIPELINE*/  
+  planning_pipeline::PlanningPipelinePtr planning_pipeline(new planning_pipeline::PlanningPipeline(robot_model, "planning_plugin", "request_adapters"));  
 
   /* Sleep a little to allow time to startup rviz, etc. */
   ros::WallDuration sleep_time(8.0);
@@ -125,8 +94,8 @@ int main(int argc, char **argv)
   moveit_msgs::Constraints pose_goal = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose, tolerance_pose, tolerance_angle);  
   req.goal_constraints.push_back(pose_goal);     
 
-  /* CALL THE PLANNER */
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  /* Call the pipeline */
+  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -171,8 +140,8 @@ int main(int argc, char **argv)
   req.goal_constraints.clear();
   req.goal_constraints.push_back(joint_goal);
   
-  /* Call the Planner */
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  /* Call the pipeline */
+  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -190,44 +159,41 @@ int main(int argc, char **argv)
   //Now you should see two planned trajectories in series
   display_publisher.publish(display_trajectory);
 
-  /* Now, let's try to go back to the first goal*/
+  sleep_time.sleep();
+
+
+  /* PRE-PROCESSING THE MOTION PLAN REQUEST */
+  /* Let's purposefully set the initial state to be outside the joint limits and let the 
+     planning request adapter deal with it */
   /* First, set the state in the planning scene to the final state of the last plan */
+  robot_state = planning_scene->getCurrentStateNonConst();
+  planning_scene->setCurrentState(response.trajectory_start);
+  joint_state_group = robot_state.getJointStateGroup("right_arm");  
   joint_state_group->setVariableValues(response.trajectory.joint_trajectory.points.back().positions);  
 
-  /* Now, we go back to the first goal*/
+  //Now, set one of the joints slightly outside its upper limit
+  robot_state::JointState* joint_state = joint_state_group->getJointState("r_shoulder_pan_joint");
+  const std::vector<std::pair<double, double> >& joint_bounds = joint_state->getVariableBounds();
+  std::vector<double> tmp_values(1, 0.0);
+  tmp_values[0] = joint_bounds[0].first - 0.01;
+  joint_state->setVariableValues(tmp_values);  
+  
   req.goal_constraints.clear();
   req.goal_constraints.push_back(pose_goal);
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  if(res.error_code_.val != res.error_code_.SUCCESS)
+  {
+    ROS_ERROR("Could not compute plan successfully");
+    return 0;
+  }  
+  /* Visualize the trajectory */
+  ROS_INFO("Visualizing the trajectory");  
   res.getMessage(response);  
+  display_trajectory.trajectory_start = response.trajectory_start;
   display_trajectory.trajectory.push_back(response.trajectory);  
+  //Now you should see three planned trajectories in series
   display_publisher.publish(display_trajectory);
-  
-  /* Let's create a new pose goal */
-  pose.pose.position.x = 0.65;
-  pose.pose.position.y = -0.2;
-  pose.pose.position.z = -0.1;  
-  moveit_msgs::Constraints pose_goal_2 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose, tolerance_pose, tolerance_angle);  
-
-  /* First, set the state in the planning scene to the final state of the last plan */
-  joint_state_group->setVariableValues(response.trajectory.joint_trajectory.points.back().positions);  
-
-  /* Now, let's try to move to this new pose goal*/
-  req.goal_constraints.clear();
-  req.goal_constraints.push_back(pose_goal_2);
-
-  /* But, let's impose a path constraint on the motion. 
-     Here, we are asking for the end-effector to stay level*/
-  geometry_msgs::QuaternionStamped quaternion;
-  quaternion.header.frame_id = "torso_lift_link";
-  quaternion.quaternion.w = 1.0;
-  
-  //  req.path_constraints = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", quaternion);
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
-  res.getMessage(response);  
-  display_trajectory.trajectory.push_back(response.trajectory);  
-  //Now you should see four planned trajectories in series
-  display_publisher.publish(display_trajectory);
-
+ 
   sleep_time.sleep();
   ROS_INFO("Done");  
   return 0;  
