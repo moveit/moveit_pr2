@@ -126,7 +126,7 @@ int main(int argc, char **argv)
   req.goal_constraints.push_back(pose_goal);     
 
   /* CALL THE PLANNER */
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planner_instance->solve(planning_scene, req, res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
   req.goal_constraints.push_back(joint_goal);
   
   /* Call the Planner */
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planner_instance->solve(planning_scene, req, res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -197,7 +197,7 @@ int main(int argc, char **argv)
   /* Now, we go back to the first goal*/
   req.goal_constraints.clear();
   req.goal_constraints.push_back(pose_goal);
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planner_instance->solve(planning_scene, req, res);
   res.getMessage(response);  
   display_trajectory.trajectory.push_back(response.trajectory);  
   display_publisher.publish(display_trajectory);
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
   quaternion.quaternion.w = 1.0;
   
   //  req.path_constraints = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", quaternion);
-  planner_instance->solve((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planner_instance->solve(planning_scene, req, res);
   res.getMessage(response);  
   display_trajectory.trajectory.push_back(response.trajectory);  
   //Now you should see four planned trajectories in series
