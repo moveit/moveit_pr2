@@ -222,6 +222,18 @@ int main(int argc, char **argv)
   quaternion.quaternion.w = 1.0;
   
   req.path_constraints = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", quaternion);
+
+  // imposing path constraints requires the planner to reason in the space of possible positions of the end-effector
+  // (the workspace of the robot)
+  // because of this, we need to specify a bound for the allowed planning volume as well;
+  // Note: a default bound is automatically filled by the WorkspaceBounds request adapter (part of the OMPL pipeline,
+  // but that is not being used in this example).
+  // We use a bound that definitely includes the reachable space for the arm. This is fine because sampling is not done in this volume 
+  // when planning for the arm; the bounds are only used to determine if the sampled configurations are valid.
+  req.workspace_parameters.min_corner.x = req.workspace_parameters.min_corner.y = req.workspace_parameters.min_corner.z = -2.0;
+  req.workspace_parameters.max_corner.x = req.workspace_parameters.max_corner.y = req.workspace_parameters.max_corner.z =  2.0;
+  
+
   planner_instance->solve(planning_scene, req, res);
   res.getMessage(response);  
   display_trajectory.trajectory.push_back(response.trajectory);  
