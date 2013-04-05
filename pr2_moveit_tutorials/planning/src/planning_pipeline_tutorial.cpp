@@ -95,7 +95,8 @@ int main(int argc, char **argv)
   req.goal_constraints.push_back(pose_goal);     
 
   /* Call the pipeline */
-  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  //  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planning_pipeline->generatePlan(planning_scene, req, res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -141,7 +142,7 @@ int main(int argc, char **argv)
   req.goal_constraints.push_back(joint_goal);
   
   /* Call the pipeline */
-  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planning_pipeline->generatePlan(planning_scene, req, res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -180,7 +181,7 @@ int main(int argc, char **argv)
   
   req.goal_constraints.clear();
   req.goal_constraints.push_back(pose_goal);
-  planning_pipeline->generatePlan((planning_scene::PlanningSceneConstPtr) planning_scene, req, res);
+  planning_pipeline->generatePlan(planning_scene, req, res);
   if(res.error_code_.val != res.error_code_.SUCCESS)
   {
     ROS_ERROR("Could not compute plan successfully");
