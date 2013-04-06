@@ -1,5 +1,5 @@
 sensors:
-  - sensor_type: occupancy_map_monitor/PointCloudOctomapUpdater
+  - sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
     point_cloud_topic: /head_mount_kinect/depth_registered/points
     max_range: 5.0
     frame_subsample: 1
