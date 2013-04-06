@@ -4,7 +4,7 @@
   <arg unless="$(arg debug)" name="launch_prefix" value="" />
   <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-  <include ns="ompl_planning" file="$(find pr2_moveit_config)/launch/ompl_planning_pipeline.launch" />  
-  <node name="ompl_planning"  launch-prefix="$(arg launch_prefix)" pkg="ompl_interface_ros" type="ompl_planner" respawn="false" output="screen" args="--debug" />
+  <include ns="ompl_planning" file="$(find pr2_moveit_config)/launch/ompl_planning_pipeline.launch" />
+  <node name="ompl_planning"  launch-prefix="$(arg launch_prefix)" pkg="moveit_ompl_planners" type="moveit_ompl_planner" respawn="false" output="screen" args="--debug" />
   
 </launch>
