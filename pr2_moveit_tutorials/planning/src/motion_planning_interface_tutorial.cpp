@@ -85,7 +85,7 @@ int main(int argc, char **argv)
   try
   {
     planner_instance.reset(planner_plugin_loader->createUnmanagedInstance(planner_plugin_name));
-    if (!planner_instance->initialize(robot_model))
+    if (!planner_instance->initialize(robot_model, node_handle.getNamespace()))
       ROS_FATAL_STREAM("Could not initialize planner instance");    
     ROS_INFO_STREAM("Using planning interface '" << planner_instance->getDescription() << "'");
   }
