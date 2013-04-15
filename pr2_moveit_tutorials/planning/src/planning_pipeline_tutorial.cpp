@@ -66,7 +66,7 @@ int main(int argc, char **argv)
   planning_scene::PlanningScenePtr planning_scene(new planning_scene::PlanningScene(robot_model));
 
   /* SETUP THE PLANNING PIPELINE*/  
-  planning_pipeline::PlanningPipelinePtr planning_pipeline(new planning_pipeline::PlanningPipeline(robot_model, "planning_plugin", "request_adapters"));  
+  planning_pipeline::PlanningPipelinePtr planning_pipeline(new planning_pipeline::PlanningPipeline(robot_model, node_handle, "planning_plugin", "request_adapters"));  
 
   /* Sleep a little to allow time to startup rviz, etc. */
   ros::WallDuration sleep_time(8.0);

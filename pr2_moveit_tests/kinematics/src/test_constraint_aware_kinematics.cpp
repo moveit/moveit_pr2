@@ -58,7 +58,7 @@ TEST(ConstraintAwareKinematics, getIK)
 
   ROS_INFO("Initializing IK solver");      
   planning_scene::PlanningScenePtr planning_scene;  
-  robot_model_loader::RDFLoader robot_model_loader("robot_description"); /** Used to load the robot model */  
+  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); /** Used to load the robot model */  
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   
   const boost::shared_ptr<srdf::Model> &srdf = robot_model_loader.getSRDF();
