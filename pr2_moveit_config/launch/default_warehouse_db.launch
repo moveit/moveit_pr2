@@ -1,0 +1,8 @@
+<launch>
+
+  <!-- Load warehouse parameters -->  
+  <include file="$(find pr2_moveit_config)/launch/warehouse.launch">
+    <arg name="moveit_warehouse_database_path" value="$(find pr2_moveit_config)/default_warehouse_mongo_db" />
+  </include>
+
+</launch>
