@@ -21,4 +21,6 @@
     <arg name="config" value="true"/>
   </include>
 
+  <include file="$(find pr2_moveit_config)/launch/default_warehouse_db.launch" />
+
 </launch>
