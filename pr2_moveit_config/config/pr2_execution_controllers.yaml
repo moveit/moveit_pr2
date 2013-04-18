@@ -49,3 +49,9 @@ controller_list:
       - l_gripper_r_finger_tip_joint
       - l_gripper_motor_screw_joint
       - l_gripper_motor_slider_joint
+  - name: head_traj_controller
+    ns: follow_joint_trajectory
+    default: true
+    joints:
+      - head_tilt_joint
+      - head_pan_joint
