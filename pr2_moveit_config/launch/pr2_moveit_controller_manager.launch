@@ -12,8 +12,8 @@
   <param name="controller_manager_name" value="$(arg controller_manager_name)" />
 
   <!-- Flag indicating whether the controller manager should be used or not -->
-  <arg name="use_controller_manager" default="false" />
-  <param name="use_controller_manager" value="$(arg use_controller_manager)" />
+  <arg name="use_pr2_controller_manager" default="false" />
+  <param name="use_pr2_controller_manager" value="$(arg use_pr2_controller_manager)" />
   
   <!-- load controller_list and controller_manager_ns -->
   <rosparam file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
