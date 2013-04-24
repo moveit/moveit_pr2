@@ -51,5 +51,7 @@
     <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)" />
     <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
   </node>
+
+      <rosparam command="load" file="$(find pr2_moveit_config)/config/grasping.yaml"/>
   
 </launch>
