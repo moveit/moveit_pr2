@@ -1,5 +1,10 @@
 <launch>
 
+  <!-- Standard Debug Arguments -->
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
   <!-- This argument must specify the list of .cfg files to process for benchmarking -->
   <arg name="cfg" />
 
@@ -14,7 +19,8 @@
   </include-->  
 
   <!-- Start Benchmark Executable -->
-  <node name="$(anon moveit_benchmark)" pkg="moveit_ros_benchmarks" type="moveit_run_benchmark" args="$(arg cfg) --benchmark-planners" respawn="false" output="screen">
+  <node name="$(anon moveit_benchmark)" pkg="moveit_ros_benchmarks" type="moveit_run_benchmark" launch-prefix="$(arg launch_prefix)" 
+	args="$(arg cfg) --benchmark-planners" respawn="false" output="screen">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
     <rosparam command="load" file="$(find pr2_moveit_config)/config/ompl_planning.yaml"/>
   </node>
