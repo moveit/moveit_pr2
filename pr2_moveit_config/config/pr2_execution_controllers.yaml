@@ -1,7 +1,6 @@
-controller_manager_ns: pr2_controller_manager
 controller_list:
   - name: r_arm_controller
-    ns: follow_joint_trajectory
+    action_ns: follow_joint_trajectory
     default: true
     joints:
       - r_shoulder_pan_joint
@@ -12,7 +11,7 @@ controller_list:
       - r_wrist_flex_joint
       - r_wrist_roll_joint
   - name: l_arm_controller
-    ns: follow_joint_trajectory
+    action_ns: follow_joint_trajectory
     default: true
     joints:
       - l_shoulder_pan_joint
@@ -23,12 +22,12 @@ controller_list:
       - l_wrist_flex_joint
       - l_wrist_roll_joint
   - name: torso_controller
-    ns: follow_joint_trajectory
+    action_ns: follow_joint_trajectory
     default: true
     joints:
       - torso_lift_joint
   - name: r_gripper_controller
-    ns: gripper_action
+    action_ns: gripper_action
     default: true
     joints:
       - r_gripper_joint
@@ -39,7 +38,7 @@ controller_list:
       - r_gripper_motor_screw_joint
       - r_gripper_motor_slider_joint
   - name: l_gripper_controller
-    ns: gripper_action
+    action_ns: gripper_action
     default: true
     joints:
       - l_gripper_joint
@@ -49,3 +48,9 @@ controller_list:
       - l_gripper_r_finger_tip_joint
       - l_gripper_motor_screw_joint
       - l_gripper_motor_slider_joint
+  - name: head_traj_controller
+    action_ns: follow_joint_trajectory
+    default: true
+    joints:
+      - head_tilt_joint
+      - head_pan_joint

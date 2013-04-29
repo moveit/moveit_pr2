@@ -1,6 +1,6 @@
-r_end_effector:
+right_eef:
   database_id: WILLOW_GRIPPER_2010
-  approach_direction: [-1.0,0.0,0.0]
-l_end_effector:
+  approach_direction: [1.0,0.0,0.0]
+left_eef:
   database_id: WILLOW_GRIPPER_2010
-  approach_direction: [-1.0,0.0,0.0]
+  approach_direction: [1.0,0.0,0.0]

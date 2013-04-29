@@ -13,6 +13,7 @@
   <arg name="allow_trajectory_execution" default="true"/>
   <arg name="max_safe_path_cost" default="1"/>
   <arg name="publish_monitored_planning_scene" default="true"/>
+  <arg name="moveit_octomap_sensor_params_file" default="$(find pr2_moveit_config)/config/sensors_kinect.yaml" />
 
   <include ns="move_group" file="$(find pr2_moveit_config)/launch/planning_pipeline.launch">
     <arg name="pipeline" value="ompl" />
@@ -25,6 +26,7 @@
 
   <include ns="move_group" file="$(find pr2_moveit_config)/launch/sensor_manager.launch" if="$(arg allow_trajectory_execution)">
     <arg name="moveit_sensor_manager" value="pr2" /> 
+    <arg name="moveit_octomap_sensor_params_file" value="$(arg moveit_octomap_sensor_params_file)"/>
   </include>
 
   <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" args="$(arg command_args)">
@@ -43,7 +45,7 @@
 				      move_group/MoveGroupPlanService
 				      move_group/MoveGroupQueryPlannersService
 				      move_group/MoveGroupStateValidationService
-				      move_group/GetPlanningSceneService
+				      move_group/MoveGroupGetPlanningSceneService
 				      " />
 
     <!-- Publish the planning scene of the physical robot so that rviz plugin can know actual robot -->
@@ -52,5 +54,7 @@
     <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)" />
     <param name="planning_scene_monitor/publish_transforms_updates" value="$(arg publish_monitored_planning_scene)" />
   </node>
+
+      <rosparam command="load" file="$(find pr2_moveit_config)/config/grasping.yaml"/>
   
 </launch>

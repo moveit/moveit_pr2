@@ -275,8 +275,14 @@ public:
   
   Pr2MoveItControllerManager() : node_handle_("~")
   { 
-    node_handle_.param("controller_manager_name", controller_manager_name_, std::string("pr2_controller_manager"));
-    node_handle_.param("use_controller_manager", use_controller_manager_, true);
+    if (node_handle_.hasParam("controller_manager_name"))
+      node_handle_.getParam("controller_manager_name", controller_manager_name_);
+    if (controller_manager_name_.empty())
+      node_handle_.param("pr2_controller_manager_name", controller_manager_name_, std::string("pr2_controller_manager"));
+    if (node_handle_.hasParam("use_controller_manager")) // 'use_controller_manager' is the old name
+      node_handle_.param("use_controller_manager", use_controller_manager_, true);
+    else
+      node_handle_.param("use_pr2_controller_manager", use_controller_manager_, true);
 
     XmlRpc::XmlRpcValue controller_list;
     if (node_handle_.hasParam("controller_list"))
@@ -314,8 +320,11 @@ public:
                 {
                 }
               }
+	      // 'ns' is the old name; use action_ns instead
               if (controller_list[i].hasMember("ns"))
                 ci.ns_ = std::string(controller_list[i]["ns"]);
+              if (controller_list[i].hasMember("action_ns"))
+                ci.ns_ = std::string(controller_list[i]["action_ns"]);
               if (controller_list[i]["joints"].getType() == XmlRpc::XmlRpcValue::TypeArray)
               {
                 int nj = controller_list[i]["joints"].size();
