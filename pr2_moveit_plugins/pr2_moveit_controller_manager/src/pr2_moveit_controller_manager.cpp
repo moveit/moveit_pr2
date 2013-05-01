@@ -164,13 +164,23 @@ public:
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
 
-    bool open = false;
-    for (std::size_t i = 0 ; i < trajectory.joint_trajectory.points.back().positions.size() ; ++i)
+       ROS_INFO(" ");
+    ROS_INFO("Gripper controller");
+    for(std::size_t i=0; i < trajectory.joint_trajectory.points.back().positions.size(); ++i)
+      {
+	ROS_INFO("%s :: %f", trajectory.joint_trajectory.joint_names[i].c_str(), trajectory.joint_trajectory.points.back().positions[i]);
+      }
+   
+    double gap_opening = (trajectory.joint_trajectory.points.back().positions.size() >= 2) ? trajectory.joint_trajectory.points.back().positions[1]/0.5*0.0857 : trajectory.joint_trajectory.points.back().positions[0]/0.5*0.0857;
+    ROS_INFO("Gap opening: %f", gap_opening);
+   
+    /* bool open = false;
+      for (std::size_t i = 0 ; i < trajectory.joint_trajectory.points.back().positions.size() ; ++i)
       if (trajectory.joint_trajectory.points.back().positions[i] > 0.5)
       {
 	open = true;
 	break;
-      }
+	}
 
     if (open)
     {
@@ -184,6 +194,22 @@ public:
       closing_ = true;
       ROS_DEBUG_STREAM("Sending gripper close command");
     }
+*/
+
+    if(gap_opening > GRIPPER_OPEN)
+    {
+      gap_opening = GRIPPER_OPEN;
+      closing_ = false;
+    }
+    if(gap_opening <=0)
+    {
+      gap_opening = 0.0;
+      closing_ = true;
+    }
+    else
+      closing_ = false;
+
+    goal.command.position = gap_opening;
 
     controller_action_client_->sendGoal(goal,
 					boost::bind(&Pr2GripperControllerHandle::controllerDoneCallback, this, _1, _2),
