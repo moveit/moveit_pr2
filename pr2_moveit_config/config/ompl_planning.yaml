@@ -2,6 +2,7 @@
 ## the planner to be used; other parameters can be specified as well, depending 
 ## on the planner
 
+constraint_approximations_path: /home/isucan/constraints_approximation_database
 
 right_arm:
   planner_configs:
@@ -14,7 +15,7 @@ right_arm:
     - KPIECEkConfigDefault
     - BKPIECEkConfigDefault
     - RRTStarkConfigDefault
-  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
+  projection_evaluator: link(r_wrist_roll_link)
   longest_valid_segment_fraction: 0.05
 
 right_arm_and_torso:
@@ -77,27 +78,34 @@ planner_configs:
 
   SBLkConfigDefault:
     type: geometric::SBL
+    range: 100000000
 
   LBKPIECEkConfigDefault:
     type: geometric::LBKPIECE
+    range: 100000000
 
   RRTkConfigDefault:
     type: geometric::RRT
+    range: 100000000
 
   RRTConnectkConfigDefault:
     type: geometric::RRTConnect
+    range: 100000000
 
   LazyRRTkConfigDefault:
     type: geometric::LazyRRT
 
   ESTkConfigDefault:
     type: geometric::EST
+    range: 100000000
 
   KPIECEkConfigDefault:
     type: geometric::KPIECE
+    range: 100000000
 
   RRTStarkConfigDefault:
     type: geometric::RRTstar
 
   BKPIECEkConfigDefault:
     type: geometric::BKPIECE
+    range: 100000000
