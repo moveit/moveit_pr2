@@ -1,0 +1,15 @@
+## the planner configurations; each config must have a type, which specifies
+## the planner to be used; other parameters can be specified as well, depending 
+## on the planner
+
+
+right_arm:
+  planner_configs:
+    - RRTkConfigDefault
+  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
+  longest_valid_segment_fraction: 0.05
+
+planner_configs:
+
+  RRTkConfigDefault:
+    type: geometric::RRT
