@@ -89,7 +89,7 @@ void place(moveit::planning_interface::MoveGroup &group)
   
   geometry_msgs::PoseStamped p; 
   p.header.frame_id = "base_footprint";
-  p.pose.position.x = 0.42;
+  p.pose.position.x = 0.7;
   p.pose.position.y = 0.0;
   p.pose.position.z = 0.5;
   p.pose.orientation.x = 0;
