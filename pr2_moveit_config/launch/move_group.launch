@@ -24,7 +24,7 @@
     <arg name="moveit_manage_controllers" value="true" />
   </include>
 
-  <include ns="move_group" file="$(find pr2_moveit_config)/launch/sensor_manager.launch" if="$(arg allow_trajectory_execution)">
+  <include ns="move_group" file="$(find pr2_moveit_config)/launch/sensor_manager.launch" >
     <arg name="moveit_sensor_manager" value="pr2" /> 
     <arg name="moveit_octomap_sensor_params_file" value="$(arg moveit_octomap_sensor_params_file)"/>
   </include>

@@ -335,7 +335,7 @@ Visualization Manager:
         Show Robot Collision: false
         Show Robot Visual: true
         Show Trail: false
-        State Display Time: 0.05 s
+        State Display Time: REALTIME
         Trajectory Topic: /move_group/display_planned_path
       Planning Metrics:
         Payload: 1
@@ -949,7 +949,7 @@ Visualization Manager:
       Marker Topic: /move_group/ompl_planner_data_marker_array
       Name: MarkerArray
       Namespaces:
-        planner_data: true
+        {}
       Queue Size: 100
       Value: true
   Enabled: true
@@ -992,5 +992,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1503
-  X: 365
+  X: 358
   Y: 32
