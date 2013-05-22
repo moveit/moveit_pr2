@@ -172,7 +172,7 @@ int main(int argc, char **argv)
   co.primitive_poses[0].position.y = -0.4;  
   co.primitive_poses[0].position.z = 0.85;
   co.primitive_poses[0].orientation.w = 1.0;
-  //  pub_co.publish(co);
+  pub_co.publish(co);
 
 
   
