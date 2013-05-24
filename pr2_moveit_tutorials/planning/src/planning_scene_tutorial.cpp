@@ -166,8 +166,8 @@ int main(int argc, char **argv)
   /* There's a more efficient way of checking constraints (when you want to check the same constraint over 
      and over again, e.g. inside a planner). We first construct a KinematicConstraintSet which pre-processes 
      the ROS Constraints messages and sets it up for quick processing. */
-  kinematic_constraints::KinematicConstraintSet kinematic_constraint_set(kinematic_model, planning_scene.getTransforms());
-  kinematic_constraint_set.add(goal_constraint);
+  kinematic_constraints::KinematicConstraintSet kinematic_constraint_set(kinematic_model);
+  kinematic_constraint_set.add(goal_constraint, planning_scene.getTransforms());
   
   bool state_constrained_2 = planning_scene.isStateConstrained(copied_state, kinematic_constraint_set);
   ROS_INFO_STREAM("Test 8: Random state is " << (state_constrained_2 ? "constrained" : "not constrained"));
