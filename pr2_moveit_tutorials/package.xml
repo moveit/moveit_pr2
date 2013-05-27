@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>pr2_moveit_tutorials</name>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   <description>The pr2_moveit_tutorials package</description>
 
   <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
