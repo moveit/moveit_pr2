@@ -43,7 +43,6 @@
 #include <pr2_mechanism_msgs/ListControllers.h>
 #include <pr2_mechanism_msgs/SwitchController.h>
 #include <pr2_mechanism_msgs/LoadController.h>
-#include <pr2_mechanism_msgs/UnloadController.h>
 #include <pr2_controllers_msgs/Pr2GripperCommandAction.h>
 #include <algorithm>
 #include <map>
@@ -52,7 +51,7 @@ namespace pr2_moveit_controller_manager
 {
 
 static const double DEFAULT_MAX_GRIPPER_EFFORT = 10000.0;
-static const double GRIPPER_OPEN = 0.0857;
+static const double GRIPPER_OPEN = 0.086;
 static const double GRIPPER_CLOSED = 0.0;
 
 template<typename T>
@@ -164,26 +163,26 @@ public:
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
 
-    // Sachin_please_fix_this_and_add_a_comment;
-    // we cannot count on order of joint names; We can however designate a specific joint to have some meaning;
-    // why do we divide by 0.5 instead of multiplying 2.0?
-    // we should use named constants
-    
-    double gap_opening = (trajectory.joint_trajectory.points.back().positions.size() >= 2) ? trajectory.joint_trajectory.points.back().positions[1]/0.5*0.0857 : trajectory.joint_trajectory.points.back().positions[0]/0.5*0.0857;
-    
-    
-    closing_ = false;
-    if (gap_opening > GRIPPER_OPEN)
-      gap_opening = GRIPPER_OPEN;
-    else
-      if (gap_opening <= 0.0)
+    bool open = false;
+    for (std::size_t i = 0 ; i < trajectory.joint_trajectory.points.back().positions.size() ; ++i)
+      if (trajectory.joint_trajectory.points.back().positions[i] > 0.5)
       {
-        gap_opening = 0.0;
-        closing_ = true;
+	open = true;
+	break;
       }
-    
-    goal.command.position = gap_opening;
-    ROS_DEBUG_STREAM("Sending gripper position " << gap_opening);
+
+    if (open)
+    {
+      goal.command.position = GRIPPER_OPEN;
+      closing_ = false;
+      ROS_DEBUG_STREAM("Sending gripper open command");
+    }
+    else
+    {
+      goal.command.position = GRIPPER_CLOSED;
+      closing_ = true;
+      ROS_DEBUG_STREAM("Sending gripper close command");
+    }
 
     controller_action_client_->sendGoal(goal,
 					boost::bind(&Pr2GripperControllerHandle::controllerDoneCallback, this, _1, _2),
@@ -364,17 +363,12 @@ public:
       if (attempts < max_attempts)
         while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/load_controller", ros::Duration(5.0))  && ++attempts < max_attempts)
           ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/load_controller" << " to come up");
-      
-      if (attempts < max_attempts)
-        while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/unload_controller", ros::Duration(5.0))  && ++attempts < max_attempts)
-          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/unload_controller" << " to come up");
-      
+            
       if (attempts < max_attempts)
       {
         lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_name_ + "/list_controllers", true);
         switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_name_ + "/switch_controller", true);
         loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_name_ + "/load_controller", true);
-        unloader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::UnloadController>(controller_manager_name_ + "/unload_controller", true);
       }
       else
         ROS_ERROR("Not using the PR2 controller manager");
@@ -433,22 +427,7 @@ public:
       for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
         names.push_back(it->first);
   }
-  
-  virtual void getLoadedControllers(std::vector<std::string> &names)
-  {
-    if (use_controller_manager_)
-    {
-      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
-      names = res.controllers;
-    }
-    else
-    {
-      names.clear();
-      for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
-        names.push_back(it->first);
-    }
-  }
-  
+   
   virtual void getControllerJoints(const std::string &name, std::vector<std::string> &joints)
   {
     std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.find(name);
@@ -474,13 +453,10 @@ public:
             joints.push_back(joint_name);
         }
       if (joints.empty())
-        ROS_DEBUG("The joints for controller '%s' are not known and were not found on the ROS param server under '%s/joints'or '%s/joint'. "
+        ROS_INFO("The joints for controller '%s' are not known and were not found on the ROS param server under '%s/joints'or '%s/joint'. "
                  "Perhaps the controller configuration is not loaded on the param server?", name.c_str(), name.c_str(), name.c_str());
-      else
-      {
-        ControllerInformation &ci = possibly_unloaded_controllers_[name];
-        ci.joints_ = joints;
-      }
+      ControllerInformation &ci = possibly_unloaded_controllers_[name];
+      ci.joints_ = joints;
     }
   }
   
@@ -489,12 +465,11 @@ public:
     moveit_controller_manager::MoveItControllerManager::ControllerState state;
     if (use_controller_manager_)
     {
-      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();  
       for (std::size_t i = 0; i < res.controllers.size(); ++i)
       {
         if (res.controllers[i] == name)
         {
-          state.loaded_ = true;
           if (res.state[i] == "running")
             state.active_ = true;
           break;
@@ -504,7 +479,6 @@ public:
     else
     {
       // if we cannot test, assume best case scenario. 
-      state.loaded_ = true;
       state.active_ = true;
     }
     
@@ -515,50 +489,6 @@ public:
     return state;
   }
   
-  virtual bool loadController(const std::string &name)
-  {
-    if (!use_controller_manager_)
-    {
-      ROS_WARN_STREAM("Cannot load controller without using the controller manager");
-      return false;
-    }
-    last_lister_response_ = ros::Time();  
-    handle_cache_.erase(name);
-    pr2_mechanism_msgs::LoadController::Request req;
-    pr2_mechanism_msgs::LoadController::Response res;
-    req.name = name;
-    if (!loader_service_.call(req, res))
-    {
-      ROS_WARN_STREAM("Something went wrong with loader service");
-      return false;
-    }
-    if (!res.ok)
-      ROS_WARN_STREAM("Loading controller " << name << " failed");
-    return res.ok;
-  }
-  
-  virtual bool unloadController(const std::string &name)
-  { 
-    if (!use_controller_manager_)
-    {
-      ROS_WARN_STREAM("Cannot unload controller without using the controller manager");
-      return false;
-    }
-    last_lister_response_ = ros::Time();
-    handle_cache_.erase(name);
-    pr2_mechanism_msgs::UnloadController::Request req;
-    pr2_mechanism_msgs::UnloadController::Response res;
-    req.name = name;
-    if (!unloader_service_.call(req, res))
-    {
-      ROS_WARN_STREAM("Something went wrong with unloader service");
-      return false;
-    }
-    if (!res.ok)
-      ROS_WARN_STREAM("Unloading controller " << name << " failed");
-    return res.ok;
-  }
-  
   virtual bool switchControllers(const std::vector<std::string> &activate, const std::vector<std::string> &deactivate)
   {
     if (!use_controller_manager_)
@@ -566,6 +496,32 @@ public:
       ROS_WARN_STREAM("Cannot switch controllers without using the controller manager");
       return false;
     }
+    
+    if (!activate.empty())
+    {
+      // load controllers to be activated, if needed
+      const std::vector<std::string> &loaded_c = getListControllerServiceResponse().controllers;
+      std::set<std::string> loaded_c_set(loaded_c.begin(), loaded_c.end());
+      for (std::size_t i = 0 ; i < activate.size() ; ++i)
+        if (loaded_c_set.find(activate[i]) == loaded_c_set.end())
+        {
+          handle_cache_.erase(activate[i]);
+          pr2_mechanism_msgs::LoadController::Request req;
+          pr2_mechanism_msgs::LoadController::Response res;
+          req.name = activate[i];
+          if (!loader_service_.call(req, res))
+          {
+            ROS_WARN("Something went wrong with loader service while trying to load '%s'", req.name.c_str());
+            return false;
+          }
+          if (!res.ok)
+          {
+            ROS_WARN("Loading controller '%s' failed", req.name.c_str());
+            return false;
+          }
+        }
+    }
+    
     last_lister_response_ = ros::Time();
     pr2_mechanism_msgs::SwitchController::Request req;
     pr2_mechanism_msgs::SwitchController::Response res;
@@ -589,7 +545,7 @@ protected:
   {
     if (use_controller_manager_)
     {
-      static const ros::Duration max_cache_age(10.0);
+      static const ros::Duration max_cache_age(1.0);
       if ((ros::Time::now() - last_lister_response_) > max_cache_age)
       {
 	pr2_mechanism_msgs::ListControllers::Request req;
@@ -625,7 +581,6 @@ protected:
   std::string controller_manager_name_; 
   bool use_controller_manager_;
   ros::ServiceClient loader_service_;
-  ros::ServiceClient unloader_service_;
   ros::ServiceClient switcher_service_;
   ros::ServiceClient lister_service_;
   
