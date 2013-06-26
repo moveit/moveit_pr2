@@ -75,6 +75,20 @@ arms:
   longest_valid_segment_fraction: 0.05
   projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
 
+whole_body:
+  planner_configs:
+    - SBLkConfigDefault 
+    - LBKPIECEkConfigDefault
+    - RRTkConfigDefault
+    - TRRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - ESTkConfigDefault
+    - KPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - RRTStarkConfigDefault
+  longest_valid_segment_fraction: 0.05
+  projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
+
 
 planner_configs:
 
@@ -96,6 +110,9 @@ planner_configs:
   TRRTkConfigDefault:
     type: geometric::RRT
     range: 100000000
+
+  TRRTkConfigDefault:
+    type: geometric::TRRT
 
   RRTConnectkConfigDefault:
     type: geometric::RRTConnect
