@@ -10,6 +10,7 @@ right_arm:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
+    - TRRTkConfigDefault
     - RRTConnectkConfigDefault
     - ESTkConfigDefault
     - KPIECEkConfigDefault
@@ -23,6 +24,7 @@ right_arm_and_torso:
     - SBLkConfigDefault
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
+    - TRRTkConfigDefault
     - RRTConnectkConfigDefault
     - ESTkConfigDefault
     - KPIECEkConfigDefault
@@ -36,6 +38,7 @@ left_arm:
     - SBLkConfigDefault 
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
+    - TRRTkConfigDefault
     - RRTConnectkConfigDefault
     - ESTkConfigDefault
     - KPIECEkConfigDefault
@@ -49,6 +52,7 @@ left_arm_and_torso:
     - SBLkConfigDefault 
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
+    - TRRTkConfigDefault
     - RRTConnectkConfigDefault
     - ESTkConfigDefault
     - KPIECEkConfigDefault
@@ -62,6 +66,7 @@ arms:
     - SBLkConfigDefault 
     - LBKPIECEkConfigDefault
     - RRTkConfigDefault
+    - TRRTkConfigDefault
     - RRTConnectkConfigDefault
     - ESTkConfigDefault
     - KPIECEkConfigDefault
@@ -85,6 +90,10 @@ planner_configs:
     range: 100000000
 
   RRTkConfigDefault:
+    type: geometric::RRT
+    range: 100000000
+
+  TRRTkConfigDefault:
     type: geometric::RRT
     range: 100000000
 
