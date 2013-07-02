@@ -2,8 +2,6 @@
 ## the planner to be used; other parameters can be specified as well, depending 
 ## on the planner
 
-constraint_approximations_path: /home/isucan/constraints_approximation_database
-
 right_arm:
   planner_configs:
     - PRMkConfigDefault
