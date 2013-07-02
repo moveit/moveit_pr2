@@ -65,8 +65,8 @@ int main(int argc, char **argv)
   planning_scene::PlanningScenePtr planning_scene(new planning_scene::PlanningScene(robot_model));
 
   /* SETUP THE PLANNER*/
-  boost::scoped_ptr<pluginlib::ClassLoader<planning_interface::Planner> > planner_plugin_loader;
-  planning_interface::PlannerPtr planner_instance;
+  boost::scoped_ptr<pluginlib::ClassLoader<planning_interface::PlannerManager> > planner_plugin_loader;
+  planning_interface::PlannerManagerPtr planner_instance;
   std::string planner_plugin_name;
 
   /* Get the name of the planner we want to use */
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
   /* Make sure to catch all exceptions */
   try
   {
-    planner_plugin_loader.reset(new pluginlib::ClassLoader<planning_interface::Planner>("moveit_core", "planning_interface::Planner"));
+    planner_plugin_loader.reset(new pluginlib::ClassLoader<planning_interface::PlannerManager>("moveit_core", "planning_interface::PlannerManager"));
   }
   catch(pluginlib::PluginlibException& ex)
   {
@@ -125,8 +125,11 @@ int main(int argc, char **argv)
   moveit_msgs::Constraints pose_goal = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose, tolerance_pose, tolerance_angle);  
   req.goal_constraints.push_back(pose_goal);     
 
+  /* Construct the planning context */
+  planning_interface::PlanningContextPtr context = planner_instance->getPlanningContext(planning_scene, req, res.error_code_);
+
   /* CALL THE PLANNER */
-  planner_instance->solve(planning_scene, req, res);
+  context->solve(res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -171,8 +174,11 @@ int main(int argc, char **argv)
   req.goal_constraints.clear();
   req.goal_constraints.push_back(joint_goal);
   
+  /* Construct the planning context */
+  context = planner_instance->getPlanningContext(planning_scene, req, res.error_code_);
+  
   /* Call the Planner */
-  planner_instance->solve(planning_scene, req, res);
+  context->solve(res);
 
   /* Check that the planning was successful */
   if(res.error_code_.val != res.error_code_.SUCCESS)
@@ -196,8 +202,9 @@ int main(int argc, char **argv)
 
   /* Now, we go back to the first goal*/
   req.goal_constraints.clear();
-  req.goal_constraints.push_back(pose_goal);
-  planner_instance->solve(planning_scene, req, res);
+  req.goal_constraints.push_back(pose_goal); 
+  context = planner_instance->getPlanningContext(planning_scene, req, res.error_code_);
+  context->solve(res);
   res.getMessage(response);  
   display_trajectory.trajectory.push_back(response.trajectory);  
   display_publisher.publish(display_trajectory);
@@ -234,7 +241,8 @@ int main(int argc, char **argv)
   req.workspace_parameters.max_corner.x = req.workspace_parameters.max_corner.y = req.workspace_parameters.max_corner.z =  2.0;
   
 
-  planner_instance->solve(planning_scene, req, res);
+  context = planner_instance->getPlanningContext(planning_scene, req, res.error_code_);
+  context->solve(res);
   res.getMessage(response);  
   display_trajectory.trajectory.push_back(response.trajectory);  
   //Now you should see four planned trajectories in series
