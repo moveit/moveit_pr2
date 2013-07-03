@@ -127,7 +127,7 @@ bool PR2ArmKinematicsPlugin::getPositionIK(const geometry_msgs::Pose &ik_pose,
                                            const std::vector<double> &ik_seed_state,
                                            std::vector<double> &solution,
                                            moveit_msgs::MoveItErrorCodes &error_code,
-                                           bool lock_redundant_joints) const
+                                           const kinematics::KinematicsQueryOptions &options) const
 {
   if(!active_)
   {
@@ -180,7 +180,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               double timeout,
                                               std::vector<double> &solution,
                                               moveit_msgs::MoveItErrorCodes &error_code,
-                                              bool lock_redundant_joints) const
+                                              const kinematics::KinematicsQueryOptions &options) const
 {
   static IKCallbackFn solution_callback = 0;  
   static std::vector<double> consistency_limits;  
@@ -193,7 +193,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               const std::vector<double> &consistency_limits,
                                               std::vector<double> &solution,
                                               moveit_msgs::MoveItErrorCodes &error_code,
-                                              bool lock_redundant_joints) const
+                                              const kinematics::KinematicsQueryOptions &options) const
 {
   static IKCallbackFn solution_callback = 0;  
   return searchPositionIK(ik_pose, ik_seed_state, timeout, consistency_limits, solution, solution_callback, error_code);   
@@ -205,7 +205,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               std::vector<double> &solution,
                                               const IKCallbackFn &solution_callback,
                                               moveit_msgs::MoveItErrorCodes &error_code,
-                                              bool lock_redundant_joints) const
+                                              const kinematics::KinematicsQueryOptions &options) const
 {
   static std::vector<double> consistency_limits;  
   return searchPositionIK(ik_pose, ik_seed_state, timeout, consistency_limits, solution, solution_callback, error_code);  
@@ -218,7 +218,7 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::Pose &ik_pose
                                               std::vector<double> &solution,
                                               const IKCallbackFn &solution_callback,
                                               moveit_msgs::MoveItErrorCodes &error_code,
-                                              bool lock_redundant_joints) const
+                                              const kinematics::KinematicsQueryOptions &options) const
 {
   if(!active_)
   {
