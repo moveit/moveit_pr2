@@ -79,14 +79,14 @@ public:
                              const std::vector<double> &ik_seed_state,
                              std::vector<double> &solution,
                              moveit_msgs::MoveItErrorCodes &error_code,
-                             bool lock_redundant_joints = false) const;      
+                             const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
     
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
                                 double timeout,
                                 std::vector<double> &solution,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                bool lock_redundant_joints = false) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
 
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
@@ -94,7 +94,7 @@ public:
                                 const std::vector<double> &consistency_limits,
                                 std::vector<double> &solution,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                bool lock_redundant_joints = false) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
 
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
@@ -102,7 +102,7 @@ public:
                                 std::vector<double> &solution,
                                 const IKCallbackFn &solution_callback,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                bool lock_redundant_joints = false) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
 
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
@@ -111,7 +111,7 @@ public:
                                 std::vector<double> &solution,
                                 const IKCallbackFn &solution_callback,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                bool lock_redundant_joints = false) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
     
   virtual bool getPositionFK(const std::vector<std::string> &link_names,
                              const std::vector<double> &joint_angles, 
