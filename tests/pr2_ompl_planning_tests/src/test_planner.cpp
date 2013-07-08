@@ -67,7 +67,7 @@ TEST(OmplPlanning, JointGoal)
 {
     ros::NodeHandle nh;
     ros::service::waitForService(PLANNER_SERVICE_NAME);
-    
+
     ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
     EXPECT_TRUE(planning_service_client.exists());
     EXPECT_TRUE(planning_service_client.isValid());
@@ -143,7 +143,7 @@ TEST(OmplPlanning, PositionGoal)
     pcm.constraint_region.primitive_poses[0].orientation.z = 0.0;
     pcm.constraint_region.primitive_poses[0].orientation.w = 1.0;
     pcm.weight = 1.0;
-    
+
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
 
@@ -225,7 +225,7 @@ TEST(OmplPlanning, PoseGoal)
     ocm.absolute_x_axis_tolerance = 0.2;
     ocm.absolute_y_axis_tolerance = 0.1;
     ocm.absolute_z_axis_tolerance = 0.4;
-    ocm.weight = 1.0;  
+    ocm.weight = 1.0;
 
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0].orientation_constraints.push_back(ocm);
@@ -257,7 +257,7 @@ TEST(OmplPlanning, PoseGoal)
 }
 
 TEST(OmplPlanning, SimplePoseGoal)
-{ 
+{
     planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
     planning_scene::PlanningScene &scene = *psm.getPlanningScene();
     EXPECT_TRUE(scene.isConfigured());
@@ -272,15 +272,15 @@ TEST(OmplPlanning, SimplePoseGoal)
     pose.pose.orientation.z = 0.0;
     pose.pose.orientation.w = 1.0;
     moveit_msgs::Constraints goal = kinematic_constraints::constructGoalConstraints("l_wrist_roll_link", pose);
-    
+
     moveit_msgs::GetMotionPlan::Request mplan_req;
     moveit_msgs::GetMotionPlan::Response mplan_res;
-    
+
     mplan_req.motion_plan_request.group_name = "left_arm";
     mplan_req.motion_plan_request.num_planning_attempts = 1;
     mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
     mplan_req.motion_plan_request.goal_constraints.push_back(goal);
-    
+
 
     ros::NodeHandle nh;
     ros::service::waitForService(PLANNER_SERVICE_NAME);

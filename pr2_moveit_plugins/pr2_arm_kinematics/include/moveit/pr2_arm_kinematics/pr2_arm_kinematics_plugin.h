@@ -64,12 +64,12 @@ class PR2ArmKinematicsPlugin : public kinematics::KinematicsBase
 {
 public:
 
-  /** 
+  /**
    *  @brief Plugin-able interface to the PR2 arm kinematics
    */
   PR2ArmKinematicsPlugin();
 
-  /** 
+  /**
    *  @brief Specifies if the solver is active or not
    *  @return True if the solver is active, false otherwise.
    */
@@ -79,14 +79,14 @@ public:
                              const std::vector<double> &ik_seed_state,
                              std::vector<double> &solution,
                              moveit_msgs::MoveItErrorCodes &error_code,
-                             const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
-    
+                             const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
                                 double timeout,
                                 std::vector<double> &solution,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
@@ -94,7 +94,7 @@ public:
                                 const std::vector<double> &consistency_limits,
                                 std::vector<double> &solution,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
@@ -102,7 +102,7 @@ public:
                                 std::vector<double> &solution,
                                 const IKCallbackFn &solution_callback,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
 
   virtual bool searchPositionIK(const geometry_msgs::Pose &ik_pose,
                                 const std::vector<double> &ik_seed_state,
@@ -111,12 +111,12 @@ public:
                                 std::vector<double> &solution,
                                 const IKCallbackFn &solution_callback,
                                 moveit_msgs::MoveItErrorCodes &error_code,
-                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;      
-    
+                                const kinematics::KinematicsQueryOptions &options = kinematics::KinematicsQueryOptions()) const;
+
   virtual bool getPositionFK(const std::vector<std::string> &link_names,
-                             const std::vector<double> &joint_angles, 
+                             const std::vector<double> &joint_angles,
                              std::vector<geometry_msgs::Pose> &poses) const;
-    
+
   /**
    * @brief  Initialization function for the kinematics
    * @return True if initialization was successful, false otherwise
@@ -126,17 +126,17 @@ public:
                           const std::string& base_name,
                           const std::string& tip_name,
                           double search_discretization);
-    
+
   /**
    * @brief  Return all the joint names in the order they are used internally
    */
   const std::vector<std::string>& getJointNames() const;
-    
+
   /**
    * @brief  Return all the link names in the order they are represented internally
    */
   const std::vector<std::string>& getLinkNames() const;
-    
+
 protected:
 
   bool active_;
@@ -151,7 +151,7 @@ protected:
   boost::shared_ptr<KDL::ChainFkSolverPos_recursive> jnt_to_pose_solver_;
   KDL::Chain kdl_chain_;
   moveit_msgs::KinematicSolverInfo ik_solver_info_, fk_solver_info_;
-  
+
 };
 }
 

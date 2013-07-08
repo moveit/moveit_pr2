@@ -47,13 +47,13 @@
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/robot_state/conversions.h>
- 
+
 int main(int argc, char **argv)
 {
   ros::init (argc, argv, "move_group_tutorial");
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  ros::NodeHandle node_handle;  
+  ros::NodeHandle node_handle;
 
   /* First put an object into the scene*/
   /* Advertise the collision object message publisher*/
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
   while(collision_object_publisher.getNumSubscribers() < 1)
   {
     ros::WallDuration sleep_t(0.5);
-    sleep_t.sleep();    
+    sleep_t.sleep();
   }
   /* Define the object message */
   moveit_msgs::CollisionObject object;
@@ -76,11 +76,11 @@ int main(int argc, char **argv)
 
   /* Define a box to be attached */
   shape_msgs::SolidPrimitive primitive;
-  primitive.type = primitive.BOX;  
+  primitive.type = primitive.BOX;
   primitive.dimensions.resize(3);
   primitive.dimensions[0] = 0.1;
   primitive.dimensions[1] = 0.1;
-  primitive.dimensions[2] = 0.1;  
+  primitive.dimensions[2] = 0.1;
 
   object.primitives.push_back(primitive);
   object.primitive_poses.push_back(pose);
@@ -89,19 +89,19 @@ int main(int argc, char **argv)
   object.operation = attached_object.object.ADD;
 
   /* Publish and sleep (to view the visualized results) */
-  collision_object_publisher.publish(object);  
+  collision_object_publisher.publish(object);
   ros::WallDuration sleep_time(1.0);
-  sleep_time.sleep();    
+  sleep_time.sleep();
 
   /* CHECK IF A STATE IS VALID */
   /* PUT THE OBJECT IN THE ENVIRONMENT */
-  ROS_INFO("Putting the object back into the environment");  
+  ROS_INFO("Putting the object back into the environment");
   planning_scene.robot_state.attached_collision_objects.clear();
-  planning_scene.world.collision_objects.clear();  
+  planning_scene.world.collision_objects.clear();
   planning_scene.world.collision_objects.push_back(object);
   planning_scene.is_diff = true;
-  planning_scene_diff_publisher.publish(planning_scene);  
-  sleep_time.sleep();  
+  planning_scene_diff_publisher.publish(planning_scene);
+  sleep_time.sleep();
 
   /* Load the robot model */
   robot_model_loader::RDFLoader robot_model_loader("robot_description");
@@ -111,12 +111,12 @@ int main(int argc, char **argv)
   current_state.getJointStateGroup("right_arm")->setToRandomValues();
 
   /* Construct a robot state message */
-  moveit_msgs::RobotState robot_state;  
+  moveit_msgs::RobotState robot_state;
   robot_state::robotStateToRobotStateMsg(current_state, robot_state);
 
   /* Construct the service request */
   moveit_msgs::GetStateValidity::Request get_state_validity_request;
-  moveit_msgs::GetStateValidity::Response get_state_validity_response;  
+  moveit_msgs::GetStateValidity::Response get_state_validity_response;
   get_state_validity_request.robot_state = robot_state;
   get_state_validity_request.group_name = "right_arm";
 
@@ -124,26 +124,26 @@ int main(int argc, char **argv)
   ros::ServiceClient service_client =  node_handle.serviceClient<moveit_msgs::GetStateValidity>("/check_state_validity");
 
   /* Publisher for display */
-  ros::Publisher display_publisher = node_handle.advertise<moveit_msgs::DisplayRobotState>("/display_robot_state", 1);  
-  moveit_msgs::DisplayRobotState display_state;  
+  ros::Publisher display_publisher = node_handle.advertise<moveit_msgs::DisplayRobotState>("/display_robot_state", 1);
+  moveit_msgs::DisplayRobotState display_state;
 
   for(std::size_t i=0; i < 20; ++i)
   {
     /* Make the service call */
-    service_client.call(get_state_validity_request, get_state_validity_response);    
+    service_client.call(get_state_validity_request, get_state_validity_response);
     if(get_state_validity_response.valid)
-      ROS_INFO("State %d was valid", (int) i);  
+      ROS_INFO("State %d was valid", (int) i);
     else
-      ROS_ERROR("State %d was invalid", (int) i);    
+      ROS_ERROR("State %d was invalid", (int) i);
 
     /* Visualize the state */
-    display_state.state = robot_state;    
-    display_publisher.publish(display_state);    
+    display_state.state = robot_state;
+    display_publisher.publish(display_state);
 
     /* Generate a new state and put it into the request */
     current_state.getJointStateGroup("right_arm")->setToRandomValues();
     robot_state::robotStateToRobotStateMsg(current_state, robot_state);
     get_state_validity_request.robot_state = robot_state;
-    sleep_time.sleep();    
-  }  
+    sleep_time.sleep();
+  }
 }

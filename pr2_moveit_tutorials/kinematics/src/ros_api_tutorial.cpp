@@ -49,14 +49,14 @@
 
 // Kinematics
 #include <moveit_msgs/GetPositionIK.h>
-  
+
 int main(int argc, char **argv)
 {
   ros::init (argc, argv, "right_arm_kinematics");
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  
-  ros::NodeHandle node_handle;  
+
+  ros::NodeHandle node_handle;
 
   // Start a service client
   ros::ServiceClient service_client = node_handle.serviceClient<moveit_msgs::GetPositionIK> ("compute_ik");
@@ -70,13 +70,13 @@ int main(int argc, char **argv)
 
   moveit_msgs::GetPositionIK::Request service_request;
   moveit_msgs::GetPositionIK::Response service_response;
-  
+
   service_request.ik_request.group_name = "left_arm";
-  service_request.ik_request.pose_stamped.header.frame_id = "torso_lift_link";  
+  service_request.ik_request.pose_stamped.header.frame_id = "torso_lift_link";
   service_request.ik_request.pose_stamped.pose.position.x = 0.75;
   service_request.ik_request.pose_stamped.pose.position.y = 0.188;
   service_request.ik_request.pose_stamped.pose.position.z = 0.0;
-  
+
   service_request.ik_request.pose_stamped.pose.orientation.x = 0.0;
   service_request.ik_request.pose_stamped.pose.orientation.y = 0.0;
   service_request.ik_request.pose_stamped.pose.orientation.z = 0.0;
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
 
   /* Filling in a seed state */
-  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); 
+  robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
   robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
@@ -104,22 +104,22 @@ int main(int argc, char **argv)
   ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
 
   /* Check for collisions*/
-  service_request.ik_request.avoid_collisions = true;  
+  service_request.ik_request.avoid_collisions = true;
 
   /* Call the service again*/
   service_client.call(service_request, service_response);
-  
+
   ROS_INFO_STREAM("Result: " << ((service_response.error_code.val == service_response.error_code.SUCCESS) ? "True " : "False ") << service_response.error_code.val);
 
   /* Visualize the result*/
   moveit_msgs::DisplayRobotState msg;
-  joint_state_group->setVariableValues(service_response.solution.joint_state);  
+  joint_state_group->setVariableValues(service_response.solution.joint_state);
   robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
   robot_state_publisher.publish(msg);
 
   //Sleep to let the message go through
-  ros::Duration(2.0).sleep();  
-  
-  ros::shutdown();  
+  ros::Duration(2.0).sleep();
+
+  ros::shutdown();
   return 0;
 }

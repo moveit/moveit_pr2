@@ -108,7 +108,7 @@ TEST(PR2ArmIK, inverseKinematics)
   KDL::Frame p_out;
   KDL::Frame p_ik;
 
-  srand ( time(NULL) ); // initialize random seed: 
+  srand ( time(NULL) ); // initialize random seed:
 
   jnt_to_pose_solver = new KDL::ChainFkSolverPos_recursive(kdl_chain);
   jnt_pos_in.resize(7);
@@ -138,8 +138,8 @@ TEST(PR2ArmIK, inverseKinematics)
         for(int j=0; j< 3; j++)
         {
           EXPECT_NEAR(p_ik.M(j,0),p_out.M(j,0),IK_NEAR);
-          EXPECT_NEAR(p_ik.M(j,1),p_out.M(j,1),IK_NEAR); 
-          EXPECT_NEAR(p_ik.M(j,2),p_out.M(j,2),IK_NEAR); 
+          EXPECT_NEAR(p_ik.M(j,1),p_out.M(j,1),IK_NEAR);
+          EXPECT_NEAR(p_ik.M(j,2),p_out.M(j,2),IK_NEAR);
           EXPECT_NEAR(p_ik.p(j),p_out.p(j),IK_NEAR_TRANSLATE);
         }
       }
@@ -224,8 +224,8 @@ TEST(PR2ArmIK, inverseKinematicsSearch)
           for(int j=0; j< 3; j++)
           {
             EXPECT_NEAR(p_ik.M(j,0),p_out.M(j,0),IK_NEAR);
-            EXPECT_NEAR(p_ik.M(j,1),p_out.M(j,1),IK_NEAR); 
-            EXPECT_NEAR(p_ik.M(j,2),p_out.M(j,2),IK_NEAR); 
+            EXPECT_NEAR(p_ik.M(j,1),p_out.M(j,1),IK_NEAR);
+            EXPECT_NEAR(p_ik.M(j,2),p_out.M(j,2),IK_NEAR);
             EXPECT_NEAR(p_ik.p(j),p_out.p(j),IK_NEAR_TRANSLATE);
           }
         }

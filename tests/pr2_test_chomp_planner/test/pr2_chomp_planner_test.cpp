@@ -48,30 +48,30 @@ class Pr2ChompPlannerTester : public testing::Test{
 
 protected:
 
-  virtual void SetUp() 
+  virtual void SetUp()
   {
-    
+
     rml_.reset(new rdf_loader::RDFLoader("robot_description"));
 
     acm_.reset(new collision_detection::AllowedCollisionMatrix());
 
     ros::NodeHandle nh;
-    
+
     XmlRpc::XmlRpcValue coll_ops;
     nh.getParam("robot_description_planning/default_collision_operations", coll_ops);
-    
+
     if (coll_ops.getType() != XmlRpc::XmlRpcValue::TypeArray)
     {
       ROS_WARN("default_collision_operations is not an array");
       return;
     }
-    
+
     if (coll_ops.size() == 0)
     {
       ROS_WARN("No collision operations in default collision operations");
       return;
     }
-    
+
     for (int i = 0 ; i < coll_ops.size() ; ++i)
     {
       if (!coll_ops[i].hasMember("object1") || !coll_ops[i].hasMember("object2") || !coll_ops[i].hasMember("operation"))
@@ -95,14 +95,14 @@ protected:
 
 };
 
-TEST_F(Pr2ChompPlannerTester, SimplePlan) 
+TEST_F(Pr2ChompPlannerTester, SimplePlan)
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
   ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorDistanceField::create());
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrixNonConst() = *acm_;
-  
+
   chomp::ChompPlanner chomp_planner(ps->getRobotModel());
 
   moveit_msgs::GetMotionPlan::Request mplan_req;
@@ -124,7 +124,7 @@ TEST_F(Pr2ChompPlannerTester, SimplePlan)
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
-  
+
   chomp::ChompParameters params;
   chomp_planner.solve(ps,
                       mplan_req,
@@ -133,7 +133,7 @@ TEST_F(Pr2ChompPlannerTester, SimplePlan)
 
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-}  
+}
 
 int main(int argc, char **argv)
 {
@@ -142,4 +142,3 @@ int main(int argc, char **argv)
 
   return RUN_ALL_TESTS();
 }
-

@@ -211,7 +211,7 @@ bool InteractiveRobot::setCallbackTimer(bool new_update_request)
   }
 }
 
-// Indicate that the world or the robot has changed and 
+// Indicate that the world or the robot has changed and
 // the new state needs to be updated and published to rviz
 void InteractiveRobot::scheduleUpdate()
 {
@@ -331,4 +331,3 @@ void InteractiveRobot::getWorldGeometry(Eigen::Affine3d& pose, double& size)
   pose = desired_world_object_pose_;
   size = WORLD_BOX_SIZE_;
 }
-

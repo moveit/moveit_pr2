@@ -109,7 +109,7 @@ void test()
   if(ik_service_call)
     {
       for(unsigned int i=0; i < response.solution.size(); i++)
-	ROS_INFO("joint: %s, value: %f",request.data.joint_names[i].c_str(),response.solution[i]);
+    ROS_INFO("joint: %s, value: %f",request.data.joint_names[i].c_str(),response.solution[i]);
     }
   else
     {

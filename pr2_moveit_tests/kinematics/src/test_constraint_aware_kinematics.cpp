@@ -53,14 +53,14 @@
 
 TEST(ConstraintAwareKinematics, getIK)
 {
-  std::string group_name = "right_arm";  
-  std::string ik_link_name = "r_wrist_roll_link";  
+  std::string group_name = "right_arm";
+  std::string ik_link_name = "r_wrist_roll_link";
 
-  ROS_INFO("Initializing IK solver");      
-  planning_scene::PlanningScenePtr planning_scene;  
-  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); /** Used to load the robot model */  
+  ROS_INFO("Initializing IK solver");
+  planning_scene::PlanningScenePtr planning_scene;
+  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); /** Used to load the robot model */
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
-  
+
   const boost::shared_ptr<srdf::Model> &srdf = robot_model_loader.getSRDF();
   const boost::shared_ptr<urdf::ModelInterface>& urdf_model = robot_model_loader.getURDF();
 
@@ -70,35 +70,35 @@ TEST(ConstraintAwareKinematics, getIK)
 
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
   robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup(group_name);
-  kinematic_state->setToDefaultValues();  
+  kinematic_state->setToDefaultValues();
 
-  kinematics_constraint_aware::KinematicsConstraintAware solver(kinematic_model, "right_arm");  
+  kinematics_constraint_aware::KinematicsConstraintAware solver(kinematic_model, "right_arm");
 
   ros::NodeHandle nh("~");
-  int number_ik_tests;  
-  nh.param("number_ik_tests", number_ik_tests, 1);  
+  int number_ik_tests;
+  nh.param("number_ik_tests", number_ik_tests, 1);
 
   int acceptable_success_percentage;
-  nh.param("accepatable_success_percentage", acceptable_success_percentage, 95);  
-  
+  nh.param("accepatable_success_percentage", acceptable_success_percentage, 95);
+
   unsigned int num_success = 0;
 
   kinematics_constraint_aware::KinematicsRequest kinematics_request;
   kinematics_constraint_aware::KinematicsResponse kinematics_response;
   kinematics_response.solution_.reset(new robot_state::RobotState(planning_scene->getCurrentState()));
-  
+
   kinematics_request.group_name_ = group_name;
   kinematics_request.timeout_ = ros::Duration(5.0);
   kinematics_request.check_for_collisions_ = false;
   kinematics_request.robot_state_ = kinematic_state;
 
   geometry_msgs::PoseStamped goal;
-  goal.header.frame_id = kinematic_model->getModelFrame();  
+  goal.header.frame_id = kinematic_model->getModelFrame();
 
   for(std::size_t i = 0; i < (unsigned int) number_ik_tests; ++i)
   {
     joint_state_group->setToRandomValues();
-    const Eigen::Affine3d &end_effector_state = joint_state_group->getRobotState()->getLinkState(ik_link_name)->getGlobalLinkTransform();    
+    const Eigen::Affine3d &end_effector_state = joint_state_group->getRobotState()->getLinkState(ik_link_name)->getGlobalLinkTransform();
     Eigen::Quaterniond quat(end_effector_state.rotation());
     Eigen::Vector3d point(end_effector_state.translation());
     goal.pose.position.x = point.x();
@@ -111,16 +111,16 @@ TEST(ConstraintAwareKinematics, getIK)
 
     joint_state_group->setToRandomValues();
     kinematics_request.pose_stamped_vector_.clear();
-    kinematics_request.pose_stamped_vector_.push_back(goal);    
-    ros::WallTime start = ros::WallTime::now();    
+    kinematics_request.pose_stamped_vector_.push_back(goal);
+    ros::WallTime start = ros::WallTime::now();
     if(solver.getIK(planning_scene, kinematics_request, kinematics_response))
-      num_success++;    
+      num_success++;
     else
-      printf("Failed in %f\n", (ros::WallTime::now()-start).toSec());   
-  }  
+      printf("Failed in %f\n", (ros::WallTime::now()-start).toSec());
+  }
   bool test_success = (((double)num_success)/number_ik_tests > acceptable_success_percentage/100.0);
-  printf("success ratio: %d of %d", num_success, number_ik_tests);  
-  EXPECT_TRUE(test_success);  
+  printf("success ratio: %d of %d", num_success, number_ik_tests);
+  EXPECT_TRUE(test_success);
 }
 
 

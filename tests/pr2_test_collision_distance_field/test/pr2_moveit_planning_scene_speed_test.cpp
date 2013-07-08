@@ -55,9 +55,9 @@ class Pr2DistanceFieldPlanningSceneTester : public testing::Test{
 
 protected:
 
-  virtual void SetUp() 
+  virtual void SetUp()
   {
-    
+
     robot_model_loader_.reset(new robot_model_loader::RDFLoader("robot_description"));
 
     planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
@@ -86,7 +86,7 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
   id.translation().z() = .7;
   planning_scene_monitor_->getPlanningScene()->getWorldNonConst()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
 
-  const collision_detection::CollisionWorldHybrid* hy_world 
+  const collision_detection::CollisionWorldHybrid* hy_world
     = dynamic_cast<const collision_detection::CollisionWorldHybrid*>(planning_scene_monitor_->getPlanningScene()->getCollisionWorld().get());
   ASSERT_TRUE(hy_world);
 
@@ -100,30 +100,30 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
   unsigned int in_collision_df = 0;
   unsigned int in_collision_fcl = 0;
   unsigned int fcl_in_coll_df_not = 0;
-  
+
   collision_detection::CollisionRequest req;
   req.group_name = "right_arm";
   req.contacts = true;
 
   collision_detection::CollisionResult res1;
   //first check with this group doesn't count
-  hy_world->checkCollisionDistanceField(req, 
+  hy_world->checkCollisionDistanceField(req,
                                         res1,
-                                        *hy_robot->getCollisionRobotDistanceField().get(), 
+                                        *hy_robot->getCollisionRobotDistanceField().get(),
                                         kstate,
                                         planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());
-  planning_scene_monitor_->getPlanningScene()->checkCollision(req, 
-                                                              res1, 
+  planning_scene_monitor_->getPlanningScene()->checkCollision(req,
+                                                              res1,
                                                               kstate,
-                                                              planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());  
-  
+                                                              planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());
+
   for(unsigned int i = 0; i < TRIALS; i++) {
     jsg->setToRandomValues();
     collision_detection::CollisionResult res;
     ros::WallTime before = ros::WallTime::now();
-    hy_world->checkCollisionDistanceField(req, 
-                                          res, 
-                                          *hy_robot->getCollisionRobotDistanceField().get(), 
+    hy_world->checkCollisionDistanceField(req,
+                                          res,
+                                          *hy_robot->getCollisionRobotDistanceField().get(),
                                           kstate,
                                           planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());
     total_speed_df += (ros::WallTime::now()-before);
@@ -134,10 +134,10 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestSlow)
     }
     res = collision_detection::CollisionResult();
     before = ros::WallTime::now();
-    planning_scene_monitor_->getPlanningScene()->checkCollision(req, 
-                                                                res, 
+    planning_scene_monitor_->getPlanningScene()->checkCollision(req,
+                                                                res,
                                                                 kstate,
-                                                                planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());  
+                                                                planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());
 
     total_speed_fcl += (ros::WallTime::now()-before);
     if(res.collision) {
@@ -164,7 +164,7 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
   id.translation().z() = .7;
   planning_scene_monitor_->getPlanningScene()->getWorldNonConst()->addToObject("sphere", shapes::ShapeConstPtr(new shapes::Sphere(0.4)), id);
 
-  const collision_detection::CollisionWorldHybrid* hy_world 
+  const collision_detection::CollisionWorldHybrid* hy_world
     = dynamic_cast<const collision_detection::CollisionWorldHybrid*>(planning_scene_monitor_->getPlanningScene()->getCollisionWorld().get());
   ASSERT_TRUE(hy_world);
 
@@ -178,32 +178,32 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
   unsigned int in_collision_df = 0;
   unsigned int in_collision_fcl = 0;
   unsigned int fcl_in_coll_df_not = 0;
-  
+
   collision_detection::CollisionRequest req;
   req.group_name = "right_arm";
   req.contacts = true;
 
   collision_detection::CollisionResult res1;
   //first check with this group doesn't count
-  boost::shared_ptr<collision_detection::GroupStateRepresentation> gsr; 
-  hy_world->checkCollisionDistanceField(req, 
+  boost::shared_ptr<collision_detection::GroupStateRepresentation> gsr;
+  hy_world->checkCollisionDistanceField(req,
                                         res1,
-                                        *hy_robot->getCollisionRobotDistanceField().get(), 
+                                        *hy_robot->getCollisionRobotDistanceField().get(),
                                         kstate,
                                         planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix(),
                                         gsr);
-  planning_scene_monitor_->getPlanningScene()->checkCollision(req, 
-                                                              res1, 
+  planning_scene_monitor_->getPlanningScene()->checkCollision(req,
+                                                              res1,
                                                               kstate,
-                                                              planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());  
-  
+                                                              planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());
+
   for(unsigned int i = 0; i < TRIALS; i++) {
     jsg->setToRandomValues();
     collision_detection::CollisionResult res;
     ros::WallTime before = ros::WallTime::now();
-    hy_world->checkCollisionDistanceField(req, 
-                                          res, 
-                                          *hy_robot->getCollisionRobotDistanceField().get(), 
+    hy_world->checkCollisionDistanceField(req,
+                                          res,
+                                          *hy_robot->getCollisionRobotDistanceField().get(),
                                           kstate,
                                           gsr);
     ros::WallDuration dur(ros::WallTime::now()-before);
@@ -216,10 +216,10 @@ TEST_F(Pr2DistanceFieldPlanningSceneTester, SpeedTestFast)
     }
     res = collision_detection::CollisionResult();
     before = ros::WallTime::now();
-    planning_scene_monitor_->getPlanningScene()->checkCollision(req, 
-                                                                res, 
+    planning_scene_monitor_->getPlanningScene()->checkCollision(req,
+                                                                res,
                                                                 kstate,
-                                                                planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());  
+                                                                planning_scene_monitor_->getPlanningScene()->getAllowedCollisionMatrix());
 
     total_speed_fcl += (ros::WallTime::now()-before);
     if(res.collision) {

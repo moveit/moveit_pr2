@@ -61,31 +61,31 @@ class Pr2DistanceFieldCollisionDetectionTester : public testing::Test{
 
 protected:
 
-  virtual void SetUp() 
+  virtual void SetUp()
   {
-    
+
     rml_.reset(new rdf_loader::RDFLoader("robot_description"));
     kmodel_.reset(new planning_models::RobotModel(rml_->getURDF(), rml_->getSRDF()));
 
     acm_.reset(new collision_detection::AllowedCollisionMatrix());
 
     ros::NodeHandle nh;
-    
+
     XmlRpc::XmlRpcValue coll_ops;
     nh.getParam("robot_description_planning/default_collision_operations", coll_ops);
-    
+
     if (coll_ops.getType() != XmlRpc::XmlRpcValue::TypeArray)
     {
       ROS_WARN("default_collision_operations is not an array");
       return;
     }
-    
+
     if (coll_ops.size() == 0)
     {
       ROS_WARN("No collision operations in default collision operations");
       return;
     }
-    
+
     for (int i = 0 ; i < coll_ops.size() ; ++i)
     {
       if (!coll_ops[i].hasMember("object1") || !coll_ops[i].hasMember("object2") || !coll_ops[i].hasMember("operation"))
@@ -95,12 +95,12 @@ protected:
       }
       acm_->setEntry(std::string(coll_ops[i]["object1"]), std::string(coll_ops[i]["object2"]), std::string(coll_ops[i]["operation"]) == "disable");
     }
-    
+
     std::map<std::string, std::vector<collision_detection::CollisionSphere> > coll_spheres;
     collision_detection::loadLinkBodySphereDecompositions(nh,
                                                           kmodel_,
                                                           coll_spheres);
-    
+
     crobot_df_.reset(new collision_detection::CollisionRobotDistanceField(kmodel_, coll_spheres));
     cworld_df_.reset(new collision_detection::CollisionWorldDistanceField());
 
@@ -116,19 +116,19 @@ protected:
 protected:
 
   boost::shared_ptr<rdf_loader::RDFLoader> rml_;
-  
+
   planning_models::RobotModelPtr             kmodel_;
-  
+
   planning_models::TransformsPtr                 ftf_;
   planning_models::TransformsConstPtr            ftf_const_;
-  
+
   boost::shared_ptr<collision_detection::CollisionRobotDistanceField> crobot_df_;
   boost::shared_ptr<collision_detection::CollisionWorldDistanceField> cworld_df_;
 
   boost::shared_ptr<collision_detection::CollisionRobot> crobot_fcl_;
   boost::shared_ptr<collision_detection::CollisionWorld> cworld_fcl_;
 
-  
+
   collision_detection::AllowedCollisionMatrixPtr acm_;
 
 };
@@ -146,7 +146,7 @@ TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
   unsigned int in_collision_df = 0;
   unsigned int in_collision_fcl = 0;
   unsigned int fcl_in_coll_df_not = 0;
-  
+
   collision_detection::CollisionRequest req;
   req.group_name = "right_arm";
   req.contacts = true;
@@ -154,8 +154,8 @@ TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
   collision_detection::CollisionResult res1;
   //first check with this group doesn't count
   boost::shared_ptr<collision_detection::GroupStateRepresentation> gsr;
-  crobot_df_->checkSelfCollision(req, res1, kstate, *acm_, gsr);  
-  crobot_fcl_->checkSelfCollision(req, res1, kstate, *acm_);  
+  crobot_df_->checkSelfCollision(req, res1, kstate, *acm_, gsr);
+  crobot_fcl_->checkSelfCollision(req, res1, kstate, *acm_);
 
   for(unsigned int i = 0; i < TRIALS; i++) {
     jsg->setToRandomValues();
@@ -192,4 +192,3 @@ int main(int argc, char **argv)
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-

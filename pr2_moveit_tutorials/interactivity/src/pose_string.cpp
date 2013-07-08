@@ -60,7 +60,7 @@ std::string PoseString(const geometry_msgs::Pose& pose)
   ss << std::setw(7) << pose.orientation.y << ", ";
   ss << std::setw(7) << pose.orientation.z << ", ";
   ss << std::setw(7) << pose.orientation.w << ")";
-  
+
   return std::string(ss.str());
 }
 
@@ -73,4 +73,3 @@ std::string PoseString(const Eigen::Affine3d &pose)
   tf::poseEigenToMsg(pose, msg);
   return PoseString(msg);
 }
-

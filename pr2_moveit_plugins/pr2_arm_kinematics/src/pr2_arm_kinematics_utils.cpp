@@ -134,11 +134,11 @@ bool solveQuadratic(const double &a, const double &b, const double &c, double *x
   }
   //ROS_DEBUG("Discriminant: %f\n",discriminant);
   if (discriminant >= 0)
-  {      
-    *x1 = (-b + sqrt(discriminant))/(2*a); 
+  {
+    *x1 = (-b + sqrt(discriminant))/(2*a);
     *x2 = (-b - sqrt(discriminant))/(2*a);
     return true;
-  } 
+  }
   else if(fabs(discriminant) < IK_EPS)
   {
     *x1 = -b/(2*a);
@@ -157,46 +157,46 @@ Eigen::Matrix4f matrixInverse(const Eigen::Matrix4f &g)
 {
   Eigen::Matrix4f result = g;
   Eigen::Matrix3f Rt = Eigen::Matrix3f::Identity();
-  
+
   Eigen::Vector3f p = Eigen::Vector3f::Zero(3);
   Eigen::Vector3f pinv = Eigen::Vector3f::Zero(3);
-  
+
   Rt(0,0) = g(0,0);
   Rt(1,1) = g(1,1);
   Rt(2,2) = g(2,2);
-  
+
   Rt(0,1) = g(1,0);
   Rt(1,0) = g(0,1);
-  
+
   Rt(0,2) = g(2,0);
   Rt(2,0) = g(0,2);
-  
+
   Rt(1,2) = g(2,1);
   Rt(2,1) = g(1,2);
-  
+
   p(0) = g(0,3);
   p(1) = g(1,3);
   p(2) = g(2,3);
-  
+
   pinv = -Rt*p;
-  
+
   result(0,0) = g(0,0);
   result(1,1) = g(1,1);
   result(2,2) = g(2,2);
-  
+
   result(0,1) = g(1,0);
   result(1,0) = g(0,1);
-  
+
   result(0,2) = g(2,0);
   result(2,0) = g(0,2);
-  
+
   result(1,2) = g(2,1);
   result(2,1) = g(1,2);
-  
+
   result(0,3) = pinv(0);
   result(1,3) = pinv(1);
   result(2,3) = pinv(2);
-  
+
   return result;
 }
 
@@ -205,7 +205,7 @@ bool solveCosineEqn(const double &a, const double &b, const double &c, double &s
 {
   double theta1 = atan2(b,a);
   double denom  = sqrt(a*a+b*b);
-  
+
   if(fabs(denom) < IK_EPS) // should never happen, wouldn't make sense but make sure it is checked nonetheless
   {
 #ifdef DEBUG
@@ -224,14 +224,14 @@ bool solveCosineEqn(const double &a, const double &b, const double &c, double &s
   double acos_term = acos(rhs_ratio);
   soln1 = theta1 + acos_term;
   soln2 = theta1 - acos_term;
-  
+
   return true;
 }
 
 
 bool checkJointNames(const std::vector<std::string> &joint_names,
                      const moveit_msgs::KinematicSolverInfo &chain_info)
-{    
+{
   for(unsigned int i=0; i < chain_info.joint_names.size(); i++)
   {
     int index = -1;
@@ -262,7 +262,7 @@ bool checkLinkNames(const std::vector<std::string> &link_names,
     if(!checkLinkName(link_names[i],chain_info))
       return false;
   }
-  return true;   
+  return true;
 }
 
 bool checkLinkName(const std::string &link_name,
@@ -273,7 +273,7 @@ bool checkLinkName(const std::string &link_name,
     if(link_name == chain_info.link_names[i])
       return true;
   }
-  return false;   
+  return false;
 }
 
 bool checkRobotState(moveit_msgs::RobotState &robot_state,
@@ -283,7 +283,7 @@ bool checkRobotState(moveit_msgs::RobotState &robot_state,
   {
     ROS_ERROR("Number of joints in robot_state.joint_state does not match number of positions in robot_state.joint_state");
     return false;
-  }    
+  }
   if(!checkJointNames(robot_state.joint_state.name,chain_info))
   {
     ROS_ERROR("Robot state must contain joint state for every joint in the kinematic chain");
@@ -292,8 +292,8 @@ bool checkRobotState(moveit_msgs::RobotState &robot_state,
   return true;
 }
 
-bool checkFKService(moveit_msgs::GetPositionFK::Request &request, 
-                    moveit_msgs::GetPositionFK::Response &response, 
+bool checkFKService(moveit_msgs::GetPositionFK::Request &request,
+                    moveit_msgs::GetPositionFK::Response &response,
                     const moveit_msgs::KinematicSolverInfo &chain_info)
 {
   if(!checkLinkNames(request.fk_link_names,chain_info))
@@ -310,13 +310,13 @@ bool checkFKService(moveit_msgs::GetPositionFK::Request &request,
   return true;
 }
 
-bool checkIKService(moveit_msgs::GetPositionIK::Request &request, 
+bool checkIKService(moveit_msgs::GetPositionIK::Request &request,
                     moveit_msgs::GetPositionIK::Response &response,
                     const moveit_msgs::KinematicSolverInfo &chain_info)
 {
   if(!checkLinkName(request.ik_request.ik_link_name,chain_info))
   {
-    ROS_ERROR("Link name in service request does not match links that kinematics can provide solutions for.");      
+    ROS_ERROR("Link name in service request does not match links that kinematics can provide solutions for.");
     response.error_code.val = response.error_code.INVALID_LINK_NAME;
     return false;
   }
@@ -333,8 +333,8 @@ bool checkIKService(moveit_msgs::GetPositionIK::Request &request,
   return true;
 }
 
-bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg, 
-                            KDL::Frame &pose_kdl, 
+bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
+                            KDL::Frame &pose_kdl,
                             const std::string &root_frame,
                             tf::TransformListener& tf)
 {
@@ -346,8 +346,8 @@ bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
 }
 
 
-bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg, 
-                            geometry_msgs::PoseStamped &pose_msg_out, 
+bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
+                            geometry_msgs::PoseStamped &pose_msg_out,
                             const std::string &root_frame,
                             tf::TransformListener& tf)
 {
@@ -364,16 +364,16 @@ bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
   pose_msg_out = pose_msg;
   tf::Stamped<tf::Pose> pose_stamped;
   poseStampedMsgToTF(pose_msg_in, pose_stamped);
-  
+
   if (!tf.canTransform(root_frame, pose_stamped.frame_id_, pose_stamped.stamp_))
   {
-    std::string err;    
+    std::string err;
     if (tf.getLatestCommonTime(pose_stamped.frame_id_, root_frame, pose_stamped.stamp_, &err) != tf::NO_ERROR)
     {
       ROS_ERROR("pr2_arm_ik:: Cannot transform from '%s' to '%s'. TF said: %s",pose_stamped.frame_id_.c_str(),root_frame.c_str(), err.c_str());
       return false;
     }
-  }    
+  }
   try
   {
     tf.transformPose(root_frame, pose_stamped, pose_stamped);
@@ -382,8 +382,8 @@ bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
   {
     ROS_ERROR("pr2_arm_ik:: Cannot transform from '%s' to '%s'",pose_stamped.frame_id_.c_str(),root_frame.c_str());
     return false;
-  } 
-  tf::poseStampedTFToMsg(pose_stamped,pose_msg_out);   
+  }
+  tf::poseStampedTFToMsg(pose_stamped,pose_msg_out);
   return true;
 }
 
@@ -413,7 +413,7 @@ void getKDLChainInfo(const KDL::Chain &chain,
   }
 }
 
-int getKDLSegmentIndex(const KDL::Chain &chain, 
+int getKDLSegmentIndex(const KDL::Chain &chain,
                        const std::string &name)
 {
   int i=0; // segment number
@@ -425,7 +425,7 @@ int getKDLSegmentIndex(const KDL::Chain &chain,
     }
     i++;
   }
-  return -1;   
+  return -1;
 }
 
 

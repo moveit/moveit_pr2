@@ -59,23 +59,23 @@ static const int TIMED_OUT = -2;
   class PR2ArmIKSolver : public KDL::ChainIkSolverPos
   {
     public:
-    
+
     /** @brief ROS/KDL based interface for the inverse kinematics of the PR2 arm
      *
      *  This class provides a KDL based interface to the inverse kinematics of the PR2 arm. It inherits from the KDL::ChainIkSolverPos class
      *  but also exposes additional functionality to return multiple solutions from an inverse kinematics computation.
      */
-    PR2ArmIKSolver(const urdf::Model &robot_model, 
+    PR2ArmIKSolver(const urdf::Model &robot_model,
                    const std::string &root_frame_name,
                    const std::string &tip_frame_name,
-                   const double &search_discretization_angle, 
+                   const double &search_discretization_angle,
                    const int &free_angle);
 
     ~PR2ArmIKSolver(){};
 
-    /** 
-     * @brief The PR2 inverse kinematics solver 
-     */ 
+    /**
+     * @brief The PR2 inverse kinematics solver
+     */
     PR2ArmIK pr2_arm_ik_;
 
     /**
@@ -85,133 +85,133 @@ static const int TIMED_OUT = -2;
 
     /**
      * @brief The KDL solver interface that is required to be implemented. NOTE: This method only returns a solution
-     * if it exists for the free parameter value passed in. To search for a solution in the entire workspace use the 
+     * if it exists for the free parameter value passed in. To search for a solution in the entire workspace use the
      * CartToJntSearch method detailed below.
      * @return < 0 if no solution is found
-     * @param q_init The initial guess for the inverse kinematics solution. 
-     * The solver uses the joint value q_init(pr2_ik_->free_angle_) as 
-     * as an input to the inverse kinematics. pr2_ik_->free_angle_ can either be 0 or 2 corresponding 
+     * @param q_init The initial guess for the inverse kinematics solution.
+     * The solver uses the joint value q_init(pr2_ik_->free_angle_) as
+     * as an input to the inverse kinematics. pr2_ik_->free_angle_ can either be 0 or 2 corresponding
      * to the shoulder pan or shoulder roll angle.
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out A single inverse kinematic solution (if it exists).  
+     * @param q_out A single inverse kinematic solution (if it exists).
      */
-    int CartToJnt(const KDL::JntArray& q_init, 
-                  const KDL::Frame& p_in, 
+    int CartToJnt(const KDL::JntArray& q_init,
+                  const KDL::Frame& p_in,
                   KDL::JntArray& q_out);
 
     /**
-     * @brief An extension of the KDL solver interface to return all solutions found. NOTE: This method only returns a solution 
-     * if it exists for the free parameter value passed in. To search for a solution in the entire workspace use the CartToJntSearch 
+     * @brief An extension of the KDL solver interface to return all solutions found. NOTE: This method only returns a solution
+     * if it exists for the free parameter value passed in. To search for a solution in the entire workspace use the CartToJntSearch
      * method detailed below.
      * @return < 0 if no solution is found
-     * @param q_init The initial guess for the inverse kinematics solution. 
-     * The solver uses the joint value q_init(pr2_ik_->free_angle_) 
-     * as an input to the inverse kinematics. pr2_ik_->free_angle_ can 
-     * either be 0 or 2 corresponding to the shoulder pan or shoulder roll angle 
+     * @param q_init The initial guess for the inverse kinematics solution.
+     * The solver uses the joint value q_init(pr2_ik_->free_angle_)
+     * as an input to the inverse kinematics. pr2_ik_->free_angle_ can
+     * either be 0 or 2 corresponding to the shoulder pan or shoulder roll angle
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out A std::vector of KDL::JntArray containing all found solutions.  
+     * @param q_out A std::vector of KDL::JntArray containing all found solutions.
      */
-    int CartToJnt(const KDL::JntArray& q_init, 
-                  const KDL::Frame& p_in, 
+    int CartToJnt(const KDL::JntArray& q_init,
+                  const KDL::Frame& p_in,
                   std::vector<KDL::JntArray> &q_out);
-  
+
      /**
-     * @brief This method searches for and returns the first set of solutions it finds. 
+     * @brief This method searches for and returns the first set of solutions it finds.
      *
      * @return < 0 if no solution is found
-     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the joint value 
-     * q_init(pr2_ik_->free_angle_) as an input to the inverse kinematics. 
-     * pr2_ik_->free_angle_ can either be 0 or 2 corresponding to the shoulder pan or shoulder roll angle 
+     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the joint value
+     * q_init(pr2_ik_->free_angle_) as an input to the inverse kinematics.
+     * pr2_ik_->free_angle_ can either be 0 or 2 corresponding to the shoulder pan or shoulder roll angle
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out A std::vector of KDL::JntArray containing all found solutions.  
+     * @param q_out A std::vector of KDL::JntArray containing all found solutions.
      * @param timeout The amount of time (in seconds) to spend looking for a solution.
      */
-    int CartToJntSearch(const KDL::JntArray& q_in, 
-                        const KDL::Frame& p_in, 
-                        std::vector<KDL::JntArray> &q_out, 
+    int CartToJntSearch(const KDL::JntArray& q_in,
+                        const KDL::Frame& p_in,
+                        std::vector<KDL::JntArray> &q_out,
                         const double &timeout);
 
      /**
-     * @brief This method searches for and returns the closest solution to 
-     * the initial guess in the first set of solutions it finds. 
+     * @brief This method searches for and returns the closest solution to
+     * the initial guess in the first set of solutions it finds.
      * @return < 0 if no solution is found
-     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the joint value q_init(pr2_ik_->free_angle_) as 
-     * as an input to the inverse kinematics. pr2_ik_->free_angle_ can either be 0 or 2 
-     * corresponding to the shoulder pan or shoulder roll angle 
+     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the joint value q_init(pr2_ik_->free_angle_) as
+     * as an input to the inverse kinematics. pr2_ik_->free_angle_ can either be 0 or 2
+     * corresponding to the shoulder pan or shoulder roll angle
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out The solution.  
+     * @param q_out The solution.
      * @param timeout The amount of time (in seconds) to spend looking for a solution.
      */
-    int CartToJntSearch(const KDL::JntArray& q_in, 
-                        const KDL::Frame& p_in, 
-                        KDL::JntArray &q_out, 
+    int CartToJntSearch(const KDL::JntArray& q_in,
+                        const KDL::Frame& p_in,
+                        KDL::JntArray &q_out,
                         const double &timeout);
 
      /**
-     * @brief This method searches for and returns the closest solution to 
-     * the initial guess in the first set of solutions it finds. 
+     * @brief This method searches for and returns the closest solution to
+     * the initial guess in the first set of solutions it finds.
      * @return < 0 if no solution is found
-     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the 
-     * joint value q_init(pr2_ik_->free_angle_) as an input to the inverse kinematics. 
-     * pr2_ik_->free_angle_ can either be 0 or 2 corresponding to the shoulder pan 
+     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the
+     * joint value q_init(pr2_ik_->free_angle_) as an input to the inverse kinematics.
+     * pr2_ik_->free_angle_ can either be 0 or 2 corresponding to the shoulder pan
      * or shoulder roll angle.
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param consistency_limit search for a solution only by varying the redundant angle 
+     * @param consistency_limit search for a solution only by varying the redundant angle
      * by a maximum of consistency_limit from the current initial guess
-     * @param q_out A std::vector of KDL::JntArray containing all found solutions.  
+     * @param q_out A std::vector of KDL::JntArray containing all found solutions.
      * @param timeout The amount of time (in seconds) to spend looking for a solution.
      */
-    int CartToJntSearch(const KDL::JntArray& q_in, 
-                        const KDL::Frame& p_in, 
-                        KDL::JntArray &q_out, 
+    int CartToJntSearch(const KDL::JntArray& q_in,
+                        const KDL::Frame& p_in,
+                        KDL::JntArray &q_out,
                         const double &timeout,
                         const double& consistency_limit);
 
      /**
-     * @brief This method searches for and returns the first solution it finds 
+     * @brief This method searches for and returns the first solution it finds
      * that also satisifies both user defined callbacks.
      * @return < 0 if no solution is found
-     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the joint value 
-     * q_init(pr2_ik_->free_angle_) as an input to the inverse kinematics. pr2_ik_->free_angle_ can either be 0 or 2 
+     * @param q_in The initial guess for the inverse kinematics solution. The solver uses the joint value
+     * q_init(pr2_ik_->free_angle_) as an input to the inverse kinematics. pr2_ik_->free_angle_ can either be 0 or 2
      * corresponding to the shoulder pan or shoulder roll angle.
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out A KDL::JntArray vector containing the solution.  
+     * @param q_out A KDL::JntArray vector containing the solution.
      * @param timeout The amount of time (in seconds) to spend looking for a solution.
      * @param error_code Return error code.
      * @param solution_callback A callback function to which IK solutions are passed.
      */
-    int CartToJntSearch(const KDL::JntArray& q_in, 
-                        const KDL::Frame& p_in, 
+    int CartToJntSearch(const KDL::JntArray& q_in,
+                        const KDL::Frame& p_in,
                         KDL::JntArray &q_out,
                         const double &timeout,
                         moveit_msgs::MoveItErrorCodes &error_code,
                         const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
 
      /**
-     * @brief This method searches for and returns the first solution it finds 
+     * @brief This method searches for and returns the first solution it finds
      * that also satisifies both user defined callbacks.
      * @return < 0 if no solution is found
-     * @param q_in The initial guess for the inverse kinematics solution. 
-     * The solver uses the joint value q_in(pr2_ik_->free_angle_) as an initial guess. 
+     * @param q_in The initial guess for the inverse kinematics solution.
+     * The solver uses the joint value q_in(pr2_ik_->free_angle_) as an initial guess.
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out The solution.  
+     * @param q_out The solution.
      * @param timeout The amount of time (in seconds) to spend looking for a solution.
-     * @param consistency_limit search for a solution only by varying the redundant angle 
+     * @param consistency_limit search for a solution only by varying the redundant angle
      * by a maximum of consistency_limit from the current initial guess
      * @param error_code Return error code.
      * @param solution_callback A callback function to which IK solutions are passed.
      */
-    int CartToJntSearch(const KDL::JntArray& q_in, 
-                        const KDL::Frame& p_in, 
-                        KDL::JntArray &q_out, 
-                        const double &timeout, 
-                        const double& consistency_limit, 
+    int CartToJntSearch(const KDL::JntArray& q_in,
+                        const KDL::Frame& p_in,
+                        KDL::JntArray &q_out,
+                        const double &timeout,
+                        const double& consistency_limit,
                         moveit_msgs::MoveItErrorCodes &error_code,
                         const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
 
     /**
-     * @brief A method to get chain information about the serial chain that the IK operates on 
-     * @param response This class gets populated with information about the joints 
+     * @brief A method to get chain information about the serial chain that the IK operates on
+     * @param response This class gets populated with information about the joints
      * that IK operates on, including joint names and limits.
     */
     void getSolverInfo(moveit_msgs::KinematicSolverInfo &response);
@@ -229,26 +229,26 @@ static const int TIMED_OUT = -2;
   private:
 
      /**
-     * @brief This method searches for and returns the first solution it finds 
+     * @brief This method searches for and returns the first solution it finds
      * that also satisifies user defined callbacks.
      * @return < 0 if no solution is found
-     * @param q_in The initial guess for the inverse kinematics solution. 
-     * The solver uses the joint value q_init(pr2_ik_->free_angle_) as an initial guess. 
+     * @param q_in The initial guess for the inverse kinematics solution.
+     * The solver uses the joint value q_init(pr2_ik_->free_angle_) as an initial guess.
      * @param p_in A KDL::Frame representation of the position of the end-effector for which the IK is being solved.
-     * @param q_out A std::vector of KDL::JntArray containing all found solutions.  
+     * @param q_out A std::vector of KDL::JntArray containing all found solutions.
      * @param timeout The amount of time (in seconds) to spend looking for a solution.
      * @param use_consistency_limit Use consistency limit
-     * @param consistency_limit search for a solution only by varying the redundant angle 
+     * @param consistency_limit search for a solution only by varying the redundant angle
      * by a maximum of consistency_limit from the current initial guess
      * @param error_code Return error code.
      * @param solution_callback A callback function to which IK solutions are passed.
      */
-    int CartToJntSearch(const KDL::JntArray& q_in, 
-                        const KDL::Frame& p_in, 
-                        KDL::JntArray &q_out, 
-                        const double &timeout, 
+    int CartToJntSearch(const KDL::JntArray& q_in,
+                        const KDL::Frame& p_in,
+                        KDL::JntArray &q_out,
+                        const double &timeout,
                         bool use_consistency_limit,
-                        const double& consistency_limit, 
+                        const double& consistency_limit,
                         moveit_msgs::MoveItErrorCodes &error_code,
                         const kinematics::KinematicsBase::IKCallbackFn &solution_callback);
 

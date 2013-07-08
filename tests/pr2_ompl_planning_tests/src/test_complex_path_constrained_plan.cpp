@@ -50,14 +50,14 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ros::NodeHandle nh;
   ros::service::waitForService(PLANNER_SERVICE_NAME);
   ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
-  
+
   ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
   EXPECT_TRUE(planning_service_client.exists());
   EXPECT_TRUE(planning_service_client.isValid());
-  
+
   moveit_msgs::GetMotionPlan::Request mplan_req;
   moveit_msgs::GetMotionPlan::Response mplan_res;
-  
+
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
   planning_scene::PlanningScene &scene = *psm.getPlanningScene();
   EXPECT_TRUE(scene.isConfigured());
@@ -67,7 +67,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.num_planning_attempts = 1;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
 
-  
+
   // set the goal constraints
 
   moveit_msgs::PositionConstraint pcm;
@@ -79,7 +79,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   pcm.constraint_region_shape.dimensions.push_back(0.001);
   pcm.constraint_region_shape.dimensions.push_back(0.001);
   pcm.constraint_region_shape.dimensions.push_back(0.001);
-  
+
   pcm.constraint_region_pose.header.frame_id = scene.getRobotModel()->getModelFrame();
   pcm.constraint_region_pose.pose.position.x = 0.5;
   pcm.constraint_region_pose.pose.position.y = 0.4;
@@ -89,13 +89,13 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   pcm.constraint_region_pose.pose.orientation.z = 0.0;
   pcm.constraint_region_pose.pose.orientation.w = 1.0;
   pcm.weight = 1.0;
-  
+
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
 
 
   // add path constraints
-  moveit_msgs::Constraints &c = mplan_req.motion_plan_request.path_constraints;  
+  moveit_msgs::Constraints &c = mplan_req.motion_plan_request.path_constraints;
 
   moveit_msgs::PositionConstraint pcm2;
   pcm2.link_name = "r_wrist_roll_link";
@@ -106,7 +106,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   pcm2.constraint_region_shape.dimensions.push_back(0.1);
   pcm2.constraint_region_shape.dimensions.push_back(0.1);
   pcm2.constraint_region_shape.dimensions.push_back(0.1);
-  
+
   pcm2.constraint_region_pose.header.frame_id = "l_wrist_roll_link";
   pcm2.constraint_region_pose.pose.position.x = 0.0;
   pcm2.constraint_region_pose.pose.position.y = 0.0;
@@ -155,12 +155,12 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
 
   kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
     (scene.getRobotModel()->getJointModelGroup("arms"), c, scene.getRobotModel(), scene.getTransforms(), kinematic_constraints::KinematicsAllocator(), sa);
-  
+
   EXPECT_TRUE(s.get() != NULL);
-  
+
   kinematic_constraints::KinematicConstraintSet kset(scene.getRobotModel(), scene.getTransforms());
   kset.add(c);
-  
+
   bool found = false;
   planning_models::RobotState *ks(scene.getRobotModel());
   ks.setToDefaultValues();
@@ -170,7 +170,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
     if (s->sample(values, ks, 10))
     {
       ks.getJointStateGroup("arms")->setStateValues(values);
-      planning_models::robotStateToRobotStateMsg(ks, mplan_req.motion_plan_request.start_state); 
+      planning_models::robotStateToRobotStateMsg(ks, mplan_req.motion_plan_request.start_state);
       moveit_msgs::DisplayTrajectory d;
       d.model_id = scene.getRobotModel()->getName();
       d.trajectory_start = mplan_req.motion_plan_request.start_state;
@@ -181,29 +181,29 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
     }
   }
   EXPECT_TRUE(found);
-  
+
   // run planner
-  
+
   ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-  
-  
+
+
   moveit_msgs::DisplayTrajectory d;
   d.model_id = scene.getRobotModel()->getName();
   d.trajectory_start = mplan_res.trajectory_start;
   d.trajectory = mplan_res.trajectory;
   pub.publish(d);
-  ros::Duration(0.5).sleep(); 
+  ros::Duration(0.5).sleep();
 }
 
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  
+
   ros::init(argc, argv, "test_ompl_planning");
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  
+
   return RUN_ALL_TESTS();
 }

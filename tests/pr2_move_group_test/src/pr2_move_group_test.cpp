@@ -44,22 +44,22 @@ static const std::string ROBOT_DESCRIPTION="robot_description";
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "pr2_move_group_test", ros::init_options::AnonymousName);
-  
+
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
   planning_scene::PlanningScene &scene = *psm.getPlanningScene();
-  
+
   actionlib::SimpleActionClient<moveit_msgs::MoveGroupAction> act("move_group", false);
   act.waitForServer();
 
-  
+
   moveit_msgs::MoveGroupGoal goal;
   /*
   goal.request.group_name = "";
   goal.request.allowed_planning_time = ros::Duration(0.5);
-  goal.request.goal_constraints.resize(1);  
+  goal.request.goal_constraints.resize(1);
   goal.request.goal_constraints[0].joint_constraints.resize(1);
   goal.request.goal_constraints[0].joint_constraints[0].position = -2.0;
   goal.request.goal_constraints[0].joint_constraints[0].joint_name = "r_shoulder_pan_joint";
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
   goal.request.group_name = "right_arm";
   goal.request.num_planning_attempts = 1;
   goal.request.allowed_planning_time = ros::Duration(5.0);
-  
+
   geometry_msgs::PoseStamped pose;
   pose.header.frame_id = "torso_lift_link";
   pose.pose.position.x = 0.75;
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
   pose.pose.orientation.z = 0.0;
   pose.pose.orientation.w = 1.0;
   moveit_msgs::Constraints g0 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
-  
+
   /*
   pose.pose.position.x = 0.35;
   pose.pose.position.y = -0.6;
@@ -93,9 +93,9 @@ int main(int argc, char **argv)
   pose.pose.orientation.x = 0.0;
   pose.pose.orientation.y = 0.0;
   pose.pose.orientation.z = 0.0;
-  pose.pose.orientation.w = 1.0;    
+  pose.pose.orientation.w = 1.0;
   moveit_msgs::Constraints g1 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
-  */  
+  */
   goal.request.goal_constraints.resize(1);
   goal.request.goal_constraints[0] = g0;
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
   start.getJointStateGroup("right_arm")->setToRandomValues();
   goal.request.goal_constraints.resize(1);
   goal.request.goal_constraints[0] = kinematic_constraints::constructGoalConstraints(start.getJointStateGroup("right_arm"));
-  
+
   act.sendGoal(goal);
   if(!act.waitForResult(ros::Duration(5.0))) {
     ROS_INFO_STREAM("Apparently returned early");

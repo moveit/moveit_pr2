@@ -50,7 +50,7 @@ TEST(OmplPlanning, SimplePlan)
     ros::NodeHandle nh;
     ros::service::waitForService(PLANNER_SERVICE_NAME);
     ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
-    
+
     ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
     EXPECT_TRUE(planning_service_client.exists());
     EXPECT_TRUE(planning_service_client.isValid());
@@ -73,11 +73,11 @@ TEST(OmplPlanning, SimplePlan)
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0] = kinematic_constraints::constructGoalConstraints(start.getJointStateGroup("right_arm"));
     std::cout << mplan_req.motion_plan_request << std::endl;
-    
+
     ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
     ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
     EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-    
+
     moveit_msgs::DisplayTrajectory d;
     d.model_id = scene.getRobotModel()->getName();
     d.trajectory_start = mplan_res.trajectory_start;
@@ -89,7 +89,7 @@ TEST(OmplPlanning, SimplePlan)
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  
+
   ros::init(argc, argv, "test_ompl_planning", ros::init_options::AnonymousName);
   ros::AsyncSpinner spinner(1);
   spinner.start();

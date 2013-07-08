@@ -49,18 +49,18 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ros::NodeHandle nh;
   ros::service::waitForService(PLANNER_SERVICE_NAME);
   ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
-  
+
   ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
   EXPECT_TRUE(planning_service_client.exists());
   EXPECT_TRUE(planning_service_client.isValid());
-  
+
   moveit_msgs::GetMotionPlan::Request mplan_req;
   moveit_msgs::GetMotionPlan::Response mplan_res;
-  
+
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
   planning_scene::PlanningScene &scene = *psm.getPlanningScene();
   EXPECT_TRUE(scene.isConfigured());
-  
+
   mplan_req.motion_plan_request.planner_id = "RRTConnectkConfigDefault";
   mplan_req.motion_plan_request.group_name = "right_arm";
   mplan_req.motion_plan_request.num_planning_attempts = 1;
@@ -76,7 +76,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.993988668449755);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-2.2779628049776051);
 
-  
+
   moveit_msgs::PositionConstraint pcm;
   pcm.link_name = "r_wrist_roll_link";
   pcm.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
@@ -98,7 +98,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
 
 
   // add path constraints
-  moveit_msgs::Constraints &constr = mplan_req.motion_plan_request.path_constraints;  
+  moveit_msgs::Constraints &constr = mplan_req.motion_plan_request.path_constraints;
   constr.orientation_constraints.resize(1);
   moveit_msgs::OrientationConstraint &ocm = constr.orientation_constraints[0];
   ocm.link_name = "r_wrist_roll_link";
@@ -110,14 +110,14 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ocm.absolute_x_axis_tolerance = 0.15;
   ocm.absolute_y_axis_tolerance = 0.15;
   ocm.absolute_z_axis_tolerance = M_PI;
-  ocm.weight = 1.0; 
+  ocm.weight = 1.0;
   std::cout << mplan_req.motion_plan_request << std::endl;
-  
+
   ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-  
-  
+
+
   moveit_msgs::DisplayTrajectory d;
   d.model_id = scene.getRobotModel()->getName();
   d.trajectory_start = mplan_res.trajectory_start;
@@ -129,10 +129,10 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  
+
   ros::init(argc, argv, "test_ompl_planning", ros::init_options::AnonymousName);
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  
+
   return RUN_ALL_TESTS();
 }

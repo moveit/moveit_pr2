@@ -65,11 +65,11 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   printf("Loading classes:\n");
   for(std::vector<std::string>::const_iterator it = classes.begin();
       it != classes.end();
-      ++it)  
+      ++it)
     printf("  %s\n", it->c_str());
   fflush(stdout);
   return;
-  
+
   for(std::vector<std::string>::const_iterator it = classes.begin();
       it != classes.end();
       ++it)
@@ -97,7 +97,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
     planning_interface::PlannerCapability capabilities;
     bool can_service = (*it)->canServiceRequest(req, capabilities);
     EXPECT_TRUE(can_service);
-   
+
     // Another dumb test: require that the planners return false from solve
     moveit_msgs::GetMotionPlan::Response res;
     bool solved = (*it)->solve(scene, req, res);
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
   {
     ROS_ERROR("Planning scene not configured");
     delete g_psm;
-    
+
     return 1;
   }
 }

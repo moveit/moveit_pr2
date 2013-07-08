@@ -188,4 +188,3 @@ void IMarker::initialize(
   server_->setCallback(imarker_.name, callback);
   server_->applyChanges();
 }
-

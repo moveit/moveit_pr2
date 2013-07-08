@@ -66,7 +66,7 @@ bool NOT_NEAR(const double &v1, const double &v2, const double &NEAR)
 
 TEST(JacobianSolver, solver)
 {
- srand ( time(NULL) ); // initialize random seed: 
+ srand ( time(NULL) ); // initialize random seed:
  rdf_loader::RDFLoader model_loader("robot_description");
  robot_model::RobotModelPtr kinematic_model;
  kinematic_model.reset(new robot_model::RobotModel(model_loader.getURDF(),model_loader.getSRDF()));
@@ -76,9 +76,9 @@ TEST(JacobianSolver, solver)
  kinematic_state->setToDefaultValues();
 
  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
- 
+
  std::string link_name = "r_wrist_roll_link";
- std::vector<double> joint_angles(7,0.0); 
+ std::vector<double> joint_angles(7,0.0);
  geometry_msgs::Point ref_position;
  Eigen::MatrixXd jacobian;
  Eigen::Vector3d point(0.0,0.0,0.0);
@@ -86,14 +86,14 @@ TEST(JacobianSolver, solver)
  ASSERT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
 
  KDL::Tree tree;
- if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree)) 
+ if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree))
  {
    ROS_ERROR("Could not initialize tree object");
  }
  KDL::Chain kdl_chain;
  std::string base_frame("torso_lift_link");
  std::string tip_frame("r_wrist_roll_link");
- if (!tree.getChain(base_frame, tip_frame, kdl_chain)) 
+ if (!tree.getChain(base_frame, tip_frame, kdl_chain))
  {
    ROS_ERROR("Could not initialize chain object");
  }
@@ -125,7 +125,7 @@ TEST(JacobianSolver, solver)
 
 TEST(JacobianSolver, solver2)
 {
- srand ( time(NULL) ); // initialize random seed: 
+ srand ( time(NULL) ); // initialize random seed:
  rdf_loader::RDFLoader model_loader("robot_description");
  robot_model::RobotModelPtr kinematic_model;
  kinematic_model.reset(new robot_model::RobotModel(model_loader.getURDF(),model_loader.getSRDF()));
@@ -135,9 +135,9 @@ TEST(JacobianSolver, solver2)
  kinematic_state->setToDefaultValues();
 
  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
- 
+
  std::string link_name = "l_wrist_roll_link";
- std::vector<double> joint_angles(7,0.0); 
+ std::vector<double> joint_angles(7,0.0);
  geometry_msgs::Point ref_position;
  Eigen::MatrixXd jacobian;
  Eigen::Vector3d point(0.0,0.0,0.0);
@@ -145,14 +145,14 @@ TEST(JacobianSolver, solver2)
  ASSERT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
 
  KDL::Tree tree;
- if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree)) 
+ if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree))
  {
    ROS_ERROR("Could not initialize tree object");
  }
  KDL::Chain kdl_chain;
  std::string base_frame("torso_lift_link");
  std::string tip_frame("l_wrist_roll_link");
- if (!tree.getChain(base_frame, tip_frame, kdl_chain)) 
+ if (!tree.getChain(base_frame, tip_frame, kdl_chain))
  {
    ROS_ERROR("Could not initialize chain object");
  }

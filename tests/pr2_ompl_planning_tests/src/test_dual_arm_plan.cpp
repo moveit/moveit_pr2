@@ -49,7 +49,7 @@ TEST(OmplPlanning, SimplePlan)
     ros::NodeHandle nh;
     ros::service::waitForService(PLANNER_SERVICE_NAME);
     ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
-    
+
     ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
     EXPECT_TRUE(planning_service_client.exists());
     EXPECT_TRUE(planning_service_client.isValid());
@@ -73,7 +73,7 @@ TEST(OmplPlanning, SimplePlan)
     pose.pose.orientation.x = 0.0;
     pose.pose.orientation.y = 0.0;
     pose.pose.orientation.z = 0.0;
-    pose.pose.orientation.w = 1.0;    
+    pose.pose.orientation.w = 1.0;
     moveit_msgs::Constraints g0 = kinematic_constraints::constructGoalConstraints("l_wrist_roll_link", pose);
 
 
@@ -83,12 +83,12 @@ TEST(OmplPlanning, SimplePlan)
     pose.pose.orientation.x = 0.0;
     pose.pose.orientation.y = 0.0;
     pose.pose.orientation.z = 0.0;
-    pose.pose.orientation.w = 1.0;    
+    pose.pose.orientation.w = 1.0;
     moveit_msgs::Constraints g1 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
 
     mplan_req.motion_plan_request.goal_constraints.resize(1);
     mplan_req.motion_plan_request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
-    
+
     ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
     ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
     EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
@@ -104,7 +104,7 @@ TEST(OmplPlanning, SimplePlan)
 int main(int argc, char **argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  
+
   ros::init(argc, argv, "test_ompl_planning", ros::init_options::AnonymousName);
   ros::AsyncSpinner spinner(1);
   spinner.start();

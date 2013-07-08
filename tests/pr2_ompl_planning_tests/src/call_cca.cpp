@@ -41,7 +41,7 @@ static const std::string ROBOT_DESCRIPTION="robot_description";
 static const std::string CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME="ompl_planning/construct_constraint_approximation";
 
 moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint()
-{  
+{
   moveit_msgs::Constraints c;
   moveit_msgs::PositionConstraint pcm2;
   pcm2.link_name = "r_wrist_roll_link";
@@ -55,7 +55,7 @@ moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint()
   pcm2.constraint_region.primitives[0].dimensions.x = 0.01;
   pcm2.constraint_region.primitives[0].dimensions.y = 0.01;
   pcm2.constraint_region.primitives[0].dimensions.z = 0.01;
-  
+
   pcm2.constraint_region.primitive_poses.resize(1);
   pcm2.constraint_region.primitive_poses[0].position.x = 0.0;
   pcm2.constraint_region.primitive_poses[0].position.y = 0.0;
@@ -91,20 +91,20 @@ moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint()
   ocm.absolute_z_axis_tolerance = 0.01;
   ocm.weight = 1.0;
   c.orientation_constraints.push_back(ocm);
-  
+
   moveit_msgs::ConstructConstraintApproximation::Request cca;
   cca.constraint = c;
   cca.group = "arms";
   cca.state_space_parameterization = "PoseModel";
   cca.samples = 1000;
-  cca.edges_per_sample = 0;  
+  cca.edges_per_sample = 0;
   return cca;
 }
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "call_cca", ros::init_options::AnonymousName);
-  
+
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
@@ -118,7 +118,6 @@ int main(int argc, char **argv)
     ROS_INFO("Done");
   else
     ROS_ERROR("Failed");
-  
+
   return 0;
 }
-

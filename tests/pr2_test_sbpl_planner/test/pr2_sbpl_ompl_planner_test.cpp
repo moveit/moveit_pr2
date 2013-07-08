@@ -45,35 +45,35 @@
 #include <collision_distance_field_ros/collision_robot_hybrid_ros.h>
 #include <rdf_loader/rdf_loader.h>
 #include <ompl_interface_ros/ompl_interface_ros.h>
-  
+
 class Pr2SBPLOMPLPlannerTester : public testing::Test{
 
 protected:
 
-  virtual void SetUp() 
+  virtual void SetUp()
   {
-    
+
     rml_.reset(new rdf_loader::RDFLoader("robot_description"));
 
     acm_.reset(new collision_detection::AllowedCollisionMatrix());
 
     ros::NodeHandle nh;
-    
+
     XmlRpc::XmlRpcValue coll_ops;
     nh.getParam("robot_description_planning/default_collision_operations", coll_ops);
-    
+
     if (coll_ops.getType() != XmlRpc::XmlRpcValue::TypeArray)
     {
       ROS_WARN("default_collision_operations is not an array");
       return;
     }
-    
+
     if (coll_ops.size() == 0)
     {
       ROS_WARN("No collision operations in default collision operations");
       return;
     }
-    
+
     for (int i = 0 ; i < coll_ops.size() ; ++i)
     {
       if (!coll_ops[i].hasMember("object1") || !coll_ops[i].hasMember("object2") || !coll_ops[i].hasMember("operation"))
@@ -97,14 +97,14 @@ protected:
 
 };
 
-TEST_F(Pr2SBPLOMPLPlannerTester, SimplePlan) 
+TEST_F(Pr2SBPLOMPLPlannerTester, SimplePlan)
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
   ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorHybridROS::create());
   ps->configure(rml_->getURDF(), rml_->getSRDF());
   ASSERT_TRUE(ps->isConfigured());
   ps->getAllowedCollisionMatrixNonConst() = *acm_;
-  
+
   sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getRobotModel());
   ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getRobotModel());
 
@@ -146,11 +146,11 @@ TEST_F(Pr2SBPLOMPLPlannerTester, SimplePlan)
 
   ASSERT_EQ(mplan_res_ompl.error_code.val, mplan_res_ompl.error_code.SUCCESS);
   EXPECT_GT(mplan_res_ompl.trajectory.joint_trajectory.points.size(), 0);
-}  
+}
 
 static const unsigned int NUM_TRIALS = 10;
 
-TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan) 
+TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan)
 {
   planning_scene::PlanningScenePtr ps(new planning_scene::PlanningScene());
   ps->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorHybridROS::create());
@@ -161,7 +161,7 @@ TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan)
   planning_models::RobotState *::JointStateGroup* start_jsg = ps->getCurrentState().getJointStateGroup("right_arm");
   planning_models::RobotState *goal_state(ps->getCurrentState());
   planning_models::RobotState *::JointStateGroup* goal_jsg = goal_state.getJointStateGroup("right_arm");
-  
+
   sbpl_interface::SBPLMetaInterface sbpl_planner(ps->getRobotModel());
   ompl_interface_ros::OMPLInterfaceROS ompl_planner(ps->getRobotModel());
 
@@ -259,7 +259,7 @@ TEST_F(Pr2SBPLOMPLPlannerTester, ManyPlan)
 
   //ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   //EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-}  
+}
 
 int main(int argc, char **argv)
 {
@@ -268,4 +268,3 @@ int main(int argc, char **argv)
 
   return RUN_ALL_TESTS();
 }
-

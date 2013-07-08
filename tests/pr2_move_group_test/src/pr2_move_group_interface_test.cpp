@@ -40,16 +40,16 @@
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "rw_move_group_interface_test", ros::init_options::AnonymousName);
-  
+
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  
+
   move_group_interface::MoveGroup group("arm");
 //  move_group_interface::MoveGroup group2("left_arm");
 /*
   std::vector<double> v0(7,0.0);
   group.setJointValueTarget(v0);
-  
+
   group.move();
   sleep(1);
   return 0;
@@ -63,13 +63,13 @@ int main(int argc, char **argv)
   v.push_back(-1.37);
   v.push_back(0);
   v.push_back(0);
-  
+
   group.setJointValueTarget(v);
-  
+
   group.move();
 
   sleep(3);
-  
+
   //    std::vector<double> v;
 
   v.clear();
@@ -92,12 +92,12 @@ int main(int argc, char **argv)
   v.push_back(-0.89);
   v.push_back(-1.09);
   v.push_back(-0.87);
-  v.push_back(0); 
+  v.push_back(0);
   v.push_back(0);
 
   group.setJointValueTarget(v);
   group.move();
-  sleep(2); 
+  sleep(2);
 
   std::vector<double> q;
   q.push_back(0.47);
@@ -107,10 +107,10 @@ int main(int argc, char **argv)
   q.push_back(-1.67);
   q.push_back(0);
   q.push_back(0);
-    
+
   group.setJointValueTarget(q);
   group.move();
-  sleep(1); 
+  sleep(1);
 */
 
 
@@ -122,12 +122,12 @@ int main(int argc, char **argv)
   v.push_back(0.38);
   v.push_back(0.055);
   v.push_back(-1.47);
-  v.push_back(0); 
+  v.push_back(0);
   v.push_back(0);
 
   group.setJointValueTarget(v);
   group.move();
-  sleep(2); 
+  sleep(2);
 
   std::vector<double> q;
   q.push_back(-0.69);
@@ -137,10 +137,10 @@ int main(int argc, char **argv)
   q.push_back(0.23);
   q.push_back(0);
   q.push_back(0);
-    
+
   group.setJointValueTarget(q);
   group.move();
-  sleep(1); 
+  sleep(1);
 
 
 

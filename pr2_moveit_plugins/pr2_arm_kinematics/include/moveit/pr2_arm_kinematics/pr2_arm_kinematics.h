@@ -69,13 +69,13 @@ namespace pr2_arm_kinematics
      *  but also exposes additional functionality to return the multiple solutions from an inverse kinematics computation. It uses an instance of
      *  a ros::NodeHandle to find the robot description. It can thus be used only if the robot description is available on a ROS param server.
      *
-     *  To use this wrapper, you must have a roscore running with a robot description available from the ROS param server. 
+     *  To use this wrapper, you must have a roscore running with a robot description available from the ROS param server.
      */
     PR2ArmKinematics(bool create_transform_listener = true);
 
     virtual ~PR2ArmKinematics();
 
-    /** 
+    /**
      *  @brief Specifies if the node is active or not
      *  @return True if the node is active, false otherwise.
      */
@@ -86,7 +86,7 @@ namespace pr2_arm_kinematics
      * @param A request message. See service definition for GetPositionIK for more information on this message.
      * @param The response message. See service definition for GetPositionIK for more information on this message.
      */
-    virtual bool getPositionIK(kinematics_msgs::GetPositionIK::Request &request, 
+    virtual bool getPositionIK(kinematics_msgs::GetPositionIK::Request &request,
                                kinematics_msgs::GetPositionIK::Response &response);
 
     /**
@@ -94,7 +94,7 @@ namespace pr2_arm_kinematics
      * @param A request message. See service definition for GetKinematicSolverInfo for more information on this message.
      * @param The response message. See service definition for GetKinematicSolverInfo for more information on this message.
      */
-    bool getIKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request, 
+    bool getIKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request,
                          kinematics_msgs::GetKinematicSolverInfo::Response &response);
 
     /**
@@ -102,7 +102,7 @@ namespace pr2_arm_kinematics
      * @param A request message. See service definition for GetKinematicSolverInfo for more information on this message.
      * @param The response message. See service definition for GetKinematicSolverInfo for more information on this message.
      */
-    bool getFKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request, 
+    bool getFKSolverInfo(kinematics_msgs::GetKinematicSolverInfo::Request &request,
                          kinematics_msgs::GetKinematicSolverInfo::Response &response);
 
     /**
@@ -110,19 +110,19 @@ namespace pr2_arm_kinematics
      * @param A request message. See service definition for GetPositionFK for more information on this message.
      * @param The response message. See service definition for GetPositionFK for more information on this message.
      */
-    bool getPositionFK(kinematics_msgs::GetPositionFK::Request &request, 
+    bool getPositionFK(kinematics_msgs::GetPositionFK::Request &request,
                        kinematics_msgs::GetPositionFK::Response &response);
 
     protected:
 
     // Helper function that assumes that everything is in the correct frame
-    bool getPositionIKHelper(kinematics_msgs::GetPositionIK::Request &request, 
-			     kinematics_msgs::GetPositionIK::Response &response);
-    
+    bool getPositionIKHelper(kinematics_msgs::GetPositionIK::Request &request,
+                 kinematics_msgs::GetPositionIK::Response &response);
+
     virtual bool transformPose(const std::string& des_frame,
-			       const geometry_msgs::PoseStamped& pose_in,
-			       geometry_msgs::PoseStamped& pose_out);
-    
+                   const geometry_msgs::PoseStamped& pose_in,
+                   geometry_msgs::PoseStamped& pose_out);
+
     bool active_;
     int free_angle_;
     urdf::Model robot_model_;

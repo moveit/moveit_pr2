@@ -48,14 +48,14 @@
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/robot_state/conversions.h>
 
- 
+
 int main(int argc, char **argv)
 {
   ros::init (argc, argv, "planning_scene_ros_api_tutorial");
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  ros::NodeHandle node_handle;  
+  ros::NodeHandle node_handle;
 
   /* ATTACH AN OBJECT*/
   /* First advertise and wait for a connection*/
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
   while(attached_object_publisher.getNumSubscribers() < 1)
   {
     ros::WallDuration sleep_t(0.5);
-    sleep_t.sleep();    
+    sleep_t.sleep();
   }
 
   /* Define the attached object message*/
@@ -80,11 +80,11 @@ int main(int argc, char **argv)
 
   /* Define a box to be attached */
   shape_msgs::SolidPrimitive primitive;
-  primitive.type = primitive.BOX;  
+  primitive.type = primitive.BOX;
   primitive.dimensions.resize(3);
   primitive.dimensions[0] = 0.1;
   primitive.dimensions[1] = 0.1;
-  primitive.dimensions[2] = 0.1;  
+  primitive.dimensions[2] = 0.1;
 
   attached_object.object.primitives.push_back(primitive);
   attached_object.object.primitive_poses.push_back(pose);
@@ -93,9 +93,9 @@ int main(int argc, char **argv)
   attached_object.object.operation = attached_object.object.ADD;
 
   /* Publish and sleep (to view the visualized results)*/
-  attached_object_publisher.publish(attached_object);  
+  attached_object_publisher.publish(attached_object);
   ros::WallDuration sleep_time(10.0);
-  sleep_time.sleep();    
+  sleep_time.sleep();
 
   /* DETACH THE OBJECT*/
   /* Note that the object will now be added back into the collision world.*/
@@ -103,9 +103,9 @@ int main(int argc, char **argv)
   detach_object.object.id = "box";
   detach_object.link_name = "r_wrist_roll_link";
   detach_object.object.operation = attached_object.object.REMOVE;
-  ROS_INFO("Detaching the object");  
-  attached_object_publisher.publish(detach_object);  
-  sleep_time.sleep();    
+  ROS_INFO("Detaching the object");
+  attached_object_publisher.publish(detach_object);
+  sleep_time.sleep();
 
 
   /* REMOVE OBJECT FROM COLLISION WORLD*/
@@ -114,60 +114,60 @@ int main(int argc, char **argv)
   while(collision_object_publisher.getNumSubscribers() < 1)
   {
     ros::WallDuration sleep_t(0.5);
-    sleep_t.sleep();    
+    sleep_t.sleep();
   }
   /* Define the message and publish the operation*/
   moveit_msgs::CollisionObject remove_object;
   remove_object.id = "box";
-  remove_object.header.frame_id = "odom_combined";  
+  remove_object.header.frame_id = "odom_combined";
   remove_object.operation = remove_object.REMOVE;
-  ROS_INFO("Removing the object");  
-  collision_object_publisher.publish(remove_object);  
-  sleep_time.sleep();    
-  
+  ROS_INFO("Removing the object");
+  collision_object_publisher.publish(remove_object);
+  sleep_time.sleep();
+
   /* USE THE PLANNING SCENE MESSAGE FOR THE SAME SET OF OPERATIONS*/
   /* Advertise the planning scene message publisher*/
   ros::Publisher planning_scene_diff_publisher = node_handle.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
   while(planning_scene_diff_publisher.getNumSubscribers() < 1)
   {
     ros::WallDuration sleep_t(0.5);
-    sleep_t.sleep();    
+    sleep_t.sleep();
   }
 
   /* PUT THE OBJECT IN THE ENVIRONMENT*/
-  ROS_INFO("Putting the object back into the environment");  
+  ROS_INFO("Putting the object back into the environment");
   moveit_msgs::PlanningScene planning_scene;
   planning_scene.world.collision_objects.push_back(attached_object.object);
   planning_scene.is_diff = true;
-  planning_scene_diff_publisher.publish(planning_scene);  
-  sleep_time.sleep();  
-  
+  planning_scene_diff_publisher.publish(planning_scene);
+  sleep_time.sleep();
+
   /* ATTACH THE OBJECT */
-  ROS_INFO("Attaching the object and removing it from the collision world");  
-  planning_scene.world.collision_objects.clear();  
+  ROS_INFO("Attaching the object and removing it from the collision world");
+  planning_scene.world.collision_objects.clear();
   planning_scene.world.collision_objects.push_back(remove_object);
   planning_scene.robot_state.attached_collision_objects.push_back(attached_object);
   planning_scene_diff_publisher.publish(planning_scene);
-  
-  sleep_time.sleep();  
+
+  sleep_time.sleep();
 
   /* DETACH THE OBJECT */
-  ROS_INFO("Detaching the object and returning it to the collision world");  
+  ROS_INFO("Detaching the object and returning it to the collision world");
   planning_scene.robot_state.attached_collision_objects.clear();
   planning_scene.robot_state.attached_collision_objects.push_back(detach_object);
-  planning_scene.world.collision_objects.clear();  
+  planning_scene.world.collision_objects.clear();
   planning_scene.world.collision_objects.push_back(attached_object.object);
   planning_scene_diff_publisher.publish(planning_scene);
 
-  sleep_time.sleep();  
+  sleep_time.sleep();
 
   /* REMOVE THE OBJECT FROM THE COLLISION WORLD */
-  ROS_INFO("Removing the object again");  
+  ROS_INFO("Removing the object again");
   planning_scene.robot_state.attached_collision_objects.clear();
-  planning_scene.world.collision_objects.clear();  
+  planning_scene.world.collision_objects.clear();
   planning_scene.world.collision_objects.push_back(remove_object);
   planning_scene_diff_publisher.publish(planning_scene);
 
-  ros::shutdown(); 
+  ros::shutdown();
   return 0;
 }

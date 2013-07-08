@@ -95,7 +95,7 @@ void publishMarkers(visualization_msgs::MarkerArray& markers)
     g_marker_array_publisher->publish(g_collision_points);
 }
 
-  
+
 void userCallback(InteractiveRobot& robot)
 {
   // move the world geometry in the collision world
@@ -160,13 +160,13 @@ int main(int argc, char **argv)
   // create a PlanningScene
   g_planning_scene = new planning_scene::PlanningScene(robot.robotModel());
 
-  // Add the world geometry to the PlanningScene's collision detection world 
+  // Add the world geometry to the PlanningScene's collision detection world
   Eigen::Affine3d world_cube_pose;
   double world_cube_size;
   robot.getWorldGeometry(world_cube_pose, world_cube_size);
   g_world_cube_shape.reset(new shapes::Box(world_cube_size, world_cube_size, world_cube_size));
   g_planning_scene->getWorldNonConst()->addToObject("world_cube", g_world_cube_shape, world_cube_pose);
-  
+
   // Create a marker array publisher for publishing contact points
   g_marker_array_publisher = new ros::Publisher(nh.advertise<visualization_msgs::MarkerArray>("interactive_robot_marray",100));
 
@@ -179,6 +179,6 @@ int main(int argc, char **argv)
   delete g_planning_scene;
   delete g_marker_array_publisher;;
 
-  ros::shutdown();  
+  ros::shutdown();
   return 0;
 }

@@ -14,20 +14,20 @@ protected:
   virtual void SetUp() {
 
     ros::NodeHandle nh;
-    
+
     planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor("robot_description"));
-    
+
     planning_scene_diff_.reset(new planning_scene::PlanningScene(planning_scene_monitor_->getPlanningScene()));
-    
+
     kinematics_plugin_loader_.reset(new kinematics_plugin_loader::KinematicsPluginLoader());
 
     kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_plugin_loader_->getLoaderFunction();
-    
-    const planning_models::RobotModel::JointModelGroup* right_arm_group 
-      = planning_scene_diff_->getRobotModel()->getJointModelGroup("right_arm"); 
 
-    const planning_models::RobotModel::JointModelGroup* left_arm_group 
-      = planning_scene_diff_->getRobotModel()->getJointModelGroup("left_arm"); 
+    const planning_models::RobotModel::JointModelGroup* right_arm_group
+      = planning_scene_diff_->getRobotModel()->getJointModelGroup("right_arm");
+
+    const planning_models::RobotModel::JointModelGroup* left_arm_group
+      = planning_scene_diff_->getRobotModel()->getJointModelGroup("left_arm");
 
     std::map<std::string, kinematics::KinematicsBasePtr> solver_map;
     solver_map["right_arm"] = kinematics_allocator(right_arm_group);
@@ -53,7 +53,7 @@ protected:
 
     planning_scene_diff_->processCollisionObjectMsg(obj);
   }
-  
+
   virtual void TearDown() {
     grasp_evaluator_fast_.reset();
     planning_scene_diff_.reset();
@@ -88,13 +88,13 @@ TEST_F(MoveitManipulationTester, GraspCollideAttachedObject) {
   obj.poses[0].position.y = -.15;
   obj.poses[0].position.z = 1.1;
   obj.poses[0].orientation.w = 1.0;
-  
+
   planning_scene_diff_->processCollisionObjectMsg(obj);
 
   moveit_manipulation_msgs::PickupGoal goal;
   goal.arm_name = "right_arm";
   goal.collision_object_name = "obj";
-  
+
   goal.target.collision_name = "obj";
   goal.target.reference_frame_id = planning_scene_diff_->getPlanningFrame();
 
@@ -109,7 +109,7 @@ TEST_F(MoveitManipulationTester, GraspCollideAttachedObject) {
   grasps[0].grasp_pose.orientation.w = 1.0;
   grasps[0].desired_approach_distance = .1;
   grasps[0].min_approach_distance = .1;
- 
+
   grasp_place_evaluation::GraspExecutionInfoVector execution_info;
 
   grasp_evaluator_fast_->testGrasps(planning_scene_diff_,
@@ -160,7 +160,7 @@ TEST_F(MoveitManipulationTester, GraspInWorldFrameOK) {
   moveit_manipulation_msgs::PickupGoal goal;
   goal.arm_name = "right_arm";
   goal.collision_object_name = "obj";
-  
+
   goal.target.collision_name = "obj";
   goal.target.reference_frame_id = planning_scene_diff_->getPlanningFrame();
 
@@ -175,7 +175,7 @@ TEST_F(MoveitManipulationTester, GraspInWorldFrameOK) {
   grasps[0].grasp_pose.orientation.w = 1.0;
   grasps[0].desired_approach_distance = .1;
   grasps[0].min_approach_distance = .1;
- 
+
   grasp_place_evaluation::GraspExecutionInfoVector execution_info;
 
   grasp_evaluator_fast_->testGrasps(planning_scene_diff_,
@@ -194,4 +194,3 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "pr2_moveit_manipulation_tests");
   return RUN_ALL_TESTS();
 }
-

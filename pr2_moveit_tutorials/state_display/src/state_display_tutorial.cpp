@@ -54,7 +54,7 @@
 // This code is described in the RobotStateDisplay tutorial here:
 //    http://moveit.ros.org/wiki/index.php/Groovy/RobotStateDisplay/C%2B%2B_API
 
-  
+
 int main(int argc, char **argv)
 {
   ros::init (argc, argv, "state_display_tutorial");
@@ -62,9 +62,9 @@ int main(int argc, char **argv)
   /* Needed for ROS_INFO commands to work */
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  
+
   /* Load the robot model */
-  robot_model_loader::RobotModelLoader robot_model_loader("robot_description"); 
+  robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
 
   /* Get a shared pointer to the model */
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
@@ -80,14 +80,14 @@ int main(int argc, char **argv)
   /* PUBLISH RANDOM ARM POSITIONS */
   ros::NodeHandle nh;
   ros::Publisher robot_state_publisher = nh.advertise<moveit_msgs::DisplayRobotState>( "tutorial_robot_state", 1 );
-  
+
   /* loop at 1 Hz */
   ros::Rate loop_rate(1);
 
   for (int cnt=0; cnt<5 && ros::ok(); cnt++)
   {
     joint_state_group->setToRandomValues();
-    
+
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
     robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
@@ -105,10 +105,10 @@ int main(int argc, char **argv)
   /* POSITION END EFFECTOR AT SPECIFIC LOCATIONS */
 
   /* Find the default pose for the end effector */
-  kinematic_state->setToDefaultValues();  
+  kinematic_state->setToDefaultValues();
 
   const Eigen::Affine3d end_effector_default_pose =
-      kinematic_state->getLinkState("r_wrist_roll_link")->getGlobalLinkTransform();        
+      kinematic_state->getLinkState("r_wrist_roll_link")->getGlobalLinkTransform();
 
   const double PI = boost::math::constants::pi<double>();
   const double RADIUS = 0.1;
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
   {
 
     /* calculate a position for the end effector */
-    Eigen::Affine3d end_effector_pose = 
+    Eigen::Affine3d end_effector_pose =
       Eigen::Translation3d(RADIUS * cos(angle), RADIUS * sin(angle), 0.0) * end_effector_default_pose;
 
     ROS_INFO_STREAM("End effector position:\n" << end_effector_pose.translation());
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
       ROS_INFO_STREAM("Could not solve IK for pose\n" << end_effector_pose.translation());
       continue;
     }
-    
+
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
     robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
@@ -142,6 +142,6 @@ int main(int argc, char **argv)
     loop_rate.sleep();
   }
 
-  ros::shutdown();  
+  ros::shutdown();
   return 0;
 }

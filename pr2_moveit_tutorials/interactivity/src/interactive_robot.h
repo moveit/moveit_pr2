@@ -95,7 +95,7 @@ public:
   void *user_data_;
 
 private:
-  /* Indicate that the world or the robot has changed and 
+  /* Indicate that the world or the robot has changed and
    * the new state needs to be updated and published to rviz */
   void scheduleUpdate();
 

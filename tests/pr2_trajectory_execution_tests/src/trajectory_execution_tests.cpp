@@ -123,9 +123,9 @@ int main(int argc, char **argv)
   int ret = RUN_ALL_TESTS();
 
   emon.reset();
-  
+
   return ret;
-  
+
   // ROS_INFO_STREAM("Current for arms is " << emon->getCurrentController("arms"));
 
   // //should switch to default controller for arms, stopping other two

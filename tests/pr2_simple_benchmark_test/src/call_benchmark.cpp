@@ -44,14 +44,14 @@ static const std::string BENCHMARK_SERVICE_NAME="benchmark_planning_problem"; //
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "call_moveit_benchmark", ros::init_options::AnonymousName);
-      
+
   ros::AsyncSpinner spinner(1);
   spinner.start();
-  
+
   // fill a benchmark request
   moveit_msgs::ComputePlanningBenchmark::Request req;
   moveit_msgs::ComputePlanningBenchmark::Request res;
-  
+
   // fill planning scene
   boost::shared_ptr<tf::TransformListener> tf(new tf::TransformListener());
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, tf);
@@ -63,11 +63,11 @@ int main(int argc, char **argv)
   if (psm.getPlanningScene()->isConfigured())
     psm.getPlanningScene()->getPlanningSceneMsg(req.scene);
   req.motion_plan_request.start_state = req.scene.robot_state;
-  
+
   // average over 3 runs
   req.default_average_count = 10;
   req.filename = "benchmark_results.log";
-  
+
   // fill in a goal
   req.motion_plan_request.group_name = "right_arm";
   req.motion_plan_request.num_planning_attempts = 1;
@@ -101,17 +101,17 @@ int main(int argc, char **argv)
   moveit_msgs::Constraints goal = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
   req.motion_plan_request.goal_constraints.push_back(goal);
   */
-  
+
   req.planner_interfaces.resize(1);
   req.planner_interfaces[0].name = "ompl_interface_ros/OMPLPlanner";
-  
+
   ros::NodeHandle nh;
   ros::service::waitForService(BENCHMARK_SERVICE_NAME);
   ros::ServiceClient benchmark_service_client = nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(BENCHMARK_SERVICE_NAME);
   if (!benchmark_service_client.call(req, res))
       ROS_ERROR("Error calling benchmark service");
-  
+
   ros::waitForShutdown();
-  
+
   return 0;
 }
