@@ -1,4 +1,7 @@
 <launch>
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
   <!-- How often (seconds) to trigger object recognition -->
   <arg name="trigger_period" default="1.0" />  
@@ -7,7 +10,14 @@
   <arg name="min_confidence" default="0.5" />  
 
   <!-- Start the recognition pipeline -->
-  <include file="$(find object_recognition_tabletop)/launch/tabletop.launch" />
+  <node name="recognize_tabletop_objects_server" launch-prefix="$(arg launch_prefix)" pkg="object_recognition_ros" type="server" respawn="false" output="screen" args="--node_name tabletop_object_recognition -c $(find pr2_moveit_config)/config/detection.ork">    
+    <remap from="/camera/rgb/camera_info" to="/head_mount_kinect/rgb/camera_info"/>
+    <remap from="/camera/rgb/image_rect_color" to="/head_mount_kinect/rgb/image_rect_color"/>
+    <remap from="/camera/rgb/image_color" to="/head_mount_kinect/rgb/image_color"/>
+    <remap from="/camera/depth_registered/camera_info" to="/head_mount_kinect/depth_registered/camera_info"/>
+    <remap from="/camera/depth_registered/image_rect" to="/head_mount_kinect/depth_registered/image_rect"/>
+    <remap from="/camera/depth_registered/image" to="/head_mount_kinect/depth_registered/image"/>
+  </node>
 
   <!-- Start the service that can answer questions about object types -->
   <include file="$(find object_recognition_ros)/launch/object_information_server.launch" />
