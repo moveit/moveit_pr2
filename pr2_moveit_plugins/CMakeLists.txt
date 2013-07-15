@@ -21,6 +21,7 @@ find_package(catkin COMPONENTS
   eigen_conversions
   control_msgs
   pr2_mechanism_msgs
+  pr2_controllers_msgs
   REQUIRED)
 
 catkin_package(
@@ -29,8 +30,6 @@ catkin_package(
   DEPENDS
     moveit_core
     )
-
-include_directories(hack_for_groovy)
 
 include_directories(pr2_arm_kinematics/include)
 include_directories(pr2_moveit_controller_manager/include)
@@ -59,5 +58,3 @@ install(
     ${CATKIN_PACKAGE_SHARE_DESTINATION}
     )
 
-# HACK
-install(DIRECTORY hack_for_groovy/ DESTINATION include)
