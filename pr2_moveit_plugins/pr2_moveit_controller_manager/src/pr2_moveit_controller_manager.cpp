@@ -170,13 +170,19 @@ public:
     int gripper_joint_index = -1;
     for(std::size_t i=0; i < trajectory.joint_trajectory.joint_names.size(); ++i)
     {
-      if(trajectory.joint_trajectory.joint_names[i] == "r_gripper_joint" || trajectory.joint_trajectory.joint_names[i] == "l_gripper_joint")
+      if(trajectory.joint_trajectory.joint_names[i] == "r_gripper_motor_screw_joint" || trajectory.joint_trajectory.joint_names[i] == "l_gripper_motor_screw_joint")
       {
 	gripper_joint_index = i;
 	break;
       }
     }
     
+    for(std::size_t i=0; i < trajectory.joint_trajectory.joint_names.size(); ++i)
+    {
+      ROS_DEBUG("Gripper trajectory (%d): %s %f", (int) i, trajectory.joint_trajectory.joint_names[i].c_str(), trajectory.joint_trajectory.points[0].positions[i]);
+    }
+    ROS_DEBUG(" ");
+
     if(gripper_joint_index == -1)
     {
       ROS_ERROR("Could not find value for gripper virtual joint");
@@ -184,7 +190,7 @@ public:
     }
 
     double gap_opening = trajectory.joint_trajectory.points.back().positions[gripper_joint_index]*GAP_CONVERSION_RATIO;
-    ROS_DEBUG("Gap opening: %f", gap_opening);        
+    ROS_INFO("Gap opening: %f", gap_opening);        
     closing_ = false;
 
     /*
