@@ -190,7 +190,7 @@ public:
     }
 
     double gap_opening = trajectory.joint_trajectory.points.back().positions[gripper_joint_index]*GAP_CONVERSION_RATIO;
-    ROS_INFO("Gap opening: %f", gap_opening);        
+    ROS_DEBUG("Gap opening: %f", gap_opening);        
     closing_ = false;
 
     /*
