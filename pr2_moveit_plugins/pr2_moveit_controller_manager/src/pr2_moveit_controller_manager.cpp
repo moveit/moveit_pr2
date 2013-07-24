@@ -53,9 +53,6 @@ namespace pr2_moveit_controller_manager
 static const double DEFAULT_MAX_GRIPPER_EFFORT = 10000.0;
 static const double GRIPPER_OPEN = 0.086;
 static const double GRIPPER_CLOSED = 0.0;
-  //static const unsigned int FULL_GRIPPER_CMD_INDEX = 1;
-  //static const unsigned int VIRTUAL_GRIPPER_CMD_INDEX = 0;
-  //static const unsigned int FULL_GRIPPER_CMD_MIN_SIZE = 2;
 static const double GAP_CONVERSION_RATIO = 0.1714;
 
 template<typename T>
@@ -193,28 +190,6 @@ public:
     ROS_DEBUG("Gap opening: %f", gap_opening);        
     closing_ = false;
 
-    /*
-    bool open = false;
-    if (gap_opening > GRIPPER_OPEN)
-      gap_opening = GRIPPER_OPEN;
-    else if (gap_opening <= 0.0)
-    {
-      open = true;
-    }
-
-    if (open)
-    {
-      goal.command.position = GRIPPER_OPEN;
-      closing_ = false;
-      ROS_DEBUG_STREAM("Sending gripper open command");
-    }
-    else
-    {
-      goal.command.position = GRIPPER_CLOSED;
-      closing_ = true;
-      ROS_DEBUG_STREAM("Sending gripper close command");
-    }
-    */
 
     if(gap_opening > GRIPPER_OPEN)
     {
