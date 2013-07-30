@@ -14,7 +14,7 @@
 *     copyright notice, this list of conditions and the following
 *     disclaimer in the documentation and/or other materials provided
 *     with the distribution.
-*   * Neither the name of the Willow Garage nor the names of its
+*   * Neither the name of Willow Garage, Inc. nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
 *
@@ -53,6 +53,7 @@ namespace pr2_moveit_controller_manager
 static const double DEFAULT_MAX_GRIPPER_EFFORT = 10000.0;
 static const double GRIPPER_OPEN = 0.086;
 static const double GRIPPER_CLOSED = 0.0;
+static const double GAP_CONVERSION_RATIO = 0.1714;
 
 template<typename T>
 class ActionBasedControllerHandle : public moveit_controller_manager::MoveItControllerHandle
@@ -163,27 +164,45 @@ public:
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
 
-    bool open = false;
-    for (std::size_t i = 0 ; i < trajectory.joint_trajectory.points.back().positions.size() ; ++i)
-      if (trajectory.joint_trajectory.points.back().positions[i] > 0.5)
+    int gripper_joint_index = -1;
+    for(std::size_t i=0; i < trajectory.joint_trajectory.joint_names.size(); ++i)
+    {
+      if(trajectory.joint_trajectory.joint_names[i] == "r_gripper_motor_screw_joint" || trajectory.joint_trajectory.joint_names[i] == "l_gripper_motor_screw_joint")
       {
-    open = true;
-    break;
+	gripper_joint_index = i;
+	break;
       }
-
-    if (open)
+    }
+    
+    for(std::size_t i=0; i < trajectory.joint_trajectory.joint_names.size(); ++i)
     {
-      goal.command.position = GRIPPER_OPEN;
+      ROS_DEBUG("Gripper trajectory (%d): %s %f", (int) i, trajectory.joint_trajectory.joint_names[i].c_str(), trajectory.joint_trajectory.points[0].positions[i]);
+    }
+    ROS_DEBUG(" ");
+
+    if(gripper_joint_index == -1)
+    {
+      ROS_ERROR("Could not find value for gripper virtual joint");
+      return false;
+    }
+
+    double gap_opening = trajectory.joint_trajectory.points.back().positions[gripper_joint_index]*GAP_CONVERSION_RATIO;
+    ROS_DEBUG("Gap opening: %f", gap_opening);        
+    closing_ = false;
+
+
+    if(gap_opening > GRIPPER_OPEN)
+    {
+      gap_opening = GRIPPER_OPEN;
       closing_ = false;
-      ROS_DEBUG_STREAM("Sending gripper open command");
     }
-    else
+    else if(gap_opening <=0.0)
     {
-      goal.command.position = GRIPPER_CLOSED;
+      gap_opening = 0.0;
       closing_ = true;
-      ROS_DEBUG_STREAM("Sending gripper close command");
     }
 
+    goal.command.position = gap_opening;
     controller_action_client_->sendGoal(goal,
                     boost::bind(&Pr2GripperControllerHandle::controllerDoneCallback, this, _1, _2),
                     boost::bind(&Pr2GripperControllerHandle::controllerActiveCallback, this),
