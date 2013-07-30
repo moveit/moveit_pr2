@@ -23,7 +23,7 @@
   <include file="$(find object_recognition_ros)/launch/object_information_server.launch" />
 
   <!-- Start the node that publishes updates to the planning scene based on detected objects -->
-  <node name="populate_moveit_planning_scene_from_ork" pkg="moveit_ork" type="moveit_planning_scene_from_ork.py" respawn="true" output="screen" args="--min-confidence $(arg min_confidence) --auto-trigger $(arg trigger_period)">
+  <node name="populate_moveit_planning_scene_from_ork" pkg="moveit_ork" type="moveit_planning_scene_from_ork.py" respawn="true" output="screen" args="--min-confidence $(arg min_confidence)">
   </node>
   
 </launch>
