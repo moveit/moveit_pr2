@@ -196,13 +196,11 @@ public:
       gap_opening = GRIPPER_OPEN;
       closing_ = false;
     }
-    if(gap_opening <=0)
+    else if(gap_opening <=0.0)
     {
       gap_opening = 0.0;
       closing_ = true;
     }
-    else
-      closing_ = false;
 
     goal.command.position = gap_opening;
     controller_action_client_->sendGoal(goal,
