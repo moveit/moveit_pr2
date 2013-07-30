@@ -1,5 +1,7 @@
 <launch>
 
+  <arg name="db" default="false" />
+
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
   </include>
@@ -20,6 +22,6 @@
     <arg name="config" value="true"/>
   </include>
 
-  <include file="$(find pr2_moveit_config)/launch/default_warehouse_db.launch" />
+  <include file="$(find pr2_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)"/>
 
 </launch>
