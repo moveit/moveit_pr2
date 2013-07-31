@@ -1,6 +1,7 @@
 <launch>
 
   <arg name="db" default="false" />
+  <arg name="debug" default="false" />
 
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
@@ -16,10 +17,12 @@
 
   <include file="$(find pr2_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="false"/>
+    <arg name="debug" value="$(arg debug)"/>
   </include>
 
   <include file="$(find pr2_moveit_config)/launch/moveit_rviz.launch">
     <arg name="config" value="true"/>
+    <arg name="debug" value="$(arg debug)"/>
   </include>
 
   <include file="$(find pr2_moveit_config)/launch/default_warehouse_db.launch" if="$(arg db)"/>
