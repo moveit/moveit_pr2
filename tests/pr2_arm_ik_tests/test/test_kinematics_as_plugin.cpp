@@ -1,5 +1,4 @@
 /*********************************************************************
-*
 * Software License Agreement (BSD License)
 *
 *  Copyright (c) 2008, Willow Garage, Inc.
