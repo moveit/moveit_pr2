@@ -2,6 +2,10 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.2 (2013-08-13)
+------------------
+* make headers and author definitions aligned the same way; white space fixes
+
 0.5.1 (2013-07-15)
 ------------------
 
