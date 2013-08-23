@@ -177,10 +177,8 @@ int main(int argc, char **argv)
 
 
   // Attach a bar object to the right gripper
-  robot_state::LinkState *link = robot.robotState()->getLinkState("r_gripper_palm_link");
-  //robot_state::LinkState *link = robot.robotState()->getLinkState("r_gripper_r_finger_link");
-  //robot_state::LinkState *link = robot.robotState()->getLinkState("r_wrist_roll_link");
-  //
+  //  const robot_model::LinkModel *link = robot.robotState()->getLinkModel("r_gripper_palm_link");
+
 
   std::vector<shapes::ShapeConstPtr> shapes;
   EigenSTL::vector_Affine3d poses;

@@ -89,9 +89,9 @@ InteractiveRobot::InteractiveRobot(
   robot_state_->setToDefaultValues();
 
   // Prepare to move the "right_arm" group
-  group_ = robot_state_->getJointStateGroup("right_arm");
-  std::string end_link = group_->getJointModelGroup()->getLinkModelNames().back();
-  desired_group_end_link_pose_ = robot_state_->getLinkState(end_link)->getGlobalLinkTransform();
+  group_ = robot_state_->getJointModelGroup("right_arm");
+  std::string end_link = group_->getLinkModelNames().back();
+  desired_group_end_link_pose_ = robot_state_->getGlobalLinkTransform(end_link);
 
   // Create a marker to control the "right_arm" group
   imarker_robot_ = new IMarker(
@@ -245,7 +245,7 @@ void InteractiveRobot::updateAll()
 {
   publishWorldState();
 
-  if (group_->setFromIK(desired_group_end_link_pose_, 10, 0.1))
+  if (robot_state_->setFromIK(group_, desired_group_end_link_pose_, 10, 0.1))
   {
     publishRobotState();
 
@@ -257,7 +257,7 @@ void InteractiveRobot::updateAll()
 // change which group is being manipulated
 void InteractiveRobot::setGroup(const std::string& name)
 {
-  robot_state::JointStateGroup* group = robot_state_->getJointStateGroup(name);
+  const robot_model::JointModelGroup* group = robot_state_->getJointModelGroup(name);
   if (!group)
   {
     ROS_ERROR_STREAM("No joint group named " << name);
@@ -265,8 +265,8 @@ void InteractiveRobot::setGroup(const std::string& name)
       throw RobotLoadException();
   }
   group_ = group;
-  std::string end_link = group_->getJointModelGroup()->getLinkModelNames().back();
-  desired_group_end_link_pose_ = robot_state_->getLinkState(end_link)->getGlobalLinkTransform();
+  std::string end_link = group_->getLinkModelNames().back();
+  desired_group_end_link_pose_ = robot_state_->getGlobalLinkTransform(end_link);
   if (imarker_robot_)
   {
     imarker_robot_->move(desired_group_end_link_pose_);

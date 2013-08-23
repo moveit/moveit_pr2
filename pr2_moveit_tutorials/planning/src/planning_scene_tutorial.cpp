@@ -46,7 +46,8 @@
 bool userCallback(const robot_state::RobotState &kinematic_state, bool verbose)
 {
   // get the joint value for the right shoulder pan of the PR2 robot
-  const std::vector<double>& joint_state_values = kinematic_state.getJointState("r_shoulder_pan_joint")->getVariableValues();
+  std::vector<double> joint_state_values;
+  kinematic_state.copyJointGroupPositions("r_shoulder_pan_joint", joint_state_values);
   return (joint_state_values.front() > 0.0);
 }
 
@@ -80,7 +81,7 @@ int main(int argc, char **argv)
   ROS_INFO_STREAM("Test 1 : Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");
 
   /* Let's change the current state that the planning scene has and check if that is in self-collision*/
-  current_state.setToRandomValues();
+  current_state.setToRandomPositions();
   collision_result.clear();
   planning_scene.checkSelfCollision(collision_request, collision_result);
   ROS_INFO_STREAM("Test 2 : Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");
@@ -88,7 +89,7 @@ int main(int argc, char **argv)
   /* Now, we will do collision checking only for the right_arm of the PR2, i.e. we will check whether
    there are any collisions between the right arm and other parts of the body of the robot.*/
   collision_request.group_name = "right_arm";
-  current_state.setToRandomValues();
+  current_state.setToRandomPositions();
   collision_result.clear();
   planning_scene.checkSelfCollision(collision_request, collision_result);
   ROS_INFO_STREAM("Test 3: Current state is " << (collision_result.collision ? "in" : "not in") << " self collision");
@@ -96,13 +97,13 @@ int main(int argc, char **argv)
   /* We will first manually set the right arm to a position where we know internal (self) collisions
      do happen.*/
   std::vector<double> joint_values;
-  robot_state::JointStateGroup* joint_state_group = current_state.getJointStateGroup("right_arm");
-  joint_state_group->getVariableValues(joint_values);
+  const robot_model::JointModelGroup* joint_model_group = current_state.getJointModelGroup("right_arm");
+  current_state.copyJointGroupPositions(joint_model_group, joint_values);
   joint_values[0] = 1.57; //hard-coded since we know collisions will happen here
-  joint_state_group->setVariableValues(joint_values);
+  current_state.setJointGroupPositions(joint_model_group, joint_values);
   /* Note that this state is now actually outside the joint limits of the PR2, which we can also check for
      directly.*/
-  ROS_INFO_STREAM("Current state is " << (current_state.satisfiesBounds() ? "valid" : "not valid"));
+  ROS_INFO_STREAM("Current state is " << (current_state.satisfiesBounds(joint_model_group) ? "valid" : "not valid"));
 
   /* Now, we will try and get contact information for any collisions that
      might have happened at a given configuration of the right arm. */
@@ -145,7 +146,6 @@ int main(int argc, char **argv)
 
   /* CONSTRAINT CHECKING*/
   /* Let's first create a constraint for the end-effector of the right arm of the PR2 */
-  const robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("right_arm");
   std::string end_effector_name = joint_model_group->getLinkModelNames().back();
 
   geometry_msgs::PoseStamped desired_pose;
@@ -158,7 +158,7 @@ int main(int argc, char **argv)
   moveit_msgs::Constraints goal_constraint = kinematic_constraints::constructGoalConstraints(end_effector_name, desired_pose);
 
   /* Now, we can directly check it for a state using the PlanningScene class*/
-  copied_state.setToRandomValues();
+  copied_state.setToRandomPositions();
   bool state_constrained = planning_scene.isStateConstrained(copied_state, goal_constraint);
   ROS_INFO_STREAM("Test 7: Random state is " << (state_constrained ? "constrained" : "not constrained"));
 

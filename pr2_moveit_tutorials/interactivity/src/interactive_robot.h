@@ -44,7 +44,6 @@
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
-#include <moveit/robot_state/joint_state_group.h>
 #include <moveit_msgs/DisplayRobotState.h>
 #include "imarker.h"
 
@@ -136,7 +135,7 @@ private:
   robot_state::RobotStatePtr robot_state_;
 
   /* info about joint group we are manipulating */
-  robot_state::JointStateGroup* group_;
+  const robot_model::JointModelGroup* group_;
   Eigen::Affine3d desired_group_end_link_pose_;
 
   /* world info */

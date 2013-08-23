@@ -62,8 +62,7 @@ void help()
 
 void userCallback(InteractiveRobot& robot)
 {
-  ROS_INFO_STREAM("Robot position: " <<
-    PoseString(robot.robotState()->getLinkState("r_wrist_roll_link")->getGlobalLinkTransform()));
+  ROS_INFO_STREAM("Robot position: " << PoseString(robot.robotState()->getGlobalLinkTransform("r_wrist_roll_link")));
 }
 
 

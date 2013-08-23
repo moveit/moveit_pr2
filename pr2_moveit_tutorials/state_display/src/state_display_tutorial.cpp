@@ -40,7 +40,6 @@
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
-#include <moveit/robot_state/joint_state_group.h>
 
 // Robot state publishing
 #include <moveit/robot_state/conversions.h>
@@ -72,7 +71,7 @@ int main(int argc, char **argv)
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
 
   /* Get the configuration for the joints in the right arm of the PR2*/
-  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
+  const robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("right_arm");
 
 
 
@@ -85,7 +84,7 @@ int main(int argc, char **argv)
 
   for (int cnt=0; cnt<5 && ros::ok(); cnt++)
   {
-    joint_state_group->setToRandomValues();
+    kinematic_state->setToRandomPositions(joint_model_group);
 
     /* get a robot state message describing the pose in kinematic_state */
     moveit_msgs::DisplayRobotState msg;
@@ -106,8 +105,7 @@ int main(int argc, char **argv)
   /* Find the default pose for the end effector */
   kinematic_state->setToDefaultValues();
 
-  const Eigen::Affine3d end_effector_default_pose =
-      kinematic_state->getLinkState("r_wrist_roll_link")->getGlobalLinkTransform();
+  const Eigen::Affine3d end_effector_default_pose = kinematic_state->getGlobalLinkTransform("r_wrist_roll_link");
 
   const double PI = boost::math::constants::pi<double>();
   const double RADIUS = 0.1;
@@ -122,7 +120,7 @@ int main(int argc, char **argv)
     ROS_INFO_STREAM("End effector position:\n" << end_effector_pose.translation());
 
     /* use IK to get joint angles satisfyuing the calculated position */
-    bool found_ik = joint_state_group->setFromIK(end_effector_pose, 10, 0.1);
+    bool found_ik = kinematic_state->setFromIK(joint_model_group, end_effector_pose, 10, 0.1);
     if (!found_ik)
     {
       ROS_INFO_STREAM("Could not solve IK for pose\n" << end_effector_pose.translation());

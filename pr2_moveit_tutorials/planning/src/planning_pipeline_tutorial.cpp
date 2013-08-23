@@ -124,18 +124,17 @@ int main(int argc, char **argv)
   /* First, set the state in the planning scene to the final state of the last plan */
   robot_state::RobotState& robot_state = planning_scene->getCurrentStateNonConst();
   planning_scene->setCurrentState(response.trajectory_start);
-  robot_state::JointStateGroup* joint_state_group = robot_state.getJointStateGroup("right_arm");
-  joint_state_group->setVariableValues(response.trajectory.joint_trajectory.points.back().positions);
+  const robot_model::JointModelGroup* joint_model_group = robot_state.getJointModelGroup("right_arm");
+  robot_state.setJointGroupPositions(joint_model_group, response.trajectory.joint_trajectory.points.back().positions);
 
   /* Now, setup a joint space goal*/
   robot_state::RobotState goal_state(robot_model);
-  robot_state::JointStateGroup* goal_group = goal_state.getJointStateGroup("right_arm");
   std::vector<double> joint_values(7, 0.0);
   joint_values[0] = -2.0;
   joint_values[3] = -0.2;
   joint_values[5] = -0.15;
-  goal_group->setVariableValues(joint_values);
-  moveit_msgs::Constraints joint_goal = kinematic_constraints::constructGoalConstraints(goal_group);
+  goal_state.setJointGroupPositions(joint_model_group, joint_values);
+  moveit_msgs::Constraints joint_goal = kinematic_constraints::constructGoalConstraints(goal_state, joint_model_group);
 
   req.goal_constraints.clear();
   req.goal_constraints.push_back(joint_goal);
@@ -168,15 +167,14 @@ int main(int argc, char **argv)
   /* First, set the state in the planning scene to the final state of the last plan */
   robot_state = planning_scene->getCurrentStateNonConst();
   planning_scene->setCurrentState(response.trajectory_start);
-  joint_state_group = robot_state.getJointStateGroup("right_arm");
-  joint_state_group->setVariableValues(response.trajectory.joint_trajectory.points.back().positions);
+  robot_state.setJointGroupPositions(joint_model_group, response.trajectory.joint_trajectory.points.back().positions);
 
   //Now, set one of the joints slightly outside its upper limit
-  robot_state::JointState* joint_state = joint_state_group->getJointState("r_shoulder_pan_joint");
-  const std::vector<std::pair<double, double> >& joint_bounds = joint_state->getVariableBounds();
+  const robot_model::JointModel* joint_model = joint_model_group->getJointModel("r_shoulder_pan_joint");
+  const robot_model::JointModel::Bounds& joint_bounds = joint_model->getVariableBounds();
   std::vector<double> tmp_values(1, 0.0);
-  tmp_values[0] = joint_bounds[0].first - 0.01;
-  joint_state->setVariableValues(tmp_values);
+  tmp_values[0] = joint_bounds[0].min_position_ - 0.01;
+  robot_state.setJointPositions(joint_model, tmp_values);
 
   req.goal_constraints.clear();
   req.goal_constraints.push_back(pose_goal);

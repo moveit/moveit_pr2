@@ -40,7 +40,6 @@
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
-#include <moveit/robot_state/joint_state_group.h>
 
 // Robot state publishing
 #include <moveit/robot_state/conversions.h>
@@ -89,14 +88,14 @@ int main(int argc, char **argv)
   robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
-  robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
+  const robot_state::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("left_arm");
 
   /* Get the names of the joints in the right_arm*/
-  service_request.ik_request.robot_state.joint_state.name = joint_state_group->getJointModelGroup()->getJointModelNames();
+  service_request.ik_request.robot_state.joint_state.name = joint_model_group->getJointModelNames();
 
   /* Get the joint values and put them into the message, this is where you could put in your own set of values as well.*/
-  joint_state_group->setToRandomValues();
-  joint_state_group->getVariableValues(service_request.ik_request.robot_state.joint_state.position);
+  kinematic_state->setToRandomPositions(joint_model_group);
+  kinematic_state->copyJointGroupPositions(joint_model_group, service_request.ik_request.robot_state.joint_state.position);
 
   /* Call the service again*/
   service_client.call(service_request, service_response);
@@ -112,7 +111,7 @@ int main(int argc, char **argv)
 
   /* Visualize the result*/
   moveit_msgs::DisplayRobotState msg;
-  joint_state_group->setVariableValues(service_response.solution.joint_state);
+  kinematic_state->setVariableValues(service_response.solution.joint_state);
   robot_state::robotStateToRobotStateMsg(*kinematic_state, msg.state);
   robot_state_publisher.publish(msg);
 
