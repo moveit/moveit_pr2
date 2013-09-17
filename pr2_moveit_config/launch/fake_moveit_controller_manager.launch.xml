@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- Set the param that trajectory_execution_manager needs to find the controller plugin -->
+  <param name="moveit_controller_manager" value="moveit_fake_controller_manager/MoveItFakeControllerManager"/>
+
+  <!-- The rest of the params are specific to this plugin -->
+ 
+  <!-- load controller_list and controller_manager_ns -->
+  <rosparam file="$(find pr2_moveit_config)/config/pr2_execution_controllers.yaml"/>
+
+</launch>
