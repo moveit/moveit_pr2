@@ -146,6 +146,7 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
   ros::Publisher pub_co = nh.advertise<moveit_msgs::CollisionObject>("collision_object", 10);
+  ros::Publisher pub_aco = nh.advertise<moveit_msgs::AttachedCollisionObject>("attached_collision_object", 10);
 
   ros::WallDuration(1.0).sleep();
 
@@ -198,7 +199,11 @@ int main(int argc, char **argv)
   co.id = "part";
   co.operation = moveit_msgs::CollisionObject::REMOVE;
   pub_co.publish(co);
-
+  
+  moveit_msgs::AttachedCollisionObject aco;
+  aco.object = co;
+  pub_aco.publish(aco);
+  
   co.operation = moveit_msgs::CollisionObject::ADD;
   co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_X] = 0.15;
   co.primitives[0].dimensions[shape_msgs::SolidPrimitive::BOX_Y] = 0.1;
