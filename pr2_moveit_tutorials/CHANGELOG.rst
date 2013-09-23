@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.3 (2013-09-23)
+------------------
 * clear potential attached body before pick&place
 * fix launch files
 * use new pick&place messages
