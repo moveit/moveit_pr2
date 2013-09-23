@@ -132,7 +132,7 @@ void place(moveit::planning_interface::MoveGroup &group)
   ocm.absolute_y_axis_tolerance = 0.2;
   ocm.absolute_z_axis_tolerance = M_PI;
   ocm.weight = 1.0;
-  group.setPathConstraints(constr);
+  //  group.setPathConstraints(constr);
   group.setPlannerId("RRTConnectkConfigDefault");
 
   group.place("part", loc);
