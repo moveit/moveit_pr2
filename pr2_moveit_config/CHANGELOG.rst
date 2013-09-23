@@ -2,6 +2,14 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* enable more information output in demo mode
+* keeping in sync with the setup assistant generated pkg
+* add source param for joint_state_publisher
+* use fake controllers for demo.launch
+* use .xml suffix for included launch files
+
 0.5.2 (2013-08-13)
 ------------------
 * changing default object recognition behavior to listen on topic

@@ -2,10 +2,12 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.2 (2013-08-13)
 ------------------
 * make headers and author definitions aligned the same way; white space fixes
-* changed joint for pr2 gripper
 * fixes to gripper controller
 
 0.5.1 (2013-07-15)

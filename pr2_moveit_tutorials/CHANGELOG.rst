@@ -2,6 +2,12 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* clear potential attached body before pick&place
+* fix launch files
+* use new pick&place messages
+
 0.5.2 (2013-08-13)
 ------------------
 * make headers and author definitions aligned the same way; white space fixes
