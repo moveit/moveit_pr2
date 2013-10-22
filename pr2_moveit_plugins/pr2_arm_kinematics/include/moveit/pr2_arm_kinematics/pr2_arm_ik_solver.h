@@ -69,12 +69,12 @@ static const int TIMED_OUT = -2;
                    const double &search_discretization_angle,
                    const int &free_angle);
 
-    ~PR2ArmIKSolver(){};
+    ~PR2ArmIKSolver(){ delete pr2_arm_ik_; };
 
     /**
      * @brief The PR2 inverse kinematics solver
      */
-    PR2ArmIK pr2_arm_ik_;
+    PR2ArmIK *pr2_arm_ik_;
 
     /**
      * @brief Indicates whether the solver has been successfully initialized

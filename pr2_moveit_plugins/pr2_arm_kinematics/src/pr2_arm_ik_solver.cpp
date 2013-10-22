@@ -45,10 +45,11 @@ PR2ArmIKSolver::PR2ArmIKSolver(const urdf::Model &robot_model,
                                const double &search_discretization_angle,
                                const int &free_angle):ChainIkSolverPos()
 {
+  pr2_arm_ik_ = new PR2ArmIK();
   search_discretization_angle_ = search_discretization_angle;
   free_angle_ = free_angle;
   root_frame_name_ = root_frame_name;
-  if(!pr2_arm_ik_.init(robot_model, root_frame_name, tip_frame_name))
+  if(!pr2_arm_ik_->init(robot_model, root_frame_name, tip_frame_name))
     active_ = false;
   else
     active_ = true;
@@ -56,7 +57,7 @@ PR2ArmIKSolver::PR2ArmIKSolver(const urdf::Model &robot_model,
 
 void PR2ArmIKSolver::getSolverInfo(moveit_msgs::KinematicSolverInfo &response)
 {
-  pr2_arm_ik_.getSolverInfo(response);
+  pr2_arm_ik_->getSolverInfo(response);
 }
 
 int PR2ArmIKSolver::CartToJnt(const KDL::JntArray& q_init,
@@ -68,11 +69,11 @@ int PR2ArmIKSolver::CartToJnt(const KDL::JntArray& q_init,
   if(free_angle_ == 0)
   {
     ROS_DEBUG("Solving with free angle: %d", free_angle_);
-    pr2_arm_ik_.computeIKShoulderPan(b, q_init(0), solution_ik);
+    pr2_arm_ik_->computeIKShoulderPan(b, q_init(0), solution_ik);
   }
   else
   {
-    pr2_arm_ik_.computeIKShoulderRoll(b, q_init(2), solution_ik);
+    pr2_arm_ik_->computeIKShoulderRoll(b, q_init(2), solution_ik);
   }
 
   if(solution_ik.empty())
@@ -120,11 +121,11 @@ int PR2ArmIKSolver::CartToJnt(const KDL::JntArray& q_init,
 
   if(free_angle_ == 0)
   {
-    pr2_arm_ik_.computeIKShoulderPan(b, q_init(0), solution_ik);
+    pr2_arm_ik_->computeIKShoulderPan(b, q_init(0), solution_ik);
   }
   else
   {
-    pr2_arm_ik_.computeIKShoulderRoll(b, q_init(2), solution_ik);
+    pr2_arm_ik_->computeIKShoulderRoll(b, q_init(2), solution_ik);
   }
 
   if(solution_ik.empty())
@@ -193,8 +194,8 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   double loop_time = 0;
   int count = 0;
 
-  int num_positive_increments = (int)((pr2_arm_ik_.solver_info_.limits[free_angle_].max_position-initial_guess)/search_discretization_angle_);
-  int num_negative_increments = (int)((initial_guess-pr2_arm_ik_.solver_info_.limits[free_angle_].min_position)/search_discretization_angle_);
+  int num_positive_increments = (int)((pr2_arm_ik_->solver_info_.limits[free_angle_].max_position-initial_guess)/search_discretization_angle_);
+  int num_negative_increments = (int)((initial_guess-pr2_arm_ik_->solver_info_.limits[free_angle_].min_position)/search_discretization_angle_);
   ROS_DEBUG("positive increments, negative increments: %d %d", num_positive_increments, num_negative_increments);
   while(loop_time < timeout)
   {
@@ -271,13 +272,13 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   double max_limit, min_limit;
   if(use_consistency_limit)
   {
-    max_limit = fmin(pr2_arm_ik_.solver_info_.limits[free_angle_].max_position, initial_guess+max_consistency);
-    min_limit = fmax(pr2_arm_ik_.solver_info_.limits[free_angle_].min_position, initial_guess-max_consistency);
+    max_limit = fmin(pr2_arm_ik_->solver_info_.limits[free_angle_].max_position, initial_guess+max_consistency);
+    min_limit = fmax(pr2_arm_ik_->solver_info_.limits[free_angle_].min_position, initial_guess-max_consistency);
   }
   else
   {
-    max_limit = pr2_arm_ik_.solver_info_.limits[free_angle_].max_position;
-    min_limit = pr2_arm_ik_.solver_info_.limits[free_angle_].min_position;
+    max_limit = pr2_arm_ik_->solver_info_.limits[free_angle_].max_position;
+    min_limit = pr2_arm_ik_->solver_info_.limits[free_angle_].min_position;
   }
 
   int num_positive_increments = (int)((max_limit-initial_guess)/search_discretization_angle_);
@@ -286,8 +287,8 @@ int PR2ArmIKSolver::CartToJntSearch(const KDL::JntArray& q_in,
   if(use_consistency_limit)
   {
     ROS_DEBUG("Consistency[Joint: %d]: Initial guess %f, consistency %f", free_angle_, initial_guess, max_consistency);
-    ROS_DEBUG("Max limit %f = max(%f, %f)", max_limit, pr2_arm_ik_.solver_info_.limits[free_angle_].max_position, initial_guess+max_consistency);
-    ROS_DEBUG("Min limit %f = min(%f, %f)", min_limit, pr2_arm_ik_.solver_info_.limits[free_angle_].min_position, initial_guess-max_consistency);
+    ROS_DEBUG("Max limit %f = max(%f, %f)", max_limit, pr2_arm_ik_->solver_info_.limits[free_angle_].max_position, initial_guess+max_consistency);
+    ROS_DEBUG("Min limit %f = min(%f, %f)", min_limit, pr2_arm_ik_->solver_info_.limits[free_angle_].min_position, initial_guess-max_consistency);
   }
   else
   {
