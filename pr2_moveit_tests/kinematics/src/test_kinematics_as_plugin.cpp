@@ -176,7 +176,6 @@ TEST(ArmIKPlugin, getFK)
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
   robot_state::RobotState kinematic_state(kinematic_model);
-  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_fk_tests;
@@ -187,8 +186,8 @@ TEST(ArmIKPlugin, getFK)
     seed.resize(my_test.kinematics_solver->getJointNames().size(), 0.0);
     fk_values.resize(my_test.kinematics_solver->getJointNames().size(), 0.0);
 
-    joint_state_group->setToRandomValues();
-    joint_state_group->getVariableValues(fk_values);
+    kinematic_state.setToRandomPositions(joint_model_group);
+    kinematic_state.copyJointGroupPositions(joint_model_group, fk_values);
 
     std::vector<geometry_msgs::Pose> poses;
     poses.resize(1);
@@ -216,7 +215,7 @@ TEST(ArmIKPlugin, searchIK)
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
   robot_state::RobotState kinematic_state(kinematic_model);
-  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
+  //  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_ik_tests;
@@ -229,8 +228,8 @@ TEST(ArmIKPlugin, searchIK)
     seed.resize(my_test.kinematics_solver->getJointNames().size(), 0.0);
     fk_values.resize(my_test.kinematics_solver->getJointNames().size(), 0.0);
 
-    joint_state_group->setToRandomValues();
-    joint_state_group->getVariableValues(fk_values);
+    kinematic_state.setToRandomPositions(joint_model_group);
+    kinematic_state.copyJointGroupPositions(joint_model_group, fk_values);
 
     std::vector<geometry_msgs::Pose> poses;
     poses.resize(1);
@@ -285,7 +284,7 @@ TEST(ArmIKPlugin, searchIKWithCallbacks)
   fk_names.push_back(my_test.kinematics_solver->getTipFrame());
 
   robot_state::RobotState kinematic_state(kinematic_model);
-  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
+  //  robot_state::JointStateGroup* joint_state_group = kinematic_state.getJointStateGroup(my_test.kinematics_solver->getGroupName());
 
   ros::NodeHandle nh("~");
   int number_ik_tests;
@@ -298,8 +297,8 @@ TEST(ArmIKPlugin, searchIKWithCallbacks)
     seed.resize(my_test.kinematics_solver->getJointNames().size(), 0.0);
     fk_values.resize(my_test.kinematics_solver->getJointNames().size(), 0.0);
 
-    joint_state_group->setToRandomValues();
-    joint_state_group->getVariableValues(fk_values);
+    kinematic_state.setToRandomPositions(joint_model_group);
+    kinematic_state.copyJointGroupPositions(joint_model_group, fk_values);
 
     std::vector<geometry_msgs::Pose> poses;
     poses.resize(1);

@@ -75,15 +75,15 @@ TEST(JacobianSolver, solver)
  kinematic_state.reset(new robot_state::RobotState(kinematic_model));
  kinematic_state->setToDefaultValues();
 
- robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("right_arm");
+ const moveit::core::JointModelGroup* joint_state_group = kinematic_state->getRobotModel()->getJointModelGroup("right_arm");
 
  std::string link_name = "r_wrist_roll_link";
  std::vector<double> joint_angles(7,0.0);
  geometry_msgs::Point ref_position;
  Eigen::MatrixXd jacobian;
  Eigen::Vector3d point(0.0,0.0,0.0);
- joint_state_group->setVariableValues(joint_angles);
- ASSERT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
+ kinematic_state->setJointGroupPositions(joint_state_group, &joint_angles[0]);
+ ASSERT_TRUE(kinematic_state->getJacobian(joint_state_group, kinematic_state->getRobotModel()->getLinkModel(link_name),point,jacobian));
 
  KDL::Tree tree;
  if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree))
@@ -111,8 +111,8 @@ TEST(JacobianSolver, solver)
      joint_angles[j] = q_in(j);
    }
    EXPECT_TRUE(kdl_solver.JntToJac(q_in,jacobian_kdl) >= 0);
-   joint_state_group->setVariableValues(joint_angles);
-   EXPECT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
+   kinematic_state->setJointGroupPositions(joint_state_group, &joint_angles[0]);
+   EXPECT_TRUE(kinematic_state->getJacobian(joint_state_group, kinematic_state->getRobotModel()->getLinkModel(link_name), point, jacobian));
    for(unsigned int k=0; k < 6; k++)
    {
      for(unsigned int m=0; m < 7; m++)
@@ -134,16 +134,17 @@ TEST(JacobianSolver, solver2)
  kinematic_state.reset(new robot_state::RobotState(kinematic_model));
  kinematic_state->setToDefaultValues();
 
- robot_state::JointStateGroup* joint_state_group = kinematic_state->getJointStateGroup("left_arm");
+ const moveit::core::JointModelGroup* joint_state_group = kinematic_state->getRobotModel()->getJointModelGroup("left_arm");
 
  std::string link_name = "l_wrist_roll_link";
  std::vector<double> joint_angles(7,0.0);
  geometry_msgs::Point ref_position;
  Eigen::MatrixXd jacobian;
  Eigen::Vector3d point(0.0,0.0,0.0);
- joint_state_group->setVariableValues(joint_angles);
- ASSERT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
+ kinematic_state->setJointGroupPositions(joint_state_group, &joint_angles[0]);
+ ASSERT_TRUE(kinematic_state->getJacobian(joint_state_group, kinematic_state->getRobotModel()->getLinkModel(link_name),point,jacobian));
 
+ 
  KDL::Tree tree;
  if (!kdl_parser::treeFromUrdfModel(*model_loader.getURDF(), tree))
  {
@@ -170,8 +171,8 @@ TEST(JacobianSolver, solver2)
      joint_angles[j] = q_in(j);
    }
    EXPECT_TRUE(kdl_solver.JntToJac(q_in,jacobian_kdl) >= 0);
-   joint_state_group->setVariableValues(joint_angles);
-   EXPECT_TRUE(joint_state_group->getJacobian(link_name,point,jacobian));
+   kinematic_state->setJointGroupPositions(joint_state_group, &joint_angles[0]);
+   EXPECT_TRUE(kinematic_state->getJacobian(joint_state_group, kinematic_state->getRobotModel()->getLinkModel(link_name),point,jacobian));
    for(unsigned int k=0; k < 6; k++)
    {
      for(unsigned int m=0; m < 7; m++)

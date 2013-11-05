@@ -971,7 +971,8 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
         Robot Alpha: 0.5
-        Show Scene Robot: true
+        Show Robot Collision: false
+        Show Robot Visual: true
       Value: true
     - Attached Body Color: 150; 50; 150
       Class: moveit_rviz_plugin/RobotState
@@ -1450,7 +1451,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.92716
+      Distance: 2.84346
       Focal Point:
         X: 0.113567
         Y: 0.10592
@@ -1476,5 +1477,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1356
-  X: 1237
-  Y: 262
+  X: 451
+  Y: 210
