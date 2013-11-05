@@ -5,7 +5,7 @@ project(pr2_moveit_tests)
 
 ## Find catkin and any catkin packages on which
 ## this package depends at build time
-find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning pluginlib)
+find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning pluginlib rostest rosunit)
 
 find_package(PkgConfig REQUIRED)
 find_package(Eigen REQUIRED)
@@ -27,3 +27,8 @@ catkin_package()
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 add_subdirectory(kinematics)
+
+install(FILES
+   kinematics/launch/pr2_jacobian_test.launch
+   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
