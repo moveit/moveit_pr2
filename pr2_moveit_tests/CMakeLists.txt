@@ -27,8 +27,3 @@ catkin_package()
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 add_subdirectory(kinematics)
-
-install(FILES
-   kinematics/launch/pr2_jacobian_test.launch
-   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
