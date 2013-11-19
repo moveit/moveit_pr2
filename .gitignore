@@ -1,3 +1,4 @@
 pr2_moveit_config/default_warehouse_mongo_db
 default_warehouse_mongo_db/
 *~
+*.pyc
