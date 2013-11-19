@@ -122,9 +122,9 @@ class TutorialFormatterDirective(rst.Directive):
             text_to_process += current_block
 
         # Debug writes...
-        print 'text_to_process ='
-        print text_to_process
-        print '= text_to_process'
+        # print 'text_to_process ='
+        # print text_to_process
+        # print '= text_to_process'
 
         lines = string2lines( text_to_process )
         self.state_machine.insert_input( lines, absfilename )

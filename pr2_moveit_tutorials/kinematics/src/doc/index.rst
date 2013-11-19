@@ -5,7 +5,7 @@ In this section, we will walk you through the C++ API for using kinematics.
 The RobotModel and RobotState classes
 -------------------------------------
 
-The RobotModel and RobotState classes are the core classes that give
+The :moveit_core:`RobotModel` and :moveit_core:`RobotState` classes are the core classes that give
 you access to the kinematics. In this example, we will walk through
 the process of using the classes for the right arm of the PR2.
 
@@ -17,7 +17,7 @@ The entire code can be seen :codedir:`here in the moveit_pr2 github project<kine
 
 Compiling the code
 ^^^^^^^^^^^^^^^^^^
-Follow the instructions for compiling code from source.
+Follow the `instructions for compiling code from source <http://moveit.ros.org/wiki/Installation>`_.
 
 The launch file
 ^^^^^^^^^^^^^^^
@@ -79,11 +79,11 @@ The expected output will be in the following form. The numbers will not match si
 Additional Reading
 ^^^^^^^^^^^^^^^^^^
 
-RobotState Display - Visualization of the RobotState using Rviz
+ * `RobotState Display <http://moveit.ros.org/wiki/RobotStateDisplay/C%2B%2B_API>`_ - Visualization of the RobotState using Rviz
 
 Links
 ^^^^^
 
-RobotModel Code API
-RobotState Code API
-Back to Kinematics
+ * :moveit_core:`RobotModel` Code API
+ * :moveit_core:`RobotState` Code API
+ * Back to `Kinematics <http://moveit.ros.org/wiki/Capabilities#Kinematics>`_

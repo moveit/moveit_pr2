@@ -59,18 +59,24 @@ int main(int argc, char **argv)
   // information about how to use more features provided by these
   // classes.
   //
-  // We will start by instantiating a RobotModelLoader class, which
-  // will look up the robot description on the ROS parameter server
-  // and construct a RobotModel for us to use.
+  // We will start by instantiating a
+  // `RobotModelLoader`_
+  // object, which will look up
+  // the robot description on the ROS parameter server and construct a
+  // :moveit_core:`RobotModel` for us to use.
+  //
+  // .. _RobotModelLoader: http://docs.ros.org/api/moveit_ros_planning/html/classrobot__model__loader_1_1RobotModelLoader.html
   robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   robot_model::RobotModelPtr kinematic_model = robot_model_loader.getModel();
   ROS_INFO("Model frame: %s", kinematic_model->getModelFrame().c_str());
 
-  // Using the RobotModel, we can construct a RobotState that
-  // maintains the configuration of the robot. We will set all joints
-  // in the state to their default values. We can then get a
-  // JointModelGroup, which represents the robot model for a
-  // particular group, e.g. the "right_arm" of the PR2 robot.
+  // Using the :moveit_core:`RobotModel`, we can construct a
+  // :moveit_core:`RobotState` that maintains the configuration
+  // of the robot. We will set all joints in the state to their
+  // default values. We can then get a
+  // :moveit_core:`JointModelGroup`, which represents the robot
+  // model for a particular group, e.g. the "right_arm" of the PR2
+  // robot.
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
   kinematic_state->setToDefaultValues();
   const robot_state::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("right_arm");
@@ -139,7 +145,7 @@ int main(int argc, char **argv)
 
   // Get the Jacobian
   // ^^^^^^^^^^^^^^^^
-  // We can also get the Jacobian from the RobotState.
+  // We can also get the Jacobian from the :moveit_core:`RobotState`.
   Eigen::Vector3d reference_point_position(0.0,0.0,0.0);
   Eigen::MatrixXd jacobian;
   kinematic_state->getJacobian(joint_model_group, kinematic_state->getLinkModel(joint_model_group->getLinkModelNames().back()),
