@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fixing broken tests for changes in robot_state
+* fix `#26 <https://github.com/ros-planning/moveit_pr2/issues/26>`_.
+
 0.5.3 (2013-09-23)
 ------------------
 * enable more information output in demo mode

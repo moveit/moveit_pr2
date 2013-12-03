@@ -2,6 +2,14 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Ported PlanningScene tutorial to sphinx, and fixed some bugs in its code.
+* removed accidentally-copied png file from rviz tutorial
+* Added external links to kinematics tutorial
+* Converted kinematics tutorial from wiki to sphinx in source.
+* add an example for using move_group_interface with constraints
+
 0.5.3 (2013-09-23)
 ------------------
 * clear potential attached body before pick&place
