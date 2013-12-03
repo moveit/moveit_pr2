@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.4 (2013-12-03)
+------------------
 * Ported PlanningScene tutorial to sphinx, and fixed some bugs in its code.
 * removed accidentally-copied png file from rviz tutorial
 * Added external links to kinematics tutorial
