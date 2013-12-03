@@ -36,13 +36,41 @@
         i = i * 2
         #My Tutorial# END_TUTORIAL
 
+    Sometimes the order that makes sense in the tutorial is not
+    compatible with the computer language of the code, like when a
+    callback function in C++ is defined outside of the main tutorial
+    code.  To support this, you can use the tags BEGIN_SUB_TUTORIAL,
+    END_SUB_TUTORIAL, and CALL_SUB_TUTORIAL.  They look like this:
+
+        # BEGIN_SUB_TUTORIAL callbackFunction
+        def callback():
+            print "in callback"
+        # END_SUB_TUTORIAL
+
+        # BEGIN_TUTORIAL
+        # Here we call a special callback:
+        callback()
+        # which is defined as:
+        # CALL_SUB_TUTORIAL callbackFunction
+        # and then we move on to the next topic.
+
+    Both the BEGIN_SUB_TUTORIAL and CALL_SUB_TUTORIAL tags take an
+    argument, which is the name of the "sub-tutorial".  That name does
+    not need to correspond to anything in the code.  Sub-tutorials
+    cannot be nested, and they only work within a single source file
+    processed by tutorialformatter.  They have no outside meaning.
+    The implementation simply slices out sub-tutorials from the input
+    lines and copies them into the output lines where-ever the
+    corresponding "call" tags are found.
+
     .. moduleauthor::  Dave Hershberger <hersh@willowgarage.com>
 """
 
 # 0.1.0: First version.
 # 0.1.1: fixed a bug in source file directory lookup: now source paths are
 #        relative to the directory in which the including document lives.
-__version__ = '0.1.1'
+# 0.1.2: Added SUB_TUTORIAL support.
+__version__ = '0.1.2'
 
 import os
 from docutils.parsers import rst
@@ -58,6 +86,42 @@ class TutorialFormatterDirective(rst.Directive):
     option_spec = dict(shell=flag, prompt=flag, nostderr=flag,
                        in_srcdir=flag, extraargs=unchanged,
                        until=unchanged)
+
+    def flatten_sub_tutorials(self, file_):
+        lines = []
+        in_sub = False
+        begin_sub_tutorial = 'BEGIN_SUB_TUTORIAL'
+        end_sub_tutorial = 'END_SUB_TUTORIAL'
+        call_sub_tutorial = 'CALL_SUB_TUTORIAL'
+        sub_name = ''
+        subs = {}
+        sub_lines = []
+        regular_lines = []
+        for line in file_:
+            begin_pos = line.find( begin_sub_tutorial )
+            if begin_pos != -1:
+                sub_name = line[begin_pos + len(begin_sub_tutorial) : ].strip()
+                in_sub = True
+            elif line.find( end_sub_tutorial ) != -1 and in_sub:
+                in_sub = False
+                subs[sub_name] = sub_lines
+                sub_lines = []
+            elif in_sub:
+                sub_lines.append(line)
+            else:
+                regular_lines.append(line)
+        flattened_lines = []
+        for line in regular_lines:
+            call_pos = line.find( call_sub_tutorial )
+            if call_pos != -1:
+                sub_name = line[call_pos + len(call_sub_tutorial) : ].strip()
+                if sub_name in subs:
+                    flattened_lines.extend( subs[sub_name] )
+                else:
+                    print 'tutorialformatter.py error: sub-tutorial %s not found.' % sub_name
+            else:
+                flattened_lines.append( line )
+        return flattened_lines
 
     def run(self):
         filename = self.arguments[0]
@@ -87,7 +151,8 @@ class TutorialFormatterDirective(rst.Directive):
         in_code = False
         in_text = False
         in_tutorial = False
-        for line in file_:
+        lines = self.flatten_sub_tutorials(file_)
+        for line in lines:
             if not in_tutorial:
                 begin_pos = line.find( 'BEGIN_TUTORIAL' )
                 if begin_pos != -1:
