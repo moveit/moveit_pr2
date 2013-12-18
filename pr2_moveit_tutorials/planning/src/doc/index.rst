@@ -1,4 +1,4 @@
-Environment Representation/C++ API
+Planning Scene/C++ API
 ==================================
 The :planning_scene:`PlanningScene` class provides the main interface that you will use
 for collision checking and constraint checking. In this tutorial, we
