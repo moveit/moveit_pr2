@@ -83,7 +83,8 @@ int main(int argc, char **argv)
   std::string planner_plugin_name;
 
   // We will get the name of planning plugin we want to load
-  // from the ROS param server, making sure to catch all exceptions.
+  // from the ROS param server, and then load the planner
+  // making sure to catch all exceptions.
   if (!node_handle.getParam("planning_plugin", planner_plugin_name))
     ROS_FATAL_STREAM("Could not find planner plugin name");
   try
@@ -224,7 +225,7 @@ int main(int argc, char **argv)
 
   // Adding Path Constraints
   // ^^^^^^^^^^^^^^^^^^^^^^^
-  // Let's add a new pose goal again. This time we will also add a path constraint to the motion
+  // Let's add a new pose goal again. This time we will also add a path constraint to the motion.
   /* Let's create a new pose goal */
   pose.pose.position.x = 0.65;
   pose.pose.position.y = -0.2;
