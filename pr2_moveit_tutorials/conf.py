@@ -29,4 +29,5 @@ extlinks = {'codedir': ('https://github.com/ros-planning/moveit_pr2/blob/hydro-d
             'collision_detection_struct': ('http://docs.ros.org/api/moveit_core/html/structcollision__detection_1_1%s.html', ''),
             'collision_detection_class': ('http://docs.ros.org/api/moveit_core/html/classcollision__detection_1_1%s.html', ''),
             'kinematic_constraints': ('http://docs.ros.org/api/moveit_core/html/classkinematic__constraints_1_1%s.html', ''),
-            'moveit_core_files': ('http://docs.ros.org/api/moveit_core/html/%s.html', '')}
+            'moveit_core_files': ('http://docs.ros.org/api/moveit_core/html/%s.html', ''),
+            'move_group_interface': ('http://docs.ros.org/api/moveit_ros_planning_interface/html/classmoveit_1_1planning__interface_1_1%s.html', '')}

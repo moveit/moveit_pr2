@@ -131,7 +131,7 @@ int main(int argc, char **argv)
 // the robot model knows to account for the attached object, e.g. for
 // collision checking.
 
-// Attaching an object from the environment requires two operations
+// Attaching an object requires two operations
 //  * Removing the original object from the environment
 //  * Attaching the object to the robot
 
