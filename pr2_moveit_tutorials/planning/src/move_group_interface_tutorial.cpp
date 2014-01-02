@@ -202,6 +202,37 @@ int main(int argc, char **argv)
      in Rviz before doing the next thing*/
   sleep(10.0);
 
+  // Cartesian Paths
+  // ^^^^^^^^^^^^^^^
+  // You can plan a cartesian path directly by specifying a list of waypoints 
+  // for the end-effector to go through. Note that we are starting 
+  // from the new start state above.
+  std::vector<geometry_msgs::Pose> waypoints;
+
+  geometry_msgs::Pose new_pose_2 = new_pose;
+  new_pose_2.position.x +=0.05;
+  new_pose_2.position.z += 0.2;
+  waypoints.push_back(new_pose_2);
+  
+  new_pose_2.position.z += 0.2;
+  waypoints.push_back(new_pose_2);
+
+  // We want the cartesian path to be interpolated at a resolution of 1 cm which 
+  // is why we will specify 0.01 as the max step in cartesian translation
+  // We will specify the jump threshold as 0.0, effectively disabling it
+  moveit_msgs::RobotTrajectory trajectory;
+  if(group.computeCartesianPath(waypoints, 0.01, 0.0, trajectory) >= 0.5)
+  {
+    display_trajectory.trajectory_start = p.start_state_;
+    display_trajectory.trajectory.clear();    
+    display_trajectory.trajectory.push_back(trajectory);
+    display_publisher.publish(display_trajectory);
+  }
+  /* This sleep is ONLY to give us enough time to see the trajectory 
+     in Rviz before doing the next thing*/
+  sleep(10.0);
+
+
   // Adding/Removing Objects and Attaching/Detaching Objects
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   // First, we will define the collision object message
