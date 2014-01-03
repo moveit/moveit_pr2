@@ -1,5 +1,5 @@
-Move Group Interface/C++ API
-==================================
+Move Group Interface/Python API
+===============================
 In MoveIt!, the primary user interface is through the RobotCommander class. It
 provides functionality for most operations that a user may want to carry out,
 specifically setting joint or pose goals, creating motion plans, moving the
