@@ -45,6 +45,8 @@ from moveit_msgs.msg import RobotState, DisplayTrajectory
 from geometry_msgs.msg import Pose, PoseStamped
 ## END_SUB_TUTORIAL
 
+from std_msgs.msg import String
+
 def move_group_python_interface_tutorial():
   ## BEGIN_TUTORIAL
   ##
@@ -53,14 +55,10 @@ def move_group_python_interface_tutorial():
   ## CALL_SUB_TUTORIAL imports
   ##
   ## First initialize moveit_commander and rospy.
+  print "============ Starting tutorial setup"
   moveit_commander.roscpp_initialize(sys.argv)
   rospy.init_node('move_group_python_interface_tutorial',
                   anonymous=True)
-
-  ## Wait for RVIZ to initialize. This sleep is ONLY to allow Rviz to come up.
-  print "============ Waiting for RVIZ..."
-  rospy.sleep(20)
-  print "============ Starting tutorial "
 
   ## Instantiate a RobotCommander object.  This object is an interface to
   ## the robot as a whole.
@@ -76,6 +74,17 @@ def move_group_python_interface_tutorial():
   ## arm.
   group = moveit_commander.MoveGroupCommander("left_arm")
 
+
+  ## We create this DisplayTrajectory publisher which is used below to publish
+  ## trajectories for RVIZ to visualize.
+  display_trajectory_publisher = rospy.Publisher(
+                                      '/move_group/display_planned_path',
+                                      DisplayTrajectory)
+
+  ## Wait for RVIZ to initialize. This sleep is ONLY to allow Rviz to come up.
+  print "============ Waiting for RVIZ..."
+  rospy.sleep(10)
+  print "============ Starting tutorial "
 
   ## Getting Basic Information
   ## ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,24 +125,22 @@ def move_group_python_interface_tutorial():
   plan1 = group.plan()
 
   print "============ Waiting while RVIZ displays the plan"
-  rospy.sleep(10)
+  rospy.sleep(5)
 
-  ## You can ask RVIZ to visualize the trajectory for you, but the group object
-  ## does this by default so it is not necessary right after generating the
-  ## plan.
-  if 1:
-    print "============ Visualizing plan 1"
-    display_publisher = rospy.Publisher('/move_group/display_planned_path',
-                                        DisplayTrajectory)
-    display_trajectory = DisplayTrajectory()
+ 
+  ## You can ask RVIZ to visualize a plan (aka trajectory) for you.  But the
+  ## group.plan() method does this automatically so this is not that useful
+  ## here (it just displays the same trajectory again).
+  print "============ Visualizing plan 1"
+  display_trajectory = DisplayTrajectory()
 
-    display_trajectory.trajectory_start = robot.get_current_state()
-    display_trajectory.trajectory.append(plan1)
-    display_publisher.publish(display_trajectory);
+  display_trajectory.trajectory_start = robot.get_current_state()
+  display_trajectory.trajectory.append(plan1)
+  display_trajectory_publisher.publish(display_trajectory);
 
-    print "============ waiting while trajectory is visualized..."
-    rospy.sleep(10)
-  
+  print "============ waiting while trajectory is visualized (again)..."
+  rospy.sleep(5)
+
 
   ## Moving to a pose goal
   ## ^^^^^^^^^^^^^^^^^^^^^
