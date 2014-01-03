@@ -98,3 +98,7 @@ The ``FollowJointTrajectory`` or ``GripperCommand`` interfaces on your robot mus
 
 You should also be able to see (using *rostopic info topic_name*) that the topics are published/subscribed to by the controllers on your robot and also by the *move_group* node.
 
+Links
+=====
+
+ * Back to :moveit_website:`Moveit Tutorials <tutorials>`

@@ -86,4 +86,4 @@ Links
 
  * :moveit_core:`RobotModel` Code API
  * :moveit_core:`RobotState` Code API
- * Back to `Kinematics <http://moveit.ros.org/wiki/Capabilities#Kinematics>`_
+ * Back to :moveit_website:`Moveit Tutorials <tutorials>`

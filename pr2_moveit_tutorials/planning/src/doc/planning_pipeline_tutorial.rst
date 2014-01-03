@@ -38,3 +38,8 @@ In Rviz, we should be able to see three trajectories being replayed eventually:
  1. The robot moves its right arm to the pose goal in front of it,
  2. The robot moves its right arm to the joint goal to the side,
  3. The robot moves its right arm back to the original pose goal in front of it,
+
+Links
+=====
+
+ * Back to :moveit_website:`Moveit Tutorials <tutorials>`
