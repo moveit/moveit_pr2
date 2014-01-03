@@ -13,4 +13,5 @@ Advanced Tutorials
 Configuration Tutorials
 =======================
 - :doc:`The Kinematics configuration tutorial</kinematics/src/doc/kinematics_configuration>` shows you the configuration details for setting up kinematics (including setting up position only inverse kinematics). 
-- :doc:`The 3D Perception configuration tutorial</kinematics/src/doc/kinematics_configuration>` shows you the configuration details for setting up 3D sensors with MoveIt!.
+- :doc:`The 3D Perception configuration tutorial</planning/src/doc/perception_configuration>` shows you the configuration details for setting up 3D sensors with MoveIt!.
+- :doc:`Controller Configuration tutorial</planning/src/doc/controller_configuration>` shows you the configuration details for setting up your robot's controllers with MoveIt!.

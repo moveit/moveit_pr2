@@ -5,7 +5,7 @@ In this section, we will walk through configuring the 3D sensors on your robot w
  * The Depth Image Occupancy Map Updater: which can take as input Depth Images (``sensor_msgs/Image``)
 
 YAML Configuration file (Point Cloud)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------
 
 We will have to generate a YAML configuration file for configuring the 3D sensors. An example file for processing point clouds can be found in the `moveit_pr2 github project <https://github.com/ros-planning/moveit_pr2/blob/hydro-devel/pr2_moveit_config/config/sensors_kinect.yaml>`_ ::
 
@@ -31,7 +31,7 @@ Parameters specific to the Point cloud updater are:
 
 
 YAML Configuration file (Depth Map)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------
 
 We will have to generate a rgbd.yaml configuration file for configuring the 3D sensors. An example file for processing point clouds can be found in the `moveit_advanced github project <https://github.com/ros-planning/moveit_advanced/blob/hydro-devel/pr2_advanced_config/config/sensors_kinect.yaml>`_ ::
 
@@ -49,7 +49,7 @@ We will have to generate a rgbd.yaml configuration file for configuring the 3D s
 The general parameters are:
  * *sensor_plugin*: The name of the plugin that we are using. 
 
-Parameters specific to the Point cloud updater are:
+Parameters specific to the Depth Map updater are:
  * *image_topic*: This specifies the topic to listen on for a depth image.
  * *queue_size*: he number of images to queue up
  * *near_clipping_plane_distance*: 
@@ -60,8 +60,8 @@ Parameters specific to the Point cloud updater are:
  * *filtered_cloud_topic*: The topic on which the filtered cloud will be published (mainly for debugging). The filtering cloud is the resultant cloud after self-filtering has been performed.
 
 
-Update the moveit_sensor_manager.launch file
---------------------------------------------
+Update the launch file
+----------------------
 
 Add the YAML file to the launch script
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -73,7 +73,6 @@ Note that you will need to input the path to the right file you have created abo
 
 Octomap Configuration
 ^^^^^^^^^^^^^^^^^^^^^
-
 You will also need to configure the Octomap by adding the following lines into the *moveit_sensor_manager.launch*::
 
  <param name="octomap_frame" type="string" value="odom_combined" />
