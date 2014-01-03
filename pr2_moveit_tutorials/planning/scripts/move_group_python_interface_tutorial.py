@@ -124,7 +124,7 @@ def move_group_python_interface_tutorial():
   ## to actually move the robot
   plan1 = group.plan()
 
-  print "============ Waiting while RVIZ displays the plan"
+  print "============ Waiting while RVIZ displays plan1..."
   rospy.sleep(5)
 
  
@@ -138,7 +138,7 @@ def move_group_python_interface_tutorial():
   display_trajectory.trajectory.append(plan1)
   display_trajectory_publisher.publish(display_trajectory);
 
-  print "============ waiting while trajectory is visualized (again)..."
+  print "============ waiting while plan1 is visualized (again)..."
   rospy.sleep(5)
 
 
@@ -170,9 +170,13 @@ def move_group_python_interface_tutorial():
 
   ## Now, let's modify one of the joints, plan to the new joint
   ## space goal and visualize the plan
-  
+  group_variable_values[0] = 1.0
+  group.set_joint_value_target(group_variable_values)
 
+  plan2 = group.plan()
 
+  print "============ Waiting while RVIZ displays plan2..."
+  rospy.sleep(5)
 
 
 
