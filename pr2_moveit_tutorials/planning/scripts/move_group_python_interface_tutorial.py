@@ -41,7 +41,6 @@ import moveit_commander
 from moveit_msgs.msg import RobotState
 
 def move_group_python_interface_tutorial():
-
   # BEGIN_TUTORIAL
   #
   # Setup
@@ -49,20 +48,60 @@ def move_group_python_interface_tutorial():
   #
   # First initialize moveit_commander and rospy.
   moveit_commander.roscpp_initialize(sys.argv)
-  rospy.init_node('move_group_python_interface_tutorial')
+  rospy.init_node('move_group_python_interface_tutorial',
+                  anonymous=True)
 
   # This sleep is ONLY to allow Rviz to come up
   print "============ Waiting for RVIZ..."
   rospy.sleep(20)
-  print "============ STARTING"
+  print "============ Starting tutorial "
 
-  # Then instantiate a RobotCommander object
+  # Instantiate a RobotCommander object.  This object is an interface to
+  # the robot as a whole.
   robot = moveit_commander.RobotCommander()
 
-  # This object is an interface to the state of the robot and the world around
-  # the robot.
+  # Instantiate a PlanningSceneInterface object.  This object is an interface
+  # to the world surrounding the robot.
+  scene = moveit_commander.PlanningSceneInterface()
+
+  # Instantiate a MoveGroupCommander object.  This object is an interface
+  # to one group of joints.  In this case the group is the joints in the right
+  # arm.  This interface can be used to plan and execute motions on the right
+  # arm.
+  group = moveit_commander.MoveGroupCommander("left_arm")
+
+
+  # Getting Basic Information
+  # ^^^^^^^^^^^^^^^^^^^^^^^^^
+  #
+  # We can get the name of the reference frame for this robot
+  print "============ Reference frame: %s" % group.get_planning_frame()
+
+  # We can also print the name of the end-effector link for this group
+  print "============ Reference frame: %s" % group.get_end_effector_link()
+
+  # We can get a list of all the groups in the robot
+  print "============ Robot Groups:"
+  print robot.get_group_names()
+
+  # Sometimes for debugging it is useful to print the entire state of the
+  # robot.
+  print "============ Printing robot state"
   print robot.get_current_state()
+  print "============"
+
+
+  # Planning to a Pose goal
+  # ^^^^^^^^^^^^^^^^^^^^^^^
+  # We can plan a motion for this group to a desired pose for the 
+  # end-effector
+
     
+
+
+
+
+
 
 
 
