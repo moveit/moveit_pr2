@@ -27,4 +27,3 @@ catkin_package()
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 add_subdirectory(kinematics)
-add_subdirectory(simulated_pick_place)
