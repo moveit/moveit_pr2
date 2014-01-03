@@ -42,7 +42,7 @@ import sys
 import rospy
 import moveit_commander
 from moveit_msgs.msg import RobotState, DisplayTrajectory
-from geometry_msgs.msg importo Pose, PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped
 ## END_SUB_TUTORIAL
 
 def move_group_python_interface_tutorial():
@@ -113,7 +113,7 @@ def move_group_python_interface_tutorial():
   ## and visualize it if successful
   ## Note that we are just planning, not asking move_group 
   ## to actually move the robot
-  plan = group.plan()
+  plan1 = group.plan()
 
   print "============ Waiting while RVIZ displays the plan"
   rospy.sleep(10)
@@ -128,7 +128,7 @@ def move_group_python_interface_tutorial():
     display_trajectory = DisplayTrajectory()
 
     display_trajectory.trajectory_start = robot.get_current_state()
-    display_trajectory.trajectory.append(plan)
+    display_trajectory.trajectory.append(plan1)
     display_publisher.publish(display_trajectory);
 
     print "============ waiting while trajectory is visualized..."
@@ -157,6 +157,13 @@ def move_group_python_interface_tutorial():
 
   group.clear_pose_targets()
 
+  ## Then, we will get the current set of joint values for the group
+  group_variable_values = group.get_current_joint_values()
+  print "============ Joint values: ", group_variable_values
+
+  ## Now, let's modify one of the joints, plan to the new joint
+  ## space goal and visualize the plan
+  
 
 
 
