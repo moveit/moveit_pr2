@@ -1451,7 +1451,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.84346
+      Distance: 3.18468
       Focal Point:
         X: 0.113567
         Y: 0.10592
@@ -1477,5 +1477,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1356
-  X: 451
-  Y: 210
+  X: 315
+  Y: 108

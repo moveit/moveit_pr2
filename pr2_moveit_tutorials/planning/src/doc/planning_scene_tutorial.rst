@@ -16,7 +16,7 @@ Follow the `instructions for compiling code from source <http://moveit.ros.org/w
 
 The launch file
 ^^^^^^^^^^^^^^^
-The entire launch file is `here <https://github.com/ros-planning/moveit_pr2/blob/hydro-devel/pr2_moveit_tutorials/planning/launch/planning_tutorial.launch>`_ on github. All the code in this
+The entire launch file is `here <https://github.com/ros-planning/moveit_pr2/blob/hydro-devel/pr2_moveit_tutorials/planning/launch/planning_scene_tutorial.launch>`_ on github. All the code in this
 tutorial can be compiled and run from the pr2_moveit_tutorials package
 that you have as part of your MoveIt! setup.
 
@@ -25,7 +25,7 @@ Running the code
 
 Roslaunch the launch file to run the code directly from pr2_moveit_tutorials::
 
- roslaunch pr2_moveit_tutorials planning_tutorial.launch
+ roslaunch pr2_moveit_tutorials planning_scene_tutorial.launch
 
 Expected Output
 ^^^^^^^^^^^^^^^
