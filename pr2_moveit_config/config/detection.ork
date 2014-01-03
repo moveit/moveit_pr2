@@ -56,5 +56,5 @@ pipeline2:
       port: 5432
       user: 'willow'
       password: 'willow'
-      name: 'household_objects_willow'
+      name: 'household_objects'
       module: 'object_recognition_tabletop'

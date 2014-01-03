@@ -5,7 +5,7 @@ project(pr2_moveit_tests)
 
 ## Find catkin and any catkin packages on which
 ## this package depends at build time
-find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning pluginlib rostest rosunit object_recognition_msgs moveit_msgs household_objects_database_msgs)
+find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning pluginlib rostest rosunit)
 
 find_package(PkgConfig REQUIRED)
 find_package(Eigen REQUIRED)
@@ -21,9 +21,7 @@ link_directories(${OCTOMAP_LIBRARY_DIRS})
 
 
 ## Declare things to be passed to other projects
-catkin_package(
-CATKIN_DEPENDS object_recognition_msgs moveit_msgs
-DEPENDS Boost Eigen)
+catkin_package()
 
 ## Specify additional locations of header files
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})

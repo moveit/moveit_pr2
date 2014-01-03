@@ -3,8 +3,6 @@
   <arg name="db" default="false" />
   <arg name="debug" default="false" />
 
-  <include file="$(find household_objects_database)/launch/objects_database_simple_local_server.launch"/>
-
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
   </include>
