@@ -42,8 +42,8 @@ import sys
 import copy
 import rospy
 import moveit_commander
-from moveit_msgs.msg import RobotState, DisplayTrajectory, OrientationConstraint
-from geometry_msgs.msg import Pose, PoseStamped
+import moveit_msgs.msg
+import geometry_msgs.msg
 ## END_SUB_TUTORIAL
 
 from std_msgs.msg import String
@@ -80,7 +80,7 @@ def move_group_python_interface_tutorial():
   ## trajectories for RVIZ to visualize.
   display_trajectory_publisher = rospy.Publisher(
                                       '/move_group/display_planned_path',
-                                      DisplayTrajectory)
+                                      moveit_msgs.msg.DisplayTrajectory)
 
   ## Wait for RVIZ to initialize. This sleep is ONLY to allow Rviz to come up.
   print "============ Waiting for RVIZ..."
@@ -112,7 +112,7 @@ def move_group_python_interface_tutorial():
   ## We can plan a motion for this group to a desired pose for the 
   ## end-effector
   print "============ Generating plan 1"
-  pose_target = Pose()
+  pose_target = geometry_msgs.msg.Pose()
   pose_target.orientation.w = 1.0
   pose_target.position.x = 0.7
   pose_target.position.y = -0.05
@@ -133,7 +133,7 @@ def move_group_python_interface_tutorial():
   ## group.plan() method does this automatically so this is not that useful
   ## here (it just displays the same trajectory again).
   print "============ Visualizing plan1"
-  display_trajectory = DisplayTrajectory()
+  display_trajectory = moveit_msgs.msg.DisplayTrajectory()
 
   display_trajectory.trajectory_start = robot.get_current_state()
   display_trajectory.trajectory.append(plan1)
@@ -190,7 +190,7 @@ def move_group_python_interface_tutorial():
   waypoints.append(group.get_current_pose().pose)
 
   # first orient gripper and move forward (+x)
-  wpose = Pose()
+  wpose = geometry_msgs.msg.Pose()
   wpose.orientation.w = 1.0
   wpose.position.x = waypoints[0].position.x + 0.1
   wpose.position.y = waypoints[0].position.y
@@ -218,6 +218,11 @@ def move_group_python_interface_tutorial():
   rospy.sleep(5)
 
  
+  ## Adding/Removing Objects and Attaching/Detaching Objects
+  ## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ## First, we will define the collision object message
+  collision_object = moveit_msgs.msg.CollisionObject()
+
 
 
   ## When finished shut down moveit_commander.
