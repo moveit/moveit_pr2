@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.5 (2014-01-03)
+------------------
 * Switched moveit_website url from numeric to moveit.ros.org.
 * Added links to all tutorials pointing back to main tutorials page on website.
 * fixing expected results
