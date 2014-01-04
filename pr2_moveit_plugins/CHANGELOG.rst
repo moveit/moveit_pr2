@@ -2,6 +2,9 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.4 (2013-12-03)
 ------------------
 * for some reason it seems the Eigen allocator is not called when constructing objects on stack (?); this fixes things for 32bit OS

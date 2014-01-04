@@ -2,6 +2,10 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* adding move group interface tutorial and sphinx docs
+
 0.5.4 (2013-12-03)
 ------------------
 * fixing broken tests for changes in robot_state

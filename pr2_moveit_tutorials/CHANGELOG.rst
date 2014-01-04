@@ -2,6 +2,20 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Switched moveit_website url from numeric to moveit.ros.org.
+* Added links to all tutorials pointing back to main tutorials page on website.
+* fixing expected results
+* adding controller configuration tutorial
+* adding kinematics and perception configuration
+* adding cartesian path into tutorial
+* adding move group interface tutorial and sphinx docs
+* adding a tutorial for the planning scene ros api using diffs
+* moving .rst files so their names match tutorial names, renaming cpp files to better reflect tutorials
+* adding sphinx information for planning pipeline and motion planning interface tutorials
+* Changed title of planning tutorial from 'Environment Representation' to 'Planning Scene'
+
 0.5.4 (2013-12-03)
 ------------------
 * Ported PlanningScene tutorial to sphinx, and fixed some bugs in its code.
