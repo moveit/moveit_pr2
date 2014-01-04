@@ -31,11 +31,7 @@ Expected Output
 
 In Rviz, we should be able to see the following (there will be a delay of 5-10 seconds between each step):
 
- 1. The robot moves its right arm to the pose goal in front of it,
- 2. The robot moves its right arm to the joint goal to the side,
- 3. The robot moves its right arm back to a new pose goal while maintaining the end-effector level. 
- 4. The robot moves its right arm along the desired cartesian path.
- 5. A new object is added into the environment at the location of the right wrist (its color will be green)
- 6. The object is attached to the wrist (its color will change)
- 7. The object is detached from the wrist (its color will change back to green)
- 8. The object is removed from the environment
+ 1. The robot moves its left arm to the pose goal in front of it (plan1)
+ 2. The robot again moves its left arm to the same goal (plan1 again)
+ 3. The robot moves its left arm to the joint goal to the side,
+ 4. The robot moves its left arm along the desired cartesian path.
