@@ -84,4 +84,7 @@ MoveIt! uses an octree based framework to represent the world around it. The *Oc
  * *octomap_resolution*: specifies the resolution at which this representation is maintained (in meters).
  * *max_range*: specifies the maximum range value to be applied for any sensor input to this node. 
 
+Links
+=====
 
+ * Back to :moveit_website:`Moveit Tutorials <tutorials>`

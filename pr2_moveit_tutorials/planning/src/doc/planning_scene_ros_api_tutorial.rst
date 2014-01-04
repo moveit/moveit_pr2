@@ -35,3 +35,7 @@ In rviz, you should be able to see the following:
  * Object gets detached from the robot
  * Object is removed from the planning scene
 
+Links
+=====
+
+ * Back to :moveit_website:`Moveit Tutorials <tutorials>`

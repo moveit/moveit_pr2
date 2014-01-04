@@ -39,3 +39,8 @@ Position Only IK
 Position only IK can easily be enabled (only if you are using the KDL Kinematics Plugin) by adding the following line to your kinematics.yaml file (for the particular group that you want to solve IK for)::
 
   position_only_ik: True
+
+Links
+=====
+
+ * Back to :moveit_website:`Moveit Tutorials <tutorials>`
