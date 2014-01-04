@@ -4,6 +4,8 @@ Beginner Tutorials
 ==================
 - :doc:`The Move Group Interface tutorial</planning/src/doc/move_group_interface_tutorial>` shows how to use the C++ interface to move_group. This is the primary interface that most users of MoveIt! should use.
 
+- :doc:`The Move Group Python Interface tutorial</planning/scripts/doc/move_group_python_interface_tutorial>` shows how to use the Python interface to move_group. This is the primary interface that most users of MoveIt! should use from Python.
+
 Advanced Tutorials
 ==================
 - :doc:`The Kinematics tutorial</kinematics/src/doc/kinematics_tutorial>` shows the basics of using the C++ API for kinematics. It includes forward and inverse kinematics, setting and getting joint values, dealing with joint limits and computing jacobians.

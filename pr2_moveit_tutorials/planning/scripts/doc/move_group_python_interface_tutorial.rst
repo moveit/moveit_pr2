@@ -1,0 +1,41 @@
+Move Group Interface/C++ API
+==================================
+In MoveIt!, the primary user interface is through the RobotCommander class. It
+provides functionality for most operations that a user may want to carry out,
+specifically setting joint or pose goals, creating motion plans, moving the
+robot, adding objects into the environment and attaching/detaching objects from
+the robot.
+
+.. tutorial-formatter:: ../move_group_python_interface_tutorial.py
+
+The entire code
+^^^^^^^^^^^^^^^
+The entire code can be seen :codedir:`here in the moveit_pr2 github project<planning>`.
+
+The launch file
+^^^^^^^^^^^^^^^
+The entire launch file is `here
+<https://github.com/ros-planning/moveit_pr2/blob/hydro-devel/pr2_moveit_tutorials/planning/launch/move_group_python_interface_tutorial.launch>`_
+on github. All the code in this tutorial can be run from the
+pr2_moveit_tutorials package that you have as part of your MoveIt! setup.
+
+Running the code
+^^^^^^^^^^^^^^^^
+
+Roslaunch the launch file to run the code directly from pr2_moveit_tutorials::
+
+ roslaunch pr2_moveit_tutorials move_group_python_interface_tutorial.launch
+
+Expected Output
+^^^^^^^^^^^^^^^
+
+In Rviz, we should be able to see the following (there will be a delay of 5-10 seconds between each step):
+
+ 1. The robot moves its right arm to the pose goal in front of it,
+ 2. The robot moves its right arm to the joint goal to the side,
+ 3. The robot moves its right arm back to a new pose goal while maintaining the end-effector level. 
+ 4. The robot moves its right arm along the desired cartesian path.
+ 5. A new object is added into the environment at the location of the right wrist (its color will be green)
+ 6. The object is attached to the wrist (its color will change)
+ 7. The object is detached from the wrist (its color will change back to green)
+ 8. The object is removed from the environment
