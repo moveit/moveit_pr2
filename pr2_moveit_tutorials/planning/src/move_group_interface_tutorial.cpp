@@ -50,8 +50,9 @@ int main(int argc, char **argv)
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
+
   /* This sleep is ONLY to allow Rviz to come up */
-  sleep(20.0);
+  sleep(10.0);
   
   // BEGIN_TUTORIAL
   // 
@@ -67,6 +68,10 @@ int main(int argc, char **argv)
   // class to deal directly with the world
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;  
 
+  // Setup for visualizing plans with Rviz
+  ros::Publisher display_publisher = node_handle.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
+  moveit_msgs::DisplayTrajectory display_trajectory;
+
   // Getting Basic Information
   // ^^^^^^^^^^^^^^^^^^^^^^^^^
   //
@@ -80,33 +85,40 @@ int main(int argc, char **argv)
   // ^^^^^^^^^^^^^^^^^^^^^^^
   // We can plan a motion for this group to a desired pose for the 
   // end-effector
-  geometry_msgs::Pose pose_target;
-  pose_target.orientation.w = 1.0;
-  pose_target.position.x = 0.7;
-  pose_target.position.y = -0.05;
-  pose_target.position.z = 1.1;
-  group.setPoseTarget(pose_target);
-
-  // Setup for visualizing the plan
-  ros::Publisher display_publisher = node_handle.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
-  moveit_msgs::DisplayTrajectory display_trajectory;
+  geometry_msgs::Pose target_pose1;
+  target_pose1.orientation.w = 1.0;
+  target_pose1.position.x = 0.28;
+  target_pose1.position.y = -0.7;
+  target_pose1.position.z = 1.0;
+  group.setPoseTarget(target_pose1);
 
   // Now, we call the planner to compute the plan
   // and visualize it if successful
   // Note that we are just planning, not asking move_group 
   // to actually move the robot
   moveit::planning_interface::MoveGroup::Plan p;
-  if(group.plan(p))
+  if (group.plan(p))
   {
-    ROS_INFO("Visualizing plan 1");    
-    display_trajectory.trajectory_start = p.start_state_;
-    display_trajectory.trajectory.push_back(p.trajectory_);
-    display_publisher.publish(display_trajectory);
-  }  
+    ROS_INFO("Visualizing plan 1 (pose goal)");    
+    // Sleep to give Rviz time to visualize the plan.
+    sleep(5.0);
 
-  /* This sleep is ONLY to give us enough time to see the trajectory 
-     in Rviz before doing the next thing*/
-  sleep(10.0);
+    // Visualizing plans
+    // ^^^^^^^^^^^^^^^^^
+    // Now that we have a plan we can visualize it in Rviz.  This is
+    // not necessary because the group.plan() call does this for us.  But this
+    // can still be useful in cases that we want to visualize a previously
+    // created plan.
+    if (1)
+    {
+      ROS_INFO("Visualizing plan 1 (again)");    
+      display_trajectory.trajectory_start = p.start_state_;
+      display_trajectory.trajectory.push_back(p.trajectory_);
+      display_publisher.publish(display_trajectory);
+      /* Sleep to give Rviz time to visualize the plan. */
+      sleep(5.0);
+    }
+  }  
   
   // Moving to a pose goal
   // ^^^^^^^^^^^^^^^^^^^^^
@@ -125,13 +137,10 @@ int main(int argc, char **argv)
   // Planning to a joint-space goal 
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   //
-  // Let's set a joint space goal and move towards it. 
-  // First, we will clear the pose target we had just set.
-
-  group.clearPoseTargets();
-
-  // Then, we will get the current set of joint values for the group
-
+  // Let's set a joint space goal and move towards it.  This will replace the
+  // pose target we set above.
+  //
+  // First get the current set of joint values for the group
   std::vector<double> group_variable_values;
   group.getCurrentState()->copyJointGroupPositions(group.getCurrentState()->getRobotModel()->getJointModelGroup(group.getName()), group_variable_values);
   
@@ -140,19 +149,13 @@ int main(int argc, char **argv)
   group_variable_values[0] = -1.0;  
   group.setJointValueTarget(group_variable_values);
   moveit::planning_interface::MoveGroup::Plan p2;
-  if(group.plan(p2))
+  if (group.plan(p2))
   {
-    ROS_INFO("Visualizing plan 2");    
-    display_trajectory.trajectory_start = p2.start_state_;
-    display_trajectory.trajectory.clear();    
-    display_trajectory.trajectory.push_back(p2.trajectory_);
-    display_publisher.publish(display_trajectory);
+    ROS_INFO("Visualizing plan 2 (joint space goal)");    
+    /* Sleep to give Rviz time to visualize the plan. */
+    sleep(5.0);
   }  
 
-  /* This sleep is ONLY to give us enough time to see the trajectory 
-     in Rviz before doing the next thing*/
-  sleep(10.0);
-  
   // Planning with Path Constraints
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   //
@@ -178,59 +181,63 @@ int main(int argc, char **argv)
   // satisfies the path constraints. So, we need to set the start
   // state to a new pose. 
   robot_state::RobotState start_state(*group.getCurrentState());
-  geometry_msgs::Pose new_pose;
-  new_pose.orientation.w = 1.0;
-  new_pose.position.x = 0.65;
-  new_pose.position.y = -0.05;
-  new_pose.position.z = 0.7;
-  start_state.setFromIK(start_state.getRobotModel()->getJointModelGroup(group.getName()),
-                        new_pose);
+  geometry_msgs::Pose start_pose2;
+  start_pose2.orientation.w = 1.0;
+  start_pose2.position.x = 0.45;
+  start_pose2.position.y = -0.05;
+  start_pose2.position.z = 0.7;
+  const robot_state::JointModelGroup *joint_model_group =
+                  start_state.getJointModelGroup(group.getName());
+  start_state.setFromIK(joint_model_group, start_pose2);
   group.setStartState(start_state);
   
   // Now we will plan to the earlier pose target from the new 
   // start state that we have just created.
-  group.setPoseTarget(pose_target);
-  if(group.plan(p))
+  group.setPoseTarget(target_pose1);
+  if (group.plan(p))
   {
-    ROS_INFO("Visualizing plan 3");    
-    display_trajectory.trajectory_start = p.start_state_;
-    display_trajectory.trajectory.clear();    
-    display_trajectory.trajectory.push_back(p.trajectory_);
-    display_publisher.publish(display_trajectory);
+    ROS_INFO("Visualizing plan 3 (constraints)");    
+    /* Sleep to give Rviz time to visualize the plan. */
+    sleep(10.0);
   }  
-  /* This sleep is ONLY to give us enough time to see the trajectory 
-     in Rviz before doing the next thing*/
-  sleep(10.0);
 
   // Cartesian Paths
   // ^^^^^^^^^^^^^^^
   // You can plan a cartesian path directly by specifying a list of waypoints 
   // for the end-effector to go through. Note that we are starting 
-  // from the new start state above.
+  // from the new start state above.  The initial pose (start state) does not
+  // need to be added to the waypoint list.
   std::vector<geometry_msgs::Pose> waypoints;
 
-  geometry_msgs::Pose new_pose_2 = new_pose;
-  new_pose_2.position.x +=0.05;
-  new_pose_2.position.z += 0.2;
-  waypoints.push_back(new_pose_2);
-  
-  new_pose_2.position.z += 0.2;
-  waypoints.push_back(new_pose_2);
+  geometry_msgs::Pose target_pose3 = start_pose2;
+  target_pose3.position.x += 0.2;
+  target_pose3.position.z += 0.2;
+  waypoints.push_back(target_pose3);  // up and out
 
-  // We want the cartesian path to be interpolated at a resolution of 1 cm which 
-  // is why we will specify 0.01 as the max step in cartesian translation
-  // We will specify the jump threshold as 0.0, effectively disabling it
+  target_pose3.position.y -= 0.2;
+  waypoints.push_back(target_pose3);  // left
+
+  target_pose3.position.z -= 0.2;
+  target_pose3.position.y += 0.2;
+  target_pose3.position.x -= 0.2;
+  waypoints.push_back(target_pose3);  // down and right (back to start)
+
+  // We want the cartesian path to be interpolated at a resolution of 1 cm
+  // which is why we will specify 0.01 as the max step in cartesian
+  // translation.  We will specify the jump threshold as 0.0, effectively
+  // disabling it.
   moveit_msgs::RobotTrajectory trajectory;
-  if(group.computeCartesianPath(waypoints, 0.01, 0.0, trajectory) >= 0.5)
+  double fraction = group.computeCartesianPath(waypoints,
+                                               0.01,  // eef_step
+                                               0.0,   // jump_threshold
+                                               trajectory);
+  if (fraction > 0.1)
   {
-    display_trajectory.trajectory_start = p.start_state_;
-    display_trajectory.trajectory.clear();    
-    display_trajectory.trajectory.push_back(trajectory);
-    display_publisher.publish(display_trajectory);
+    ROS_INFO("Visualizing plan 4 (cartesian path) (%.2f%% acheived)",
+        fraction * 100.0);    
+    /* Sleep to give Rviz time to visualize the plan. */
+    sleep(15.0);
   }
-  /* This sleep is ONLY to give us enough time to see the trajectory 
-     in Rviz before doing the next thing*/
-  sleep(10.0);
 
 
   // Adding/Removing Objects and Attaching/Detaching Objects
@@ -238,21 +245,24 @@ int main(int argc, char **argv)
   // First, we will define the collision object message
   moveit_msgs::CollisionObject collision_object;
   /* The header must contain a valid TF frame*/
-  collision_object.header.frame_id = group.getEndEffectorLink();
+  collision_object.header.frame_id = group.getPlanningFrame();
   /* The id of the object */
   collision_object.id = "box";
 
-  /* A default pose */
+  /* A default pose (relative to frame_id) */
   geometry_msgs::Pose pose;
   pose.orientation.w = 1.0;
+  pose.position.x = 0.6;
+  pose.position.y = -0.2;
+  pose.position.z = 1.2;
 
   /* Define a box to be attached */
   shape_msgs::SolidPrimitive primitive;
   primitive.type = primitive.BOX;
   primitive.dimensions.resize(3);
-  primitive.dimensions[0] = 0.1;
+  primitive.dimensions[0] = 0.2;
   primitive.dimensions[1] = 0.1;
-  primitive.dimensions[2] = 0.1;
+  primitive.dimensions[2] = 0.4;
 
   collision_object.primitives.push_back(primitive);
   collision_object.primitive_poses.push_back(pose);
@@ -265,8 +275,28 @@ int main(int argc, char **argv)
   ROS_INFO("Add an object into the world");  
   planning_scene_interface.addCollisionObjects(collision_objects);
   
-  /* This sleep is ONLY to give us enough time to see the object appear in Rviz*/
+  ROS_INFO("Visualizing box world object");    
+  /* Sleep so we have time to see the object in RViz */
   sleep(2.0);
+
+  // Now when we plan a trajectory it will avoid the obstacle
+  start_state = *group.getCurrentState();
+  group.setStartState(start_state);
+  group.setPoseTarget(target_pose1);
+  if (group.plan(p))
+  {
+    ROS_INFO("Visualizing plan 1 (pose goal move around box)");    
+    // Sleep to give Rviz time to visualize the plan.
+    sleep(10.0);
+  }
+  
+
+
+
+
+
+
+
 
   // Now, let's attach the collision object to the robot
   ROS_INFO("Attach the object to the robot");  
