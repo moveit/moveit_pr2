@@ -65,26 +65,26 @@ int main(int argc, char **argv)
   moveit::planning_interface::MoveGroup group("right_arm");
 
   // We will use the :planning_scene_interface:`PlanningSceneInterface`
-  // class to deal directly with the world
+  // class to deal directly with the world.
   moveit::planning_interface::PlanningSceneInterface planning_scene_interface;  
 
-  // Setup for visualizing plans with Rviz
+  // (Optional) Create a publisher for visualizing plans in Rviz.
   ros::Publisher display_publisher = node_handle.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
   moveit_msgs::DisplayTrajectory display_trajectory;
 
   // Getting Basic Information
   // ^^^^^^^^^^^^^^^^^^^^^^^^^
   //
-  // We can print the name of the reference frame for this robot
+  // We can print the name of the reference frame for this robot.
   ROS_INFO("Reference frame: %s", group.getPlanningFrame().c_str());
   
-  // We can also print the name of the end-effector link for this group
+  // We can also print the name of the end-effector link for this group.
   ROS_INFO("Reference frame: %s", group.getEndEffectorLink().c_str());
 
   // Planning to a Pose goal
   // ^^^^^^^^^^^^^^^^^^^^^^^
   // We can plan a motion for this group to a desired pose for the 
-  // end-effector
+  // end-effector.
   geometry_msgs::Pose target_pose1;
   target_pose1.orientation.w = 1.0;
   target_pose1.position.x = 0.28;
@@ -94,22 +94,22 @@ int main(int argc, char **argv)
 
 
   // Now, we call the planner to compute the plan
-  // and visualize it if successful
+  // and visualize it.
   // Note that we are just planning, not asking move_group 
-  // to actually move the robot
+  // to actually move the robot.
   moveit::planning_interface::MoveGroup::Plan my_plan;
   bool success = group.plan(my_plan);
 
   ROS_INFO("Visualizing plan 1 (pose goal) %s",success?"":"FAILED");    
-  // Sleep to give Rviz time to visualize the plan.
+  /* Sleep to give Rviz time to visualize the plan. */
   sleep(5.0);
 
   // Visualizing plans
   // ^^^^^^^^^^^^^^^^^
-  // Now that we have a plan we can visualize it in Rviz.  This is
-  // not necessary because the group.plan() call does this for us.  But this
-  // can still be useful in cases that we want to visualize a previously
-  // created plan.
+  // Now that we have a plan we can visualize it in Rviz.  This is not
+  // necessary because the group.plan() call we made above did this
+  // automatically.  But explicitly publishing plans is useful in cases that we
+  // want to visualize a previously created plan.
   if (1)
   {
     ROS_INFO("Visualizing plan 1 (again)");    
@@ -140,12 +140,12 @@ int main(int argc, char **argv)
   // Let's set a joint space goal and move towards it.  This will replace the
   // pose target we set above.
   //
-  // First get the current set of joint values for the group
+  // First get the current set of joint values for the group.
   std::vector<double> group_variable_values;
   group.getCurrentState()->copyJointGroupPositions(group.getCurrentState()->getRobotModel()->getJointModelGroup(group.getName()), group_variable_values);
   
   // Now, let's modify one of the joints, plan to the new joint
-  // space goal and visualize the plan
+  // space goal and visualize the plan.
   group_variable_values[0] = -1.0;  
   group.setJointValueTarget(group_variable_values);
   success = group.plan(my_plan);
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
   //
   // Path constraints can easily be specified for a link on the robot.
   // Let's specify a path constraint and a pose goal for our group.
-  // First define the constraint
+  // First define the path constraint.
   moveit_msgs::OrientationConstraint ocm;  
   ocm.link_name = "r_wrist_roll_link";  
   ocm.header.frame_id = "base_link";
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
   ocm.absolute_z_axis_tolerance = 0.1;
   ocm.weight = 1.0;
   
-  // Now, add it to the set of path constraints for the group
+  // Now, set it as the path constraint for the group.
   moveit_msgs::Constraints test_constraints;
   test_constraints.orientation_constraints.push_back(ocm);  
   group.setPathConstraints(test_constraints);
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
   /* Sleep to give Rviz time to visualize the plan. */
   sleep(10.0);
 
-  // When done with the path constraint be sure to clear it
+  // When done with the path constraint be sure to clear it.
   group.clearPathConstraints();
 
   // Cartesian Paths
@@ -240,7 +240,7 @@ int main(int argc, char **argv)
 
   // Adding/Removing Objects and Attaching/Detaching Objects
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  // First, we will define the collision object message
+  // First, we will define the collision object message.
   moveit_msgs::CollisionObject collision_object;
   collision_object.header.frame_id = group.getPlanningFrame();
 
@@ -289,26 +289,30 @@ int main(int argc, char **argv)
 
   ROS_INFO("Visualizing plan 5 (pose goal move around box) %s",
     success?"":"FAILED");
-  // Sleep to give Rviz time to visualize the plan.
+  /* Sleep to give Rviz time to visualize the plan. */
   sleep(10.0);
   
-  // Now, let's attach the collision object to the robot
+
+  // Now, let's attach the collision object to the robot.
   ROS_INFO("Attach the object to the robot");  
   group.attachObject(collision_object.id);  
+  /* Sleep to give Rviz time to show the object attached (different color). */
   sleep(4.0);
 
 
-  // Now, let's detach the collision object from the robot
+  // Now, let's detach the collision object from the robot.
   ROS_INFO("Detach the object from the robot");  
   group.detachObject(collision_object.id);  
+  /* Sleep to give Rviz time to show the object detached. */
   sleep(4.0);
 
 
-  // Now, let's remove the collision object from the world
+  // Now, let's remove the collision object from the world.
   ROS_INFO("Remove the object from the world");  
   std::vector<std::string> object_ids;
   object_ids.push_back(collision_object.id);  
   planning_scene_interface.removeCollisionObjects(object_ids);
+  /* Sleep to give Rviz time to show the object is no longer there. */
   sleep(4.0);
 // END_TUTORIAL
 
