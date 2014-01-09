@@ -102,7 +102,7 @@ TEST(JacobianSolver, solver)
  KDL::JntArray q_in(7);
  EXPECT_TRUE(kdl_solver.JntToJac(q_in,jacobian_kdl) >= 0);
 
- unsigned int NUM_TESTS = 1000000;
+ unsigned int NUM_TESTS = 10000;
  for(unsigned int i=0; i < NUM_TESTS; i++)
  {
    for(int j=0; j < 7; j++)
@@ -162,7 +162,7 @@ TEST(JacobianSolver, solver2)
  KDL::JntArray q_in(7);
  EXPECT_TRUE(kdl_solver.JntToJac(q_in,jacobian_kdl) >= 0);
 
- unsigned int NUM_TESTS = 1000000;
+ unsigned int NUM_TESTS = 10000;
  for(unsigned int i=0; i < NUM_TESTS; i++)
  {
    for(int j=0; j < 7; j++)

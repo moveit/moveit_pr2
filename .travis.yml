@@ -14,6 +14,7 @@ notifications:
       - dave.hershberger@sri.com
     on_success: change #[always|never|change] # default: change
     on_failure: change #[always|never|change] # default: always
+
 before_install: # Use this to prepare the system to install prerequisites or dependencies
   # Define some config vars
   - export ROS_DISTRO=hydro
@@ -30,6 +31,7 @@ before_install: # Use this to prepare the system to install prerequisites or dep
   # Setup rosdep
   - sudo rosdep init
   - rosdep update
+
 install: # Use this to install any prerequisites or dependencies necessary to run your build
   # Create workspace
   - mkdir -p ~/ros/ws_moveit/src
@@ -44,7 +46,28 @@ install: # Use this to install any prerequisites or dependencies necessary to ru
   - cd ../
   # Install dependencies for source repos
   - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y
+
 before_script: # Use this to prepare your build for testing e.g. copy database configurations, environment variables, etc.
   - source /opt/ros/$ROS_DISTRO/setup.bash  
+
 script: # All commands must exit with code 0 on success. Anything else is considered failure.
   - catkin_make -j2
+
+  # Tests need the package's environment 
+  - source devel/setup.bash
+
+  # Go to build dir so can use straight "make"
+  - cd build
+
+  # Build all tests, because individual run_tests_* targets do not
+  # depend on the building of test binaries. (Could solve with chained catkin workspace...)
+  - make tests
+
+  # Since this is a downstream package, just run tests for this package.
+  - make run_tests_pr2_moveit_tests
+  
+  # "make run_tests" and friends return success even when tests fail,
+  # so here we run catkin_test_results which summarizes the results
+  # and returns a result code indicating whether there were any
+  # failures or not.
+  - catkin_test_results .

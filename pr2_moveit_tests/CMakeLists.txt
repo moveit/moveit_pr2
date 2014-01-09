@@ -5,7 +5,14 @@ project(pr2_moveit_tests)
 
 ## Find catkin and any catkin packages on which
 ## this package depends at build time
-find_package(catkin REQUIRED COMPONENTS moveit_core moveit_ros_planning pluginlib rostest rosunit)
+find_package(catkin REQUIRED
+  COMPONENTS
+  moveit_core
+  moveit_ros_planning
+  pluginlib
+  rostest
+  rosunit
+)
 
 find_package(PkgConfig REQUIRED)
 find_package(Eigen REQUIRED)
