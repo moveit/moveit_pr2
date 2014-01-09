@@ -9,7 +9,6 @@ find_package(catkin REQUIRED
   COMPONENTS
   moveit_core
   moveit_ros_planning
-  orocos_kdl
   pluginlib
   rostest
   rosunit
