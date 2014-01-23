@@ -336,7 +336,6 @@ int main(int argc, char **argv)
   // Now, we can plan and visualize
   moveit::planning_interface::MoveGroup::Plan two_arms_plan;
   two_arms_group.plan(two_arms_plan);
-  /* Sleep to give Rviz time to show the object is no longer there. */
   sleep(4.0);
 
 // END_TUTORIAL
