@@ -314,6 +314,30 @@ int main(int argc, char **argv)
   planning_scene_interface.removeCollisionObjects(object_ids);
   /* Sleep to give Rviz time to show the object is no longer there. */
   sleep(4.0);
+
+
+  // Dual-arm pose goals
+  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  // First define a new group for addressing the two arms. Then define 
+  // two separate pose goals, one for each end-effector. Note that 
+  // we are reusing the goal for the right arm above
+  moveit::planning_interface::MoveGroup two_arms_group("arms");
+
+  two_arms_group.setPoseTarget(target_pose1, "r_wrist_roll_link");
+
+  geometry_msgs::Pose target_pose2;
+  target_pose2.orientation.w = 1.0;
+  target_pose2.position.x = 0.7;
+  target_pose2.position.y = 0.15;
+  target_pose2.position.z = 1.0;
+
+  two_arms_group.setPoseTarget(target_pose2, "l_wrist_roll_link");
+
+  // Now, we can plan and visualize
+  moveit::planning_interface::MoveGroup::Plan two_arms_plan;
+  two_arms_group.plan(two_arms_plan);
+  sleep(4.0);
+
 // END_TUTORIAL
 
   ros::shutdown();  
