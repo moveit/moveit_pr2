@@ -86,13 +86,13 @@ Debugging Information
 ---------------------
 The ``FollowJointTrajectory`` or ``GripperCommand`` interfaces on your robot must be communicating in the namespace: ``\name\action_ns``. In the above example, you should be able to see the following topics (using *rostopic list*) on your robot:
 
- * /r_arm_controller/follow_joint_trajectory/command
+ * /r_arm_controller/follow_joint_trajectory/goal
  * /r_arm_controller/follow_joint_trajectory/feedback
  * /r_arm_controller/follow_joint_trajectory/result
- * /l_arm_controller/follow_joint_trajectory/command
+ * /l_arm_controller/follow_joint_trajectory/goal
  * /l_arm_controller/follow_joint_trajectory/feedback
  * /l_arm_controller/follow_joint_trajectory/result
- * /gripper_controller/gripper_action/command
+ * /gripper_controller/gripper_action/goal
  * /gripper_controller/gripper_action/feedback
  * /gripper_controller/gripper_action/result
 
