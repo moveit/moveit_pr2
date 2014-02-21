@@ -47,7 +47,6 @@ FollowJointTrajectory Controller Interface
 The parameters are:
  * *name*: The name of the controller.  (See debugging information below for important notes).
  * *action_ns*: The action namespace for the controller. (See debugging information below for important notes). 
-Parameters specific to the Point cloud updater are:
  * *type*: The type of action being used (here FollowJointTrajectory).
  * *default*: The default controller is the primary controller chosen by MoveIt! for communicating with a particular set of joints.
  * *joints*: Names of all the joints that are being addressed by this interface.
@@ -57,7 +56,6 @@ GripperCommand Controller Interface
 The parameters are:
  * *name*: The name of the controller.  (See debugging information below for important notes).
  * *action_ns*: The action namespace for the controller. (See debugging information below for important notes). 
-Parameters specific to the Point cloud updater are:
  * *type*: The type of action being used (here GripperCommand).
  * *default*: The default controller is the primary controller chosen by MoveIt! for communicating with a particular set of joints.
  * *joints*: Names of all the joints that are being addressed by this interface.
