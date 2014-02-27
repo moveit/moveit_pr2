@@ -2,6 +2,36 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update controller_configuration.rst
+  Fix cut and paste errors.
+* fix topics to check for while debugging
+* fixing
+* added example for dual arm pose goals
+* move_group tutorial: update expected output
+* cleanup tutorial text (comments)
+* move_group tutorial: fix timing & error checking
+* move_group interface tutorial: plan around obstacle
+  add code to generate a plan while a world box is in the way.
+* improve move_group_interface tutorial
+  Clarify use of display_publisher.
+  Fix cartesian path request so it can succeed.
+  Add path planning with obstacle.
+* python tutorial: cleanup imports
+* fix copyright and link
+* python tutorial: update expected output description
+* python tutorial: add cartesian paths
+* python tutorial: add joint state plan
+* python tutorial: fix display_trajectory_publisher
+* python tutorial: fix title
+* python tutorial: fix typo
+* python tutorial: add go command
+* python tutorial: add MoveGroupCommander interface
+* add python move_group interface tutorial
+* python interface tutorial
+* Contributors: Acorn Pooley, Sachin Chitta
+
 0.5.5 (2014-01-03)
 ------------------
 * Switched moveit_website url from numeric to moveit.ros.org.

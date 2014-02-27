@@ -2,6 +2,9 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.5 (2014-01-03)
 ------------------
 * adding move group interface tutorial and sphinx docs
