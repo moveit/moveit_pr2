@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.6 (2014-02-27)
+------------------
 * Refactored jacobian test.
 * Changed orocos_kdl import from a catkin component to regular package.
 * Run tests in Travis builds.

@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.6 (2014-02-27)
+------------------
 * Update controller_configuration.rst
   Fix cut and paste errors.
 * fix topics to check for while debugging
