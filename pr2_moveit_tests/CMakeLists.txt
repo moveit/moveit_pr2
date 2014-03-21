@@ -15,7 +15,6 @@ find_package(catkin REQUIRED
 )
 
 find_package(PkgConfig REQUIRED)
-find_package(Eigen REQUIRED)
 find_package(Boost REQUIRED system filesystem date_time thread)
 
 pkg_check_modules(FCL REQUIRED fcl)
