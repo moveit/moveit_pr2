@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update build system for ROS indigo
+* Contributors: Ioan Sucan
+
 0.5.6 (2014-02-27)
 ------------------
 * Refactored jacobian test.
