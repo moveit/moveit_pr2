@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2014-03-23)
+------------------
 * update build system for ROS indigo
 * Contributors: Ioan Sucan
 
