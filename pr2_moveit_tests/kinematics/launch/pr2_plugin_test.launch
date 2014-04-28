@@ -2,10 +2,10 @@
   <!-- send pr2 urdf to param server -->
   <include file="$(find pr2_description)/robots/upload_pr2.launch" />
 
-    <!-- the semantic description that corresponds to the URDF -->
-    <param name="robot_description_semantic" textfile="$(find pr2_jacobian_tests)/pr2.srdf" />
+  <!-- the semantic description that corresponds to the URDF -->
+  <param name="robot_description_semantic" textfile="$(find pr2_jacobian_tests)/pr2.srdf" />
 
-  <test test-name="pr2_kinematics_plugin_test" pkg="pr2_moveit_tests" type="pr2_kinematics_test" name="pr2_right_arm_kinematics" time-limit="180" >    
+  <test test-name="pr2_kinematics_plugin_test" pkg="pr2_moveit_tests" type="pr2_kinematics_test" name="pr2_right_arm_kinematics" time-limit="180" >
    <param name="tip_name" value="r_wrist_roll_link" />     
    <param name="root_name" value="torso_lift_link" />  
    <param name="search_discretization" value="0.025" />  
