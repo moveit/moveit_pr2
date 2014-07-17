@@ -24,7 +24,7 @@ Running the code
 
 Roslaunch the launch file to run the code directly from pr2_moveit_tutorials::
 
- roslaunch pr2_moveit_tutorials motion_planning_interface_tutorial.launch
+ roslaunch pr2_moveit_tutorials motion_planning_api_tutorial.launch
 
 Expected Output
 ^^^^^^^^^^^^^^^
