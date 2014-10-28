@@ -5,9 +5,6 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(Eigen REQUIRED)
-find_package(Boost REQUIRED thread)
-
 find_package(catkin COMPONENTS
   moveit_core
   pluginlib
@@ -22,7 +19,11 @@ find_package(catkin COMPONENTS
   control_msgs
   pr2_mechanism_msgs
   pr2_controllers_msgs
+  cmake_modules
   REQUIRED)
+
+find_package(Eigen REQUIRED)
+find_package(Boost REQUIRED thread)
 
 catkin_package(
   LIBRARIES
