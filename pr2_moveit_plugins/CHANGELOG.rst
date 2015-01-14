@@ -2,6 +2,12 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* build system fix
+* Fix deprecated class loader call, renamed global variables to have _, cleaned up launch files
+* Contributors: Dave Coleman, Ioan Sucan
+
 0.5.7 (2014-03-23)
 ------------------
 
