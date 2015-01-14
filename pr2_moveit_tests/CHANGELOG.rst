@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2015-01-14)
+------------------
 * Moved include_directories(catkin_...) ahead of other calls.
 * Fix deprecated class loader call, renamed global variables to have _, cleaned up launch files
 * Contributors: Dave Coleman, Dave Hershberger
