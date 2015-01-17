@@ -2,6 +2,9 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.0 (2015-01-14)
 ------------------
 * Moved include_directories(catkin_...) ahead of other calls.

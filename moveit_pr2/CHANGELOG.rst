@@ -2,6 +2,11 @@
 Changelog for package moveit_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update maintainer while debugging build errors
+* Contributors: Michael Ferguson
+
 0.6.0 (2015-01-14)
 ------------------
 

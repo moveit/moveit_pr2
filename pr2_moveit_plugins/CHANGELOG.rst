@@ -2,6 +2,12 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update maintainer while debugging build errors
+* add build depend on cmake_modules
+* Contributors: Michael Ferguson
+
 0.6.0 (2015-01-14)
 ------------------
 * build system fix
