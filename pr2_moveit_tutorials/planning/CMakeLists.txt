@@ -19,3 +19,7 @@ target_link_libraries(move_group_interface_tutorial ${catkin_LIBRARIES} ${Boost_
 install(TARGETS move_group_interface_tutorial DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(PROGRAMS
+  scripts/move_group_python_interface_tutorial.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
