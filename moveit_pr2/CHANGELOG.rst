@@ -2,6 +2,14 @@
 Changelog for package moveit_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.2 (2016-02-05)
+------------------
+* Convert deprecated shape_tools dependency to geometric_shapes
+* Install move_group_python_interface_tutorial.py
+* pr2_moveit_tutorials/package.xml add run_depends
+  on pr2 kinematics, moveit config, and moveit plugins
+* Contributors: Ian McMahon, Steven Peters
+
 0.6.1 (2015-01-16)
 ------------------
 * update maintainer while debugging build errors

@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.2 (2016-02-05)
+------------------
+* Fix message dependencies.
+* Contributors: Christian Dornhege
+
 0.6.1 (2015-01-16)
 ------------------
 * update maintainer while debugging build errors
