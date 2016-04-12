@@ -35,6 +35,10 @@
     <group name="torso">
         <joint name="torso_lift_joint" />
     </group>
+    <group name="arms_and_torso">
+        <group name="arms" />
+        <group name="torso" />
+    </group>
     <group name="whole_body">
         <group name="base" />
         <group name="arms" />
