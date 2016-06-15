@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 // using "diffs". A planning scene diff is the difference between the current 
 // planning scene (maintained by the move_group node) and the new planning 
 // scene desired by the user. 
-
+//
 // Advertise the required topic
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // Note that this topic may need to be remapped in the launch file 
@@ -130,7 +130,7 @@ int main(int argc, char **argv)
 // "attach" the object to the robot so that any component dealing with 
 // the robot model knows to account for the attached object, e.g. for
 // collision checking.
-
+//
 // Attaching an object requires two operations
 //  * Removing the original object from the environment
 //  * Attaching the object to the robot
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
 
   sleep_time.sleep();
 
-// REMOVE THE OBJECT FROM THE COLLISION WORLD
+// Remove the object from the collision world
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // Removing the object from the collision world just requires
 // using the remove object message defined earlier. 
