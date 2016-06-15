@@ -42,6 +42,7 @@
 #include <moveit_msgs/AttachedCollisionObject.h>
 #include <moveit_msgs/GetStateValidity.h>
 #include <moveit_msgs/DisplayRobotState.h>
+#include <moveit_msgs/ApplyPlanningScene.h>
 
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_state/robot_state.h>
@@ -124,6 +125,28 @@ int main(int argc, char **argv)
   planning_scene_diff_publisher.publish(planning_scene);
   sleep_time.sleep();
 
+// Interlude: Synchronous vs Asynchronous updates
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// There are two separate mechanisms available to interact
+// with the move_group node using diffs:
+//
+// * Send a diff via a rosservice call and block until
+//   the diff is applied (synchronous update)
+// * Send a diff via a topic, continue even though the diff
+//   might not be applied yet (asynchronous update)
+//
+// While most of this tutorial uses the latter mechanism (given the long sleeps
+// inserted for visualization purposes asynchronous updates do not pose a problem),
+// it would is perfectly justified to replace the planning_scene_diff_publisher
+// by the following service client:
+   ros::ServiceClient planning_scene_diff_client = node_handle.serviceClient<moveit_msgs::ApplyPlanningScene>("apply_planning_scene");
+   planning_scene_diff_client.waitForExistence();
+// and send the diffs to the planning scene via a service call:
+   moveit_msgs::ApplyPlanningScene srv;
+   srv.request.scene = planning_scene;
+   planning_scene_diff_client.call(srv);
+// Note that this does not continue until we are sure the diff has been applied.
+//
 // Attach an object to the robot
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // When the robot picks up an object from the environment, we need to 
