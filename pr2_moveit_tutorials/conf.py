@@ -22,6 +22,9 @@ show_authors = True
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Name of the style used to generate the html documentation
+html_theme = 'default'
+
 extlinks = {'codedir': ('https://github.com/ros-planning/moveit_pr2/blob/hydro-devel/pr2_moveit_tutorials/%s', ''),
             'moveit_core': ('http://docs.ros.org/api/moveit_core/html/classmoveit_1_1core_1_1%s.html', ''),
             'planning_scene': ('http://docs.ros.org/api/moveit_core/html/classplanning__scene_1_1%s.html', ''),
