@@ -42,6 +42,7 @@
 #include <moveit_msgs/AttachedCollisionObject.h>
 #include <moveit_msgs/GetStateValidity.h>
 #include <moveit_msgs/DisplayRobotState.h>
+#include <moveit_msgs/ApplyPlanningScene.h>
 
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_state/robot_state.h>
@@ -68,7 +69,7 @@ int main(int argc, char **argv)
 // using "diffs". A planning scene diff is the difference between the current 
 // planning scene (maintained by the move_group node) and the new planning 
 // scene desired by the user. 
-
+//
 // Advertise the required topic
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // Note that this topic may need to be remapped in the launch file 
@@ -124,13 +125,35 @@ int main(int argc, char **argv)
   planning_scene_diff_publisher.publish(planning_scene);
   sleep_time.sleep();
 
+// Interlude: Synchronous vs Asynchronous updates
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// There are two separate mechanisms available to interact
+// with the move_group node using diffs:
+//
+// * Send a diff via a rosservice call and block until
+//   the diff is applied (synchronous update)
+// * Send a diff via a topic, continue even though the diff
+//   might not be applied yet (asynchronous update)
+//
+// While most of this tutorial uses the latter mechanism (given the long sleeps
+// inserted for visualization purposes asynchronous updates do not pose a problem),
+// it would is perfectly justified to replace the planning_scene_diff_publisher
+// by the following service client:
+   ros::ServiceClient planning_scene_diff_client = node_handle.serviceClient<moveit_msgs::ApplyPlanningScene>("apply_planning_scene");
+   planning_scene_diff_client.waitForExistence();
+// and send the diffs to the planning scene via a service call:
+   moveit_msgs::ApplyPlanningScene srv;
+   srv.request.scene = planning_scene;
+   planning_scene_diff_client.call(srv);
+// Note that this does not continue until we are sure the diff has been applied.
+//
 // Attach an object to the robot
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // When the robot picks up an object from the environment, we need to 
 // "attach" the object to the robot so that any component dealing with 
 // the robot model knows to account for the attached object, e.g. for
 // collision checking.
-
+//
 // Attaching an object requires two operations
 //  * Removing the original object from the environment
 //  * Attaching the object to the robot
@@ -178,7 +201,7 @@ int main(int argc, char **argv)
 
   sleep_time.sleep();
 
-// REMOVE THE OBJECT FROM THE COLLISION WORLD
+// Remove the object from the collision world
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // Removing the object from the collision world just requires
 // using the remove object message defined earlier. 
