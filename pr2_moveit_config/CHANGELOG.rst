@@ -2,6 +2,17 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [feat] pr2_moveit_config: add additional capabilities
+* [feat] rviz config: default to left_arm group
+  Otherwise the object inserted into the planning scene
+  in planning_scene_ros_api_tutorial is covered by
+  the interactive marker of the right_arm group.
+* [feat] made jiggle_fraction parameter usable from outside
+* [feat] add arms_and_torso group
+* Contributors: Tobias Fromm, tarukosu, v4hn
+
 0.6.2 (2016-02-05)
 ------------------
 
