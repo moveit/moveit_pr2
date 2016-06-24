@@ -2,6 +2,18 @@
 Changelog for package moveit_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [doc] tutorial section for apply_planning_scene service, and some more updates.
+* [feat] pr2_moveit_config: add additional capabilities
+* [feat] rviz config: default to left_arm group
+  Otherwise the object inserted into the planning scene
+  in planning_scene_ros_api_tutorial is covered by
+  the interactive marker of the right_arm group.
+* [feat] made jiggle_fraction parameter usable from outside
+* [feat] add arms_and_torso group
+* Contributors: v4hn, Tobias Fromm, tarukosu
+
 0.6.2 (2016-02-05)
 ------------------
 * Convert deprecated shape_tools dependency to geometric_shapes

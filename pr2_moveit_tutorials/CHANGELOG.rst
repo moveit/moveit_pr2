@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [doc] tutorial section for apply_planning_scene service, and some more updates.
+* Contributors: v4hn
+
 0.6.2 (2016-02-05)
 -----------
 * Convert deprecated shape_tools dependency to geometric_shapes
