@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.3 (2016-06-24)
+------------------
 * [feat] pr2_moveit_config: add additional capabilities
 * [feat] rviz config: default to left_arm group
   Otherwise the object inserted into the planning scene

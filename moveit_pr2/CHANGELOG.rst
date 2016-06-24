@@ -2,8 +2,8 @@
 Changelog for package moveit_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.3 (2016-06-24)
+------------------
 * [doc] tutorial section for apply_planning_scene service, and some more updates.
 * [feat] pr2_moveit_config: add additional capabilities
 * [feat] rviz config: default to left_arm group

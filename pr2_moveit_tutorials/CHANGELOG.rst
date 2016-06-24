@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tutorials
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.3 (2016-06-24)
+------------------
 * [doc] tutorial section for apply_planning_scene service, and some more updates.
 * Contributors: v4hn
 
