@@ -17,7 +17,7 @@ The entire code can be seen :codedir:`here in the moveit_pr2 github project<kine
 
 Compiling the code
 ^^^^^^^^^^^^^^^^^^
-Follow the `instructions for compiling code from source <http://moveit.ros.org/wiki/Installation>`_.
+Follow the `instructions for compiling code from source <http://moveit.ros.org/install/>`_.
 
 The launch file
 ^^^^^^^^^^^^^^^
