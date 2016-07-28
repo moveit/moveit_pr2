@@ -43,6 +43,45 @@
 
 static const std::string ROBOT_DESCRIPTION="robot_description";
 
+void openGripper(trajectory_msgs::JointTrajectory& posture){
+  posture.joint_names.resize(6);
+  posture.joint_names[0] = "r_gripper_joint";
+  posture.joint_names[1] = "r_gripper_motor_screw_joint";
+  posture.joint_names[2] = "r_gripper_l_finger_joint";
+  posture.joint_names[3] = "r_gripper_r_finger_joint";
+  posture.joint_names[4] = "r_gripper_r_finger_tip_joint";
+  posture.joint_names[5] = "r_gripper_l_finger_tip_joint";
+
+  posture.points.resize(1);
+  posture.points[0].positions.resize(6);
+  posture.points[0].positions[0] = 1;
+  posture.points[0].positions[1] = 1.0;
+  posture.points[0].positions[2] = 0.477;
+  posture.points[0].positions[3] = 0.477;
+  posture.points[0].positions[4] = 0.477;
+  posture.points[0].positions[5] = 0.477;
+}
+
+void closedGripper(trajectory_msgs::JointTrajectory& posture){
+  posture.joint_names.resize(6);
+  posture.joint_names[0] = "r_gripper_joint";
+  posture.joint_names[1] = "r_gripper_motor_screw_joint";
+  posture.joint_names[2] = "r_gripper_l_finger_joint";
+  posture.joint_names[3] = "r_gripper_r_finger_joint";
+  posture.joint_names[4] = "r_gripper_r_finger_tip_joint";
+  posture.joint_names[5] = "r_gripper_l_finger_tip_joint";
+
+  posture.points.resize(1);
+  posture.points[0].positions.resize(6);
+  posture.points[0].positions[0] = 0;
+  posture.points[0].positions[1] = 0;
+  posture.points[0].positions[2] = 0.002;
+  posture.points[0].positions[3] = 0.002;
+  posture.points[0].positions[4] = 0.002;
+  posture.points[0].positions[5] = 0.002;
+}
+
+
 void pick(moveit::planning_interface::MoveGroup &group)
 {
   std::vector<moveit_msgs::Grasp> grasps;
@@ -69,15 +108,9 @@ void pick(moveit::planning_interface::MoveGroup &group)
   g.post_grasp_retreat.min_distance = 0.1;
   g.post_grasp_retreat.desired_distance = 0.25;
 
-  g.pre_grasp_posture.joint_names.resize(1, "r_gripper_joint");
-  g.pre_grasp_posture.points.resize(1);
-  g.pre_grasp_posture.points[0].positions.resize(1);
-  g.pre_grasp_posture.points[0].positions[0] = 1;
+  openGripper(g.pre_grasp_posture);
 
-  g.grasp_posture.joint_names.resize(1, "r_gripper_joint");
-  g.grasp_posture.points.resize(1);
-  g.grasp_posture.points[0].positions.resize(1);
-  g.grasp_posture.points[0].positions[0] = 0;
+  closedGripper(g.grasp_posture);
 
   grasps.push_back(g);
   group.setSupportSurfaceName("table");
@@ -109,10 +142,7 @@ void place(moveit::planning_interface::MoveGroup &group)
   g.post_place_retreat.min_distance = 0.1;
   g.post_place_retreat.desired_distance = 0.25;
 
-  g.post_place_posture.joint_names.resize(1, "r_gripper_joint");
-  g.post_place_posture.points.resize(1);
-  g.post_place_posture.points[0].positions.resize(1);
-  g.post_place_posture.points[0].positions[0] = 1;
+  openGripper(g.post_place_posture);
 
   loc.push_back(g);
   group.setSupportSurfaceName("table");
