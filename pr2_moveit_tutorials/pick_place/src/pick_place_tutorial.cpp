@@ -88,7 +88,7 @@ void pick(moveit::planning_interface::MoveGroup &group)
 
   geometry_msgs::PoseStamped p;
   p.header.frame_id = "base_footprint";
-  p.pose.position.x = 0.32;
+  p.pose.position.x = 0.34;
   p.pose.position.y = -0.7;
   p.pose.position.z = 0.5;
   p.pose.orientation.x = 0;
