@@ -1,0 +1,35 @@
+<package>
+  <name>pr2_jacobian_tests</name>
+  <version>0.6.3</version>
+  <description>pr2_jacobian_tests</description>
+  <maintainer email="sachinc@willowgarage.com">Sachin Chitta</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/pr2_jacobian_tests</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Sachin Chitta</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>robot_model_loader</build_depend>
+  <build_depend>planning_models</build_depend>
+  <build_depend>kdl</build_depend>
+  <build_depend>kdl_parser</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>robot_model_loader</run_depend>
+  <run_depend>planning_models</run_depend>
+  <run_depend>kdl</run_depend>
+  <run_depend>kdl_parser</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>robot_model_loader</test_depend> -->
+  <!-- <test_depend>planning_models</test_depend> -->
+  <!-- <test_depend>kdl</test_depend> -->
+  <!-- <test_depend>kdl_parser</test_depend> -->
+
+</package>
