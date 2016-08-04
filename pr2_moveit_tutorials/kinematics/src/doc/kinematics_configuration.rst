@@ -34,6 +34,14 @@ The KDL kinematics plugin wraps around the numerical inverse kinematics solver p
  * It obeys joint limits specified in the URDF (and will use the safety limits if they are specified in the URDF). 
  * The KDL kinematics plugin currently only works with serial chains. 
 
+The LMA Kinematics Plugin
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The LMA (Levenberg-Marquardt) kinematics plugin also wraps around a numerical inverse kinematics solver provided by the Orocos KDL package.
+ * It obeys joint limits specified in the URDF (and will use the safety limits if they are specified in the URDF). 
+ * The LMA kinematics plugin currently only works with serial chains.
+ * Usage: ``kinematics_solver: lma_kinematics_plugin/LMAKinematicsPlugin``
+
 Position Only IK
 ----------------
 Position only IK can easily be enabled (only if you are using the KDL Kinematics Plugin) by adding the following line to your kinematics.yaml file (for the particular group that you want to solve IK for)::
