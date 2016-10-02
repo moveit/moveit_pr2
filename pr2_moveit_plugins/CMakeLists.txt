@@ -32,6 +32,8 @@ catkin_package(
     moveit_core
     )
 
+add_compile_options(-std=c++11)
+
 include_directories(pr2_arm_kinematics/include)
 include_directories(pr2_moveit_controller_manager/include)
 include_directories(pr2_moveit_sensor_manager/include)
