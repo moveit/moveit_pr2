@@ -1,29 +1,40 @@
 <launch>
-
   <arg name="db" default="false" />
   <arg name="debug" default="false" />
+  <arg name="rviz" default="true" />
+  <arg name="load_robot_description" default="true" />
+  <arg name="use_actual_robot" default="false" />
+  <arg name="moveit_octomap_sensor_params_file"
+       default="$(find pr2_moveit_config)/config/sensors_kinect.yaml" />
+
+  <arg     if="$(arg use_actual_robot)" name="simulation_mode" value="false" />
+  <arg unless="$(arg use_actual_robot)" name="simulation_mode" value="true" />
 
   <include file="$(find pr2_moveit_config)/launch/planning_context.launch">
-    <arg name="load_robot_description" value="true"/>
+    <arg name="load_robot_description" value="$(arg load_robot_description)"/>
   </include>
 
-  <node pkg="tf" type="static_transform_publisher" name="virtual_joint_broadcaster_0" args="0 0 0 0 0 0 odom_combined base_footprint 100" />
+  <node unless="$(arg use_actual_robot)"
+        pkg="tf" type="static_transform_publisher" name="virtual_joint_broadcaster_0" args="0 0 0 0 0 0 odom_combined base_footprint 100" />
 
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+  <node unless="$(arg use_actual_robot)"
+        name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="false"/>
     <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
   </node>
-  
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <node unless="$(arg use_actual_robot)"
+        name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <include file="$(find pr2_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>
-    <arg name="fake_execution" value="true"/>
+    <arg name="fake_execution" value="$(arg simulation_mode)"/>
     <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
+    <arg name="moveit_octomap_sensor_params_file" value="$(arg moveit_octomap_sensor_params_file)"/>
   </include>
 
-  <include file="$(find pr2_moveit_config)/launch/moveit_rviz.launch">
+  <include file="$(find pr2_moveit_config)/launch/moveit_rviz.launch" if="$(arg rviz)">
     <arg name="config" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
   </include>
