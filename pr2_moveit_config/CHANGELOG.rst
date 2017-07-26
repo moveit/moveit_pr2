@@ -4,6 +4,9 @@ Changelog for package pr2_moveit_config
 
 Forthcoming
 -----------
+
+0.6.4 (2017-06-20)
+------------------
 * [fix] Fix always showing init pose. (`#89 <https://github.com/ros-planning/moveit_pr2/issues/89>`_)
 * [capability] add arms_and_torso group
 * [enhance] allow to open pr2_moveit_config in setup_assistant
