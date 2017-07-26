@@ -5,6 +5,9 @@ Changelog for package pr2_moveit_tests
 Forthcoming
 -----------
 
+0.6.4 (2017-06-20)
+------------------
+
 0.6.3 (2016-06-24)
 ------------------
 
