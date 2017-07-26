@@ -2,6 +2,11 @@
 Changelog for package moveit_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Remove obsolete dependency on moveit-tutorials `#92 <https://github.com/ros-planning/moveit_pr2/issues/92>`_
+* Contributors: Dave Coleman
+
 0.6.4 (2017-06-20)
 ------------------
 * [fix] Fix always showing init pose. (`#89 <https://github.com/ros-planning/moveit_pr2/issues/89>`_)
