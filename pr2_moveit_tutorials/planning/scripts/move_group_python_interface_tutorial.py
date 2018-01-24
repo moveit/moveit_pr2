@@ -186,7 +186,9 @@ def move_group_python_interface_tutorial():
   ## for the end-effector to go through.
   waypoints = []
 
-  # start with the current pose
+  # start with the current pose, only for rviz simulation. Remove this step if working
+  # with a real robot, or group.compute_cartesian_path() will complain about "Trajectory
+  # message contains waypoints that are not strictly increasing in time".
   waypoints.append(group.get_current_pose().pose)
 
   # first orient gripper and move forward (+x)
