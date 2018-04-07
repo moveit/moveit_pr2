@@ -17,13 +17,13 @@
   <!-- Dependencies needed to compile this package. -->
   <build_depend>robot_model_loader</build_depend>
   <build_depend>planning_models</build_depend>
-  <build_depend>kdl</build_depend>
+  <build_depend>orocos_kdl</build_depend>
   <build_depend>kdl_parser</build_depend>
 
   <!-- Dependencies needed after this package is compiled. -->
   <run_depend>robot_model_loader</run_depend>
   <run_depend>planning_models</run_depend>
-  <run_depend>kdl</run_depend>
+  <run_depend>orocos_kdl</run_depend>
   <run_depend>kdl_parser</run_depend>
 
   <!-- Dependencies needed only for running tests. -->
