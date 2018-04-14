@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>moveit_pr2</name>
   <version>0.6.3</version>
   <description>All PR2-specific packages for MoveIt</description>
@@ -15,8 +15,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>pr2_moveit_plugins</run_depend>
-  <run_depend>pr2_moveit_config</run_depend>
+  <exec_depend>pr2_moveit_plugins</exec_depend>
+  <exec_depend>pr2_moveit_config</exec_depend>
 
   <export>
     <metapackage/>
