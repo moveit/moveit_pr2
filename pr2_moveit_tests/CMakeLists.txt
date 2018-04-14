@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pr2_moveit_tests)
 
-## Find catkin and system dependencies
+add_compile_options(-std=c++11)
 
 ## Find catkin and any catkin packages on which
 ## this package depends at build time
