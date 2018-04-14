@@ -3,13 +3,13 @@
   <arg name="load_robot_description" default="false"/>
 
   <!-- Load universal robotic description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="robot_description" command="$(find xacro)/xacro.py '$(find pr2_description)/robots/pr2.urdf.xacro'" />
-      
+  <param if="$(arg load_robot_description)" name="robot_description" command="$(find xacro)/xacro '$(find pr2_description)/robots/pr2.urdf.xacro' --inorder" />
+
   <!-- The semantic description that corresponds to the URDF -->
   <param name="robot_description_semantic" textfile="$(find pr2_moveit_config)/config/pr2.srdf" />
-  
+
   <!-- Load to the parameter server yaml files -->
-  <group ns="robot_description_planning">    
+  <group ns="robot_description_planning">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/joint_limits.yaml"/>
   </group>
 
@@ -17,5 +17,5 @@
   <group ns="robot_description_kinematics">
     <rosparam command="load" file="$(find pr2_moveit_config)/config/kinematics.yaml"/>
   </group>
- 
+
 </launch>
