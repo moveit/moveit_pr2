@@ -133,8 +133,8 @@ class MyTest
       error_code.val = error_code.PLANNING_FAILED;
   };
 
-  kinematics::KinematicsBasePtr kinematics_solver_;
-  boost::shared_ptr<pluginlib::ClassLoader<kinematics::KinematicsBase> > kinematics_loader_;
+  boost::shared_ptr<kinematics::KinematicsBase> kinematics_solver_;
+  std::shared_ptr<pluginlib::ClassLoader<kinematics::KinematicsBase> > kinematics_loader_;
 };
 
 MyTest my_test;
