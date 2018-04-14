@@ -22,7 +22,7 @@ find_package(catkin COMPONENTS
   cmake_modules
   REQUIRED)
 
-find_package(Eigen REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED thread)
 
 catkin_package(
