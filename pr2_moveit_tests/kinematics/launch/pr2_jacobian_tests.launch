@@ -9,7 +9,7 @@
     </group>
 
     <!-- the semantic description that corresponds to the URDF -->
-    <param name="robot_description_semantic" textfile="$(find pr2_jacobian_tests)/pr2.srdf" />
+    <param name="robot_description_semantic" textfile="$(find pr2_moveit_tests)/pr2.srdf" />
 
     <!-- test -->
     <test test-name="pr2_jacobian_test"  pkg="pr2_moveit_tests" type="pr2_jacobian_test"  name="jacobian_test" time-limit="180" >
