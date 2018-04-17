@@ -35,7 +35,7 @@
 
 #include "planning_interface/planning_interface.h"
 #include <planning_scene_monitor/planning_scene_monitor.h>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 

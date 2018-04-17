@@ -38,7 +38,7 @@
 #include <moveit/controller_manager/controller_manager.h>
 #include <control_msgs/FollowJointTrajectoryAction.h>
 #include <actionlib/client/simple_action_client.h>
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 
 #include <pr2_mechanism_msgs/ListControllers.h>
 #include <pr2_mechanism_msgs/SwitchController.h>
