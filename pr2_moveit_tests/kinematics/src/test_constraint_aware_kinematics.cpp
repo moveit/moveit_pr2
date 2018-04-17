@@ -36,7 +36,7 @@
 
 #include <ros/ros.h>
 #include <gtest/gtest.h>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 
 // MoveIt!
 #include <moveit/kinematics_constraint_aware/kinematics_constraint_aware.h>

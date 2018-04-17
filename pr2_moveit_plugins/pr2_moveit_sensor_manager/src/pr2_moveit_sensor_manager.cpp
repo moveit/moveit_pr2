@@ -36,7 +36,7 @@
 
 #include <ros/ros.h>
 #include <moveit/sensor_manager/sensor_manager.h>
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 #include <boost/math/constants/constants.hpp>
 
 #include <actionlib/client/simple_action_client.h>
