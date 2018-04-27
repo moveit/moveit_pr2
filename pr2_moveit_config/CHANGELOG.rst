@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2018-04-27)
+------------------
 * Migrate to format2
 * Fix xacro warnings
 * [moveit.rviz] Fix always showing init pose. (`#89 <https://github.com/ros-planning/moveit_pr2/issues/89>`_)

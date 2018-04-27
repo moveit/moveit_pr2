@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.0 (2018-04-27)
+------------------
 * Maintainer update & order dependencies
 * pluginlib headers migration
 * Migrate to format2
