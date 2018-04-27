@@ -4,6 +4,11 @@ Changelog for package moveit_pr2
 
 Forthcoming
 -----------
+* Migrate to format2
+* Add Bence as maintainer
+* Remove moveit-tutorials dependency
+* Contributors: Bence Magyar, Dave Coleman, Isaac I.Y. Saito
+
 * [fix] Remove obsolete dependency on moveit-tutorials `#92 <https://github.com/ros-planning/moveit_pr2/issues/92>`_
 * Contributors: Dave Coleman
 

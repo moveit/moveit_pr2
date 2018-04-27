@@ -4,6 +4,14 @@ Changelog for package pr2_moveit_plugins
 
 Forthcoming
 -----------
+* Maintainer update & order dependencies
+* pluginlib headers migration
+* Migrate to format2
+* Add Bence as maintainer
+* GetKinematicSolverInfo -> KinematicSolverInfo
+* compile with c++11
+* Explicitly convert shared_ptr to bool for c++11 compatibility.
+* Contributors: Bence Magyar, Christian Dornhege, Dave Coleman, Isaac I.Y. Saito, Maarten de Vries, v4hn
 
 0.6.4 (2017-06-20)
 ------------------
