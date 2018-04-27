@@ -6,8 +6,6 @@
   <author email="sachinc@willowgarage.com">Sachin Chitta</author>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
-  <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
-  <maintainer email="mferguson@fetchrobotics.com">Michael Ferguson</maintainer>
 
   <license>BSD</license>
 
@@ -15,8 +13,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>pr2_moveit_plugins</exec_depend>
   <exec_depend>pr2_moveit_config</exec_depend>
+  <exec_depend>pr2_moveit_plugins</exec_depend>
 
   <export>
     <metapackage/>
