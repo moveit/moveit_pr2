@@ -163,8 +163,8 @@ TEST(ArmIKPlugin, getFK)
 {
   rdf_loader::RDFLoader rdf_loader_;
   robot_model::RobotModelPtr kinematic_model;
-  const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
+  const srdf::ModelSharedPtr& srdf = rdf_loader_.getSRDF();
+  const urdf::ModelInterfaceSharedPtr& urdf_model = rdf_loader_.getURDF();
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
@@ -200,8 +200,8 @@ TEST(ArmIKPlugin, searchIK)
 {
   rdf_loader::RDFLoader rdf_loader_;
   robot_model::RobotModelPtr kinematic_model;
-  const boost::shared_ptr<srdf::Model> &srdf_model = rdf_loader_.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
+  const srdf::ModelSharedPtr& srdf_model = rdf_loader_.getSRDF();
+  const urdf::ModelInterfaceSharedPtr& urdf_model = rdf_loader_.getURDF();
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf_model));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
@@ -269,8 +269,8 @@ TEST(ArmIKPlugin, searchIKWithCallbacks)
 {
   rdf_loader::RDFLoader rdf_loader_;
   robot_model::RobotModelPtr kinematic_model;
-  const boost::shared_ptr<srdf::Model> &srdf = rdf_loader_.getSRDF();
-  const boost::shared_ptr<urdf::ModelInterface>& urdf_model = rdf_loader_.getURDF();
+  const srdf::ModelSharedPtr& srdf = rdf_loader_.getSRDF();
+  const urdf::ModelInterfaceSharedPtr& urdf_model = rdf_loader_.getURDF();
   kinematic_model.reset(new robot_model::RobotModel(urdf_model, srdf));
   robot_model::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup(my_test.kinematics_solver_->getGroupName());
 
