@@ -2,6 +2,11 @@
 Changelog for package moveit_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Package version aligning with a newly added moveit_full_pr2. This is needed for the release into rosdistro.
+* Contributors: Isaac I.Y. Saito
+
 0.6.6 (2017-07-25)
 ------------------
 * [fix] Remove obsolete dependency on moveit-tutorials `#92 <https://github.com/ros-planning/moveit_pr2/issues/92>`_

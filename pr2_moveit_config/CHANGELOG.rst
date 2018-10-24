@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Package version aligning with a newly added moveit_full_pr2. This is needed for the release into rosdistro.
+* Contributors: Isaac I.Y. Saito
+
 0.6.6 (2017-07-25)
 ------------------
 

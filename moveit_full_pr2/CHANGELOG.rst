@@ -2,8 +2,10 @@
 Changelog for package moveit_full_pr2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.7.14 (2018-10-20)
--------------------
+Forthcoming
+-----------
+* Moved a repository from https://github.com/ros-planning/moveit to https://github.com/ros-planning/moveit_pr2 `#98 <https://github.com/ros-planning/moveit_pr2/issues/98>`_
+* Contributors: Isaac I.Y. Saito, Robert Haschke
 
 0.7.12 (2017-08-06)
 -------------------
