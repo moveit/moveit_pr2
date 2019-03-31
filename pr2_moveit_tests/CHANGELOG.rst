@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.1 (2019-03-31)
+------------------
 * adjust tests to Ptr typedefs
 * Contributors: v4hn
 

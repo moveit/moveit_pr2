@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>pr2_moveit_tests</name>
-  <version>0.7.0</version>
+  <version>0.7.1</version>
   <description>The pr2_moveit_tests package</description>
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
   <author email="sachinc@willowgarage.com">Sachin Chitta</author>

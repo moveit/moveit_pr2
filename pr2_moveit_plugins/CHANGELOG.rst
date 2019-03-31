@@ -2,8 +2,8 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.7.1 (2019-03-31)
+------------------
 * use urdf typedefs to stay compatible with boost vs std ptrs
 * Contributors: v4hn
 
