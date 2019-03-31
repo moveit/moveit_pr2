@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* adjust tests to Ptr typedefs
+* Contributors: v4hn
+
 0.7.0 (2018-04-27)
 ------------------
 * pluginlib headers migration
