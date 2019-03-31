@@ -5,7 +5,9 @@ MoveIt! Packages for PR2
 
 ## Build Status
 
-indigo-devel branch: [![Build Status](https://travis-ci.org/ros-planning/moveit_pr2.png?branch=indigo-devel)](https://travis-ci.org/ros-planning/moveit_pr2)
+Indigo | Kinetic | Melodic
+------ | ------ | ------
+[![Build Status](https://travis-ci.org/ros-planning/moveit_pr2.png?branch=indigo-devel)](https://travis-ci.org/ros-planning/moveit_pr2) | [![Build Status](https://travis-ci.org/ros-planning/moveit_pr2.png?branch=kinetic-devel)](https://travis-ci.org/ros-planning/moveit_pr2) | N/A
 
 ## PR2 MoveIt! Tutorials
 
