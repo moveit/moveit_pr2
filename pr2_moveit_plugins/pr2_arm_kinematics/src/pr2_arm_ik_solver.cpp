@@ -357,3 +357,7 @@ std::string PR2ArmIKSolver::getFrameId()
 {
   return root_frame_name_;
 }
+
+void PR2ArmIKSolver::updateInternalDataStructures()
+{
+}
