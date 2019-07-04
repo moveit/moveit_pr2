@@ -32,7 +32,6 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-
 #include <trajectory_execution_ros/trajectory_execution_monitor_ros.h>
 #include <planning_scene_monitor/planning_scene_monitor.h>
 #include <csignal>
@@ -43,45 +42,51 @@ boost::shared_ptr<trajectory_execution_ros::TrajectoryExecutionMonitorRos> emon;
 boost::shared_ptr<planning_scene_monitor::PlanningSceneMonitor> planning_scene_monitor_;
 ros::ServiceClient lister_service;
 
-void sigHandler(int x) {
+void sigHandler(int x)
+{
   emon.reset();
   exit(0);
 }
 
-void getRunningControllerMap(std::map<std::string, bool>& controller_map) {
+void getRunningControllerMap(std::map<std::string, bool>& controller_map)
+{
   controller_map.clear();
 
   pr2_mechanism_msgs::ListControllers::Request req;
   pr2_mechanism_msgs::ListControllers::Response res;
 
-  if(!lister_service.call(req, res)) {
+  if (!lister_service.call(req, res))
+  {
     ROS_WARN_STREAM("Something wrong with lister service");
     return;
   }
-  for(unsigned int i = 0; i < res.controllers.size(); i++) {
+  for (unsigned int i = 0; i < res.controllers.size(); i++)
+  {
     controller_map[res.controllers[i]] = (res.state[i] == "running");
   }
 }
 
-TEST(TrajectoryExecutionTests, loadUnload) {
-
-  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getRobotModel()));
+TEST(TrajectoryExecutionTests, loadUnload)
+{
+  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(
+      planning_scene_monitor_->getPlanningScene()->getRobotModel()));
   std::map<std::string, bool> initial_map = emon->getOriginalControllerConfiguration();
   emon.reset();
   std::map<std::string, bool> after_map;
   getRunningControllerMap(after_map);
   ASSERT_EQ(after_map.size(), initial_map.size());
   std::map<std::string, bool>::iterator it2 = after_map.begin();
-  for(std::map<std::string, bool>::iterator it = initial_map.begin();
-      it != initial_map.end();
-      it++, it2++) {
+  for (std::map<std::string, bool>::iterator it = initial_map.begin(); it != initial_map.end(); it++, it2++)
+  {
     EXPECT_EQ(it->first, it2->first);
     EXPECT_EQ(it->second, it2->second);
   }
 }
 
-TEST(TrajectoryExecutionTests, switchRestore) {
-  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getRobotModel()));
+TEST(TrajectoryExecutionTests, switchRestore)
+{
+  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(
+      planning_scene_monitor_->getPlanningScene()->getRobotModel()));
   std::map<std::string, bool> initial_map = emon->getOriginalControllerConfiguration();
 
   EXPECT_TRUE(emon->getCurrentController("arms") == "r_arm_controller" ||
@@ -93,7 +98,7 @@ TEST(TrajectoryExecutionTests, switchRestore) {
   EXPECT_EQ(emon->getCurrentController("left_arm"), "both_arms_controller");
 
   emon->switchAssociatedStopStartControllers("right_arm", "r_arm_controller");
-  //should be right arm, as that's what we replaced arms with
+  // should be right arm, as that's what we replaced arms with
   EXPECT_EQ(emon->getCurrentController("arms"), "r_arm_controller");
   EXPECT_EQ(emon->getCurrentController("left_arm"), "l_arm_controller");
 
@@ -103,15 +108,14 @@ TEST(TrajectoryExecutionTests, switchRestore) {
   getRunningControllerMap(after_map);
   ASSERT_EQ(after_map.size(), initial_map.size());
   std::map<std::string, bool>::iterator it2 = after_map.begin();
-  for(std::map<std::string, bool>::iterator it = initial_map.begin();
-      it != initial_map.end();
-      it++, it2++) {
+  for (std::map<std::string, bool>::iterator it = initial_map.begin(); it != initial_map.end(); it++, it2++)
+  {
     EXPECT_EQ(it->first, it2->first);
     EXPECT_EQ(it->second, it2->second);
   }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "trajectory_execution_tests", ros::init_options::NoSigintHandler);
   testing::InitGoogleTest(&argc, argv);
@@ -124,7 +128,8 @@ int main(int argc, char **argv)
   ros::service::waitForService("/pr2_controller_manager/list_controllers");
 
   planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor("robot_description"));
-  lister_service = nh.serviceClient<pr2_mechanism_msgs::ListControllers>("/pr2_controller_manager/list_controllers", true);
+  lister_service =
+      nh.serviceClient<pr2_mechanism_msgs::ListControllers>("/pr2_controller_manager/list_controllers", true);
 
   int ret = RUN_ALL_TESTS();
 

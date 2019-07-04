@@ -39,65 +39,69 @@
 #include <moveit_msgs/ComputePlanningBenchmark.h>
 #include <kinematic_constraints/utils.h>
 
-static const std::string PLANNER_SERVICE_NAME="/ompl_planning/benchmark_planning_problem";
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string PLANNER_SERVICE_NAME = "/ompl_planning/benchmark_planning_problem";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
-void benchmarkSimplePlan(const std::string &config)
-{
-    ros::NodeHandle nh;
-    ros::service::waitForService(PLANNER_SERVICE_NAME);
-    ros::ServiceClient benchmark_service_client = nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(PLANNER_SERVICE_NAME);
-
-    moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
-    moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
-
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-    planning_scene::PlanningScene &scene = *psm.getPlanningScene();
-
-    mplan_req.motion_plan_request.num_planning_attempts = 50;
-    mplan_req.motion_plan_request.planner_id = config;
-    mplan_req.motion_plan_request.group_name = "right_arm";
-    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-    const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
-    mplan_req.motion_plan_request.goal_constraints.resize(1);
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
-    for(unsigned int i = 0; i < joint_names.size(); i++)
-    {
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 0.001;
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 0.001;
-        mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
-    }
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
-    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
-
-    benchmark_service_client.call(mplan_req, mplan_res);
-}
-
-void benchmarkPathConstrained(const std::string &config)
+void benchmarkSimplePlan(const std::string& config)
 {
   ros::NodeHandle nh;
   ros::service::waitForService(PLANNER_SERVICE_NAME);
-  ros::ServiceClient benchmark_service_client = nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(PLANNER_SERVICE_NAME);
+  ros::ServiceClient benchmark_service_client =
+      nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(PLANNER_SERVICE_NAME);
 
   moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
   moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
 
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-  planning_scene::PlanningScene &scene = *psm.getPlanningScene();
+  planning_scene::PlanningScene& scene = *psm.getPlanningScene();
+
+  mplan_req.motion_plan_request.num_planning_attempts = 50;
+  mplan_req.motion_plan_request.planner_id = config;
+  mplan_req.motion_plan_request.group_name = "right_arm";
+  mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
+  const std::vector<std::string>& joint_names =
+      scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  mplan_req.motion_plan_request.goal_constraints.resize(1);
+  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
+  for (unsigned int i = 0; i < joint_names.size(); i++)
+  {
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 0.001;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 0.001;
+    mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
+  }
+  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
+  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
+  mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
+
+  benchmark_service_client.call(mplan_req, mplan_res);
+}
+
+void benchmarkPathConstrained(const std::string& config)
+{
+  ros::NodeHandle nh;
+  ros::service::waitForService(PLANNER_SERVICE_NAME);
+  ros::ServiceClient benchmark_service_client =
+      nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(PLANNER_SERVICE_NAME);
+
+  moveit_msgs::ComputePlanningBenchmark::Request mplan_req;
+  moveit_msgs::ComputePlanningBenchmark::Response mplan_res;
+
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
+  planning_scene::PlanningScene& scene = *psm.getPlanningScene();
 
   mplan_req.motion_plan_request.num_planning_attempts = 50;
   mplan_req.motion_plan_request.planner_id = config;
   mplan_req.motion_plan_request.group_name = "right_arm";
 
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
-  const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names =
+      scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
 
-  for(unsigned int i = 0; i < joint_names.size(); i++)
+  for (unsigned int i = 0; i < joint_names.size(); i++)
   {
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
@@ -114,8 +118,6 @@ void benchmarkPathConstrained(const std::string &config)
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -1.9776217463278662;
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[6].position = 1.8552611548679128;
 
-
-
   mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.21044517893021499);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(0.038959594993384528);
@@ -125,13 +127,10 @@ void benchmarkPathConstrained(const std::string &config)
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.993988668449755);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-2.2779628049776051);
 
-
-
-
   // add path constraints
-  moveit_msgs::Constraints &constr = mplan_req.motion_plan_request.path_constraints;
+  moveit_msgs::Constraints& constr = mplan_req.motion_plan_request.path_constraints;
   constr.orientation_constraints.resize(1);
-  moveit_msgs::OrientationConstraint &ocm = constr.orientation_constraints[0];
+  moveit_msgs::OrientationConstraint& ocm = constr.orientation_constraints[0];
   ocm.link_name = "r_wrist_roll_link";
   ocm.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
   ocm.orientation.x = 0.0;
@@ -146,7 +145,7 @@ void benchmarkPathConstrained(const std::string &config)
   benchmark_service_client.call(mplan_req, mplan_res);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "call_ompl_planning", ros::init_options::AnonymousName);
   ros::AsyncSpinner spinner(1);

@@ -41,8 +41,8 @@
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <kinematic_constraints/utils.h>
 
-static const std::string PLANNER_SERVICE_NAME="/ompl_planning/plan_kinematic_path";
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string PLANNER_SERVICE_NAME = "/ompl_planning/plan_kinematic_path";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
 TEST(OmplPlanning, PathConstrainedSimplePlan)
 {
@@ -58,14 +58,15 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   moveit_msgs::GetMotionPlan::Response mplan_res;
 
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-  planning_scene::PlanningScene &scene = *psm.getPlanningScene();
+  planning_scene::PlanningScene& scene = *psm.getPlanningScene();
   EXPECT_TRUE(scene.isConfigured());
 
   mplan_req.motion_plan_request.planner_id = "RRTConnectkConfigDefault";
   mplan_req.motion_plan_request.group_name = "right_arm";
   mplan_req.motion_plan_request.num_planning_attempts = 1;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(15.0);
-  const std::vector<std::string>& joint_names = scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names =
+      scene.getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
 
   mplan_req.motion_plan_request.start_state.joint_state.name = joint_names;
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.21044517893021499);
@@ -75,7 +76,6 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(2.3582101183671629);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-1.993988668449755);
   mplan_req.motion_plan_request.start_state.joint_state.position.push_back(-2.2779628049776051);
-
 
   moveit_msgs::PositionConstraint pcm;
   pcm.link_name = "r_wrist_roll_link";
@@ -96,11 +96,10 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
 
-
   // add path constraints
-  moveit_msgs::Constraints &constr = mplan_req.motion_plan_request.path_constraints;
+  moveit_msgs::Constraints& constr = mplan_req.motion_plan_request.path_constraints;
   constr.orientation_constraints.resize(1);
-  moveit_msgs::OrientationConstraint &ocm = constr.orientation_constraints[0];
+  moveit_msgs::OrientationConstraint& ocm = constr.orientation_constraints[0];
   ocm.link_name = "r_wrist_roll_link";
   ocm.header.frame_id = psm.getPlanningScene()->getPlanningFrame();
   ocm.orientation.x = 0.0;
@@ -117,7 +116,6 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
 
-
   moveit_msgs::DisplayTrajectory d;
   d.model_id = scene.getRobotModel()->getName();
   d.trajectory_start = mplan_res.trajectory_start;
@@ -126,7 +124,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ros::Duration(0.5).sleep();
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
 

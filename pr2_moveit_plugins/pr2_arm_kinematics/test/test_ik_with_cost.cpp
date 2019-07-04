@@ -58,21 +58,21 @@ static const int NUM_TESTS = 1000;
 
 double gen_rand(double min, double max)
 {
-  int rand_num = rand()%100+1;
-  double result = min + (double)((max-min)*rand_num)/101.0;
+  int rand_num = rand() % 100 + 1;
+  double result = min + (double)((max - min) * rand_num) / 101.0;
   return result;
 }
 
-bool NOT_NEAR(const double &v1, const double &v2, const double &NEAR)
+bool NOT_NEAR(const double& v1, const double& v2, const double& NEAR)
 {
-   if(fabs(v1-v2) > NEAR)
-      return true;
-   return false;
+  if (fabs(v1 - v2) > NEAR)
+    return true;
+  return false;
 }
 
 void test()
 {
-  srand ( time(NULL) ); // initialize random seed
+  srand(time(NULL));  // initialize random seed
   ros::NodeHandle rh;
   ros::service::waitForService(ARM_QUERY_NAME);
   ros::service::waitForService(ARM_FK_NAME);
@@ -85,7 +85,7 @@ void test()
   kinematics_msgs::IKServiceWithCost::Response response;
 
   request.data.pose_stamped.header.frame_id = "torso_lift_link";
-  request.data.pose_stamped.header.stamp    = ros::Time::now();
+  request.data.pose_stamped.header.stamp = ros::Time::now();
   request.data.pose_stamped.pose.position.x = 0.75;
   request.data.pose_stamped.pose.position.y = -0.188;
   request.data.pose_stamped.pose.position.z = 0.0;
@@ -109,21 +109,22 @@ void test()
   request.link_names.resize(1);
   request.link_names[0] = "r_wrist_roll_link";
 
-  bool ik_service_call = ik_client.call(request,response);
-  if(ik_service_call)
-    {
-      for(unsigned int i=0; i < response.solution.size(); i++)
-    ROS_INFO("joint: %s, value: %f",request.data.joint_names[i].c_str(),response.solution[i]);
-    }
+  bool ik_service_call = ik_client.call(request, response);
+  if (ik_service_call)
+  {
+    for (unsigned int i = 0; i < response.solution.size(); i++)
+      ROS_INFO("joint: %s, value: %f", request.data.joint_names[i].c_str(), response.solution[i]);
+  }
   else
-    {
-      ROS_ERROR("Call was unsuccessful");
-    }
+  {
+    ROS_ERROR("Call was unsuccessful");
+  }
   ros::shutdown();
 }
 
-int main(int argc, char **argv){
-  ros::init (argc, argv, "pr2_ik_node_test");
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "pr2_ik_node_test");
   ros::spinOnce();
   test();
 }

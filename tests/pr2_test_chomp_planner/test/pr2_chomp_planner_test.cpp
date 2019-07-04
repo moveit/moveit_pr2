@@ -44,13 +44,11 @@
 #include <collision_distance_field/collision_detector_allocator_distance_field.h>
 #include <rdf_loader/rdf_loader.h>
 
-class Pr2ChompPlannerTester : public testing::Test{
-
+class Pr2ChompPlannerTester : public testing::Test
+{
 protected:
-
   virtual void SetUp()
   {
-
     rml_.reset(new rdf_loader::RDFLoader("robot_description"));
 
     acm_.reset(new collision_detection::AllowedCollisionMatrix());
@@ -72,27 +70,25 @@ protected:
       return;
     }
 
-    for (int i = 0 ; i < coll_ops.size() ; ++i)
+    for (int i = 0; i < coll_ops.size(); ++i)
     {
       if (!coll_ops[i].hasMember("object1") || !coll_ops[i].hasMember("object2") || !coll_ops[i].hasMember("operation"))
       {
         ROS_WARN("All collision operations must have two objects and an operation");
         continue;
       }
-      acm_->setEntry(std::string(coll_ops[i]["object1"]), std::string(coll_ops[i]["object2"]), std::string(coll_ops[i]["operation"]) == "disable");
+      acm_->setEntry(std::string(coll_ops[i]["object1"]), std::string(coll_ops[i]["object2"]),
+                     std::string(coll_ops[i]["operation"]) == "disable");
     }
   }
 
   virtual void TearDown()
   {
-
   }
 
 protected:
-
   boost::shared_ptr<rdf_loader::RDFLoader> rml_;
   collision_detection::AllowedCollisionMatrixPtr acm_;
-
 };
 
 TEST_F(Pr2ChompPlannerTester, SimplePlan)
@@ -110,10 +106,11 @@ TEST_F(Pr2ChompPlannerTester, SimplePlan)
   mplan_req.motion_plan_request.group_name = "right_arm";
   mplan_req.motion_plan_request.num_planning_attempts = 5;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-  const std::vector<std::string>& joint_names = ps->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names =
+      ps->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
-  for(unsigned int i = 0; i < joint_names.size(); i++)
+  for (unsigned int i = 0; i < joint_names.size(); i++)
   {
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
     mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
@@ -126,16 +123,13 @@ TEST_F(Pr2ChompPlannerTester, SimplePlan)
   mplan_req.motion_plan_request.goal_constraints[0].joint_constraints[5].position = -.2;
 
   chomp::ChompParameters params;
-  chomp_planner.solve(ps,
-                      mplan_req,
-                      params,
-                      mplan_res);
+  chomp_planner.solve(ps, mplan_req, params, mplan_res);
 
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "test_chomp_planning");

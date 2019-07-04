@@ -39,47 +39,46 @@
 
 namespace pr2_constraint_sampler
 {
-
 // define the actual sampler
 class PR2ConstraintSampler : public constraint_samplers::ConstraintSampler
 {
 public:
-
-  PR2ConstraintSampler(const planning_scene::PlanningSceneConstPtr &scene, const std::string &group_name) : constraint_samplers::ConstraintSampler(scene, group_name)
+  PR2ConstraintSampler(const planning_scene::PlanningSceneConstPtr& scene, const std::string& group_name)
+    : constraint_samplers::ConstraintSampler(scene, group_name)
   {
   }
 
-  virtual bool configure(const moveit_msgs::Constraints &constr)
-  {
-    return false;
-  }
-
-  virtual bool sample(planning_models::RobotState *::JointStateGroup *jsg, const planning_models::RobotState& reference_state, unsigned int max_attempts)
+  virtual bool configure(const moveit_msgs::Constraints& constr)
   {
     return false;
   }
 
+  virtual bool sample(planning_models::RobotState* ::JointStateGroup* jsg,
+                      const planning_models::RobotState& reference_state, unsigned int max_attempts)
+  {
+    return false;
+  }
 };
 
 // define the sampler allocator plugin interface
 class PR2ConstraintSamplerAllocator : public constraint_samplers::ConstraintSamplerAllocator
 {
 public:
-
-  virtual constraint_samplers::ConstraintSamplerPtr alloc(const planning_scene::PlanningSceneConstPtr &scene, const std::string &group_name, const moveit_msgs::Constraints &constr)
+  virtual constraint_samplers::ConstraintSamplerPtr alloc(const planning_scene::PlanningSceneConstPtr& scene,
+                                                          const std::string& group_name,
+                                                          const moveit_msgs::Constraints& constr)
   {
     constraint_samplers::ConstraintSamplerPtr cs(new PR2ConstraintSampler(scene, group_name));
     cs->configure(constr);
     return cs;
   }
 
-  virtual bool canService(const planning_scene::PlanningSceneConstPtr &scene, const std::string &group_name, const moveit_msgs::Constraints &constr) const
+  virtual bool canService(const planning_scene::PlanningSceneConstPtr& scene, const std::string& group_name,
+                          const moveit_msgs::Constraints& constr) const
   {
     return false;
   }
-
 };
-
 }
 
 PLUGINLIB_EXPORT_CLASS(pr2_constraint_sampler::PR2ConstraintSamplerAllocator,

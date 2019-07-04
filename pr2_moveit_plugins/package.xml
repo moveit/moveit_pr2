@@ -19,8 +19,10 @@
 
   <depend>moveit_core</depend>
   <depend>roscpp</depend>
+  <depend>rosconsole</depend>
   <depend>kdl_parser</depend>
   <depend>urdf</depend>
+  <depend>tf</depend>
   <depend>tf_conversions</depend>
   <depend>eigen_conversions</depend>
   <depend>pluginlib</depend>
@@ -28,7 +30,6 @@
   <depend>pr2_mechanism_msgs</depend>
   <depend>pr2_controllers_msgs</depend>
   <depend>actionlib</depend> 
-  <depend>angles</depend>
 
   <export>
     <moveit_core plugin="${prefix}/pr2_moveit_sensor_manager_plugin_description.xml"/>

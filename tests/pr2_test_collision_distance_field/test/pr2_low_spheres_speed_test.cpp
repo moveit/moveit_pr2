@@ -57,13 +57,11 @@
 
 static const unsigned int TRIALS = 10000;
 
-class Pr2DistanceFieldCollisionDetectionTester : public testing::Test{
-
+class Pr2DistanceFieldCollisionDetectionTester : public testing::Test
+{
 protected:
-
   virtual void SetUp()
   {
-
     rml_.reset(new rdf_loader::RDFLoader("robot_description"));
     kmodel_.reset(new planning_models::RobotModel(rml_->getURDF(), rml_->getSRDF()));
 
@@ -86,20 +84,19 @@ protected:
       return;
     }
 
-    for (int i = 0 ; i < coll_ops.size() ; ++i)
+    for (int i = 0; i < coll_ops.size(); ++i)
     {
       if (!coll_ops[i].hasMember("object1") || !coll_ops[i].hasMember("object2") || !coll_ops[i].hasMember("operation"))
       {
         ROS_WARN("All collision operations must have two objects and an operation");
         continue;
       }
-      acm_->setEntry(std::string(coll_ops[i]["object1"]), std::string(coll_ops[i]["object2"]), std::string(coll_ops[i]["operation"]) == "disable");
+      acm_->setEntry(std::string(coll_ops[i]["object1"]), std::string(coll_ops[i]["object2"]),
+                     std::string(coll_ops[i]["operation"]) == "disable");
     }
 
     std::map<std::string, std::vector<collision_detection::CollisionSphere> > coll_spheres;
-    collision_detection::loadLinkBodySphereDecompositions(nh,
-                                                          kmodel_,
-                                                          coll_spheres);
+    collision_detection::loadLinkBodySphereDecompositions(nh, kmodel_, coll_spheres);
 
     crobot_df_.reset(new collision_detection::CollisionRobotDistanceField(kmodel_, coll_spheres));
     cworld_df_.reset(new collision_detection::CollisionWorldDistanceField());
@@ -110,17 +107,15 @@ protected:
 
   virtual void TearDown()
   {
-
   }
 
 protected:
-
   boost::shared_ptr<rdf_loader::RDFLoader> rml_;
 
-  planning_models::RobotModelPtr             kmodel_;
+  planning_models::RobotModelPtr kmodel_;
 
-  planning_models::TransformsPtr                 ftf_;
-  planning_models::TransformsConstPtr            ftf_const_;
+  planning_models::TransformsPtr ftf_;
+  planning_models::TransformsConstPtr ftf_const_;
 
   boost::shared_ptr<collision_detection::CollisionRobotDistanceField> crobot_df_;
   boost::shared_ptr<collision_detection::CollisionWorldDistanceField> cworld_df_;
@@ -128,17 +123,15 @@ protected:
   boost::shared_ptr<collision_detection::CollisionRobot> crobot_fcl_;
   boost::shared_ptr<collision_detection::CollisionWorld> cworld_fcl_;
 
-
   collision_detection::AllowedCollisionMatrixPtr acm_;
-
 };
 
 TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
 {
-  planning_models::RobotState *kstate(kmodel_);
+  planning_models::RobotState* kstate(kmodel_);
   kstate.setToDefaultValues();
 
-  planning_models::RobotState *::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
+  planning_models::RobotState* ::JointStateGroup* jsg = kstate.getJointStateGroup("right_arm");
 
   ros::WallDuration total_speed_df;
   ros::WallDuration total_speed_fcl;
@@ -152,41 +145,47 @@ TEST_F(Pr2DistanceFieldCollisionDetectionTester, SpeedTest)
   req.contacts = true;
 
   collision_detection::CollisionResult res1;
-  //first check with this group doesn't count
+  // first check with this group doesn't count
   boost::shared_ptr<collision_detection::GroupStateRepresentation> gsr;
   crobot_df_->checkSelfCollision(req, res1, kstate, *acm_, gsr);
   crobot_fcl_->checkSelfCollision(req, res1, kstate, *acm_);
 
-  for(unsigned int i = 0; i < TRIALS; i++) {
+  for (unsigned int i = 0; i < TRIALS; i++)
+  {
     jsg->setToRandomValues();
     collision_detection::CollisionResult res;
     ros::WallTime before = ros::WallTime::now();
     crobot_df_->checkSelfCollision(req, res, kstate, gsr);
-    total_speed_df += (ros::WallTime::now()-before);
+    total_speed_df += (ros::WallTime::now() - before);
     bool df_in_collision = false;
-    if(res.collision) {
+    if (res.collision)
+    {
       in_collision_df++;
       df_in_collision = true;
     }
     res = collision_detection::CollisionResult();
     before = ros::WallTime::now();
     crobot_fcl_->checkSelfCollision(req, res, kstate, *acm_);
-    total_speed_fcl += (ros::WallTime::now()-before);
-    if(res.collision) {
+    total_speed_fcl += (ros::WallTime::now() - before);
+    if (res.collision)
+    {
       in_collision_fcl++;
-      if(!df_in_collision) {
+      if (!df_in_collision)
+      {
         fcl_in_coll_df_not++;
       }
     }
   }
-  std::cerr << "Average time df " << total_speed_df.toSec()/(1.0*TRIALS) << " hz " << (1.0/(total_speed_df.toSec()/(1.0*TRIALS))) << std::endl;
+  std::cerr << "Average time df " << total_speed_df.toSec() / (1.0 * TRIALS) << " hz "
+            << (1.0 / (total_speed_df.toSec() / (1.0 * TRIALS))) << std::endl;
   std::cerr << "In collision df " << in_collision_df << std::endl;
-  std::cerr << "Average time fcl " << total_speed_fcl.toSec()/(1.0*TRIALS) << " hz " << (1.0/(total_speed_fcl.toSec()/(1.0*TRIALS))) << std::endl;
+  std::cerr << "Average time fcl " << total_speed_fcl.toSec() / (1.0 * TRIALS) << " hz "
+            << (1.0 / (total_speed_fcl.toSec() / (1.0 * TRIALS))) << std::endl;
   std::cerr << "In collision fcl " << in_collision_fcl << std::endl;
   std::cerr << "Fcl in collision df not " << fcl_in_coll_df_not << std::endl;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "pr2_moveit_cd_speed_test");
   testing::InitGoogleTest(&argc, argv);

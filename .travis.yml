@@ -1,22 +1,26 @@
-# This config file for Travis CI utilizes https://github.com/ros-planning/moveit_ci/ package.
+# This config file for Travis CI utilizes https://github.com/ros-planning/moveit_ci package.
 sudo: required
-dist: trusty
+dist: xenial  # distro used by Travis, moveit_ci uses the docker image's distro
 services:
   - docker
-language: generic
-compiler:
-  - gcc
+language: cpp
+compiler: gcc
+cache: ccache
+
 notifications:
   email:
     recipients:
+
 env:
   matrix:
-    - ROS_DISTRO=kinetic ROS_REPO=ros              UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/ros-planning/moveit/kinetic-devel/moveit.rosinstall
-    - ROS_DISTRO=kinetic ROS_REPO=ros-shadow-fixed UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/ros-planning/moveit/kinetic-devel/moveit.rosinstall
-matrix:
-  allow_failures:
-    - env: ROS_DISTRO=kinetic ROS_REPO=ros              UPSTREAM_WORKSPACE=https://raw.githubusercontent.com/ros-planning/moveit/kinetic-devel/moveit.rosinstall
+    - TEST="clang-format catkin_lint"  ROS_DISTRO=melodic
+    # Due to the new KinematicsBase API, these tests fail since Melodic
+    - DOCKER_IMAGE=moveit/moveit:master-source  TEST_BLACKLIST="pr2_moveit_tests"
+    - DOCKER_IMAGE=moveit/moveit:melodic-source TEST_BLACKLIST="pr2_moveit_tests"
+    - DOCKER_IMAGE=moveit/moveit:kinetic-source
+
 before_script:
-  - git clone -q https://github.com/ros-planning/moveit_ci.git .moveit_ci
+  - git clone -q --depth=1 https://github.com/ros-planning/moveit_ci.git .moveit_ci
+
 script:
-  - source .moveit_ci/travis.sh
+  - .moveit_ci/travis.sh

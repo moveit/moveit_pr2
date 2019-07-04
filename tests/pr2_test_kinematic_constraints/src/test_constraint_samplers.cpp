@@ -47,12 +47,11 @@
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
 class ConstraintSamplerTestBase : public testing::Test
 {
 protected:
-
   virtual void SetUp()
   {
     psm_.reset(new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION));
@@ -64,16 +63,14 @@ protected:
   }
 
 protected:
-
   ros::NodeHandle nh_;
   planning_scene_monitor::PlanningSceneMonitorPtr psm_;
   planning_models::RobotModelConstPtr kmodel_;
 };
 
-
 TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
 {
-  planning_models::RobotState *ks(kmodel_);
+  planning_models::RobotState* ks(kmodel_);
   ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
 
@@ -123,7 +120,7 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   EXPECT_EQ(jcs.getConstrainedJointCount(), 2);
   EXPECT_EQ(jcs.getUnconstrainedJointCount(), 12);
 
-  for (int t = 0 ; t < 1000 ; ++t)
+  for (int t = 0; t < 1000; ++t)
   {
     EXPECT_TRUE(jcs.sample(ks.getJointStateGroup("arms"), ks, 1));
     EXPECT_TRUE(jc2.decide(ks).satisfied);
@@ -134,7 +131,8 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   moveit_msgs::Constraints c;
 
   // no constraints should give no sampler
-  constraint_samplers::ConstraintSamplerPtr s0 = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
+  constraint_samplers::ConstraintSamplerPtr s0 =
+      constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s0.get() == NULL);
 
   // add the constraints
@@ -143,11 +141,12 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
   c.joint_constraints.push_back(jcm3);
   c.joint_constraints.push_back(jcm4);
 
-  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
+  constraint_samplers::ConstraintSamplerPtr s =
+      constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s.get() != NULL);
 
   // test the generated sampler
-  for (int t = 0 ; t < 1000 ; ++t)
+  for (int t = 0; t < 1000; ++t)
   {
     EXPECT_TRUE(s->sample(ks.getJointStateGroup("arms"), ks, 1));
     EXPECT_TRUE(jc2.decide(ks).satisfied);
@@ -157,7 +156,7 @@ TEST_F(ConstraintSamplerTestBase, JointConstraintsSampler)
 
 TEST_F(ConstraintSamplerTestBase, OrientationConstraintsSampler)
 {
-  planning_models::RobotState *ks(kmodel_);
+  planning_models::RobotState* ks(kmodel_);
   ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
 
@@ -183,18 +182,18 @@ TEST_F(ConstraintSamplerTestBase, OrientationConstraintsSampler)
   ocm.header.frame_id = kmodel_->getModelFrame();
   EXPECT_TRUE(oc.configure(ocm));
 
-  constraint_samplers::IKConstraintSampler iks(psm_->getPlanningScene(), "right_arm", constraint_samplers::IKSamplingPose(oc));
-  for (int t = 0 ; t < 100 ; ++t)
+  constraint_samplers::IKConstraintSampler iks(psm_->getPlanningScene(), "right_arm",
+                                               constraint_samplers::IKSamplingPose(oc));
+  for (int t = 0; t < 100; ++t)
   {
     EXPECT_TRUE(iks.sample(ks.getJointStateGroup("right_arm"), ks, 100));
     EXPECT_TRUE(oc.decide(ks).satisfied);
   }
-
 }
 
 TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
 {
-  planning_models::RobotState *ks(kmodel_);
+  planning_models::RobotState* ks(kmodel_);
   ks.setToDefaultValues();
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
 
@@ -239,39 +238,42 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
 
   EXPECT_TRUE(oc.configure(ocm));
 
-  constraint_samplers::IKConstraintSampler iks1(psm_->getPlanningScene(), "left_arm", constraint_samplers::IKSamplingPose(pc, oc));
-  for (int t = 0 ; t < 100 ; ++t)
+  constraint_samplers::IKConstraintSampler iks1(psm_->getPlanningScene(), "left_arm",
+                                                constraint_samplers::IKSamplingPose(pc, oc));
+  for (int t = 0; t < 100; ++t)
   {
     EXPECT_TRUE(iks1.sample(ks.getJointStateGroup("left_arm"), ks, 100));
     EXPECT_TRUE(pc.decide(ks).satisfied);
     EXPECT_TRUE(oc.decide(ks).satisfied);
   }
 
-  constraint_samplers::IKConstraintSampler iks2(psm_->getPlanningScene(), "left_arm", constraint_samplers::IKSamplingPose(pc));
-  for (int t = 0 ; t < 100 ; ++t)
+  constraint_samplers::IKConstraintSampler iks2(psm_->getPlanningScene(), "left_arm",
+                                                constraint_samplers::IKSamplingPose(pc));
+  for (int t = 0; t < 100; ++t)
   {
     EXPECT_TRUE(iks2.sample(ks.getJointStateGroup("left_arm"), ks, 100));
     EXPECT_TRUE(pc.decide(ks).satisfied);
   }
 
-  constraint_samplers::IKConstraintSampler iks3(psm_->getPlanningScene(), "left_arm", constraint_samplers::IKSamplingPose(oc));
-  for (int t = 0 ; t < 100 ; ++t)
+  constraint_samplers::IKConstraintSampler iks3(psm_->getPlanningScene(), "left_arm",
+                                                constraint_samplers::IKSamplingPose(oc));
+  for (int t = 0; t < 100; ++t)
   {
     EXPECT_TRUE(iks3.sample(ks.getJointStateGroup("left_arm"), ks, 100));
     EXPECT_TRUE(oc.decide(ks).satisfied);
   }
-
 
   // test the automatic construction of constraint sampler
   moveit_msgs::Constraints c;
   c.position_constraints.push_back(pcm);
   c.orientation_constraints.push_back(ocm);
 
-  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "left_arm", c);
+  constraint_samplers::ConstraintSamplerPtr s =
+      constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "left_arm", c);
   EXPECT_TRUE(s.get() != NULL);
   static const int NT = 1000;
   int succ = 0;
-  for (int t = 0 ; t < NT ; ++t)
+  for (int t = 0; t < NT; ++t)
   {
     EXPECT_TRUE(s->sample(ks.getJointStateGroup("left_arm"), ks, 100));
     EXPECT_TRUE(pc.decide(ks).satisfied);
@@ -279,7 +281,8 @@ TEST_F(ConstraintSamplerTestBase, PoseConstraintsSampler)
     if (s->sample(ks.getJointStateGroup("left_arm"), ks, 1))
       succ++;
   }
-  ROS_INFO("Success rate for IK Constraint Sampler with position & orientation constraints for one arm: %lf", (double)succ / (double)NT);
+  ROS_INFO("Success rate for IK Constraint Sampler with position & orientation constraints for one arm: %lf",
+           (double)succ / (double)NT);
 }
 
 TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
@@ -335,24 +338,26 @@ TEST_F(ConstraintSamplerTestBase, GenericConstraintsSampler)
   c.orientation_constraints.push_back(ocm);
 
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
-  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
+  constraint_samplers::ConstraintSamplerPtr s =
+      constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s.get() != NULL);
 
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
 
-  planning_models::RobotState *ks(kmodel_);
+  planning_models::RobotState* ks(kmodel_);
   ks.setToDefaultValues();
   static const int NT = 1000;
   int succ = 0;
-  for (int t = 0 ; t < 1000 ; ++t)
+  for (int t = 0; t < 1000; ++t)
   {
     EXPECT_TRUE(s->sample(ks.getJointStateGroup("arms"), ks, 1000));
     EXPECT_TRUE(kset.decide(ks).satisfied);
     if (s->sample(ks.getJointStateGroup("arms"), ks, 1))
       succ++;
   }
-  ROS_INFO("Success rate for IK Constraint Sampler with position & orientation constraints for both arms: %lf", (double)succ / (double)NT);
+  ROS_INFO("Success rate for IK Constraint Sampler with position & orientation constraints for both arms: %lf",
+           (double)succ / (double)NT);
 }
 
 TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples1)
@@ -376,18 +381,19 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples1)
   ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);
 
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
-  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "right_arm", c);
+  constraint_samplers::ConstraintSamplerPtr s =
+      constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "right_arm", c);
   EXPECT_TRUE(s.get() != NULL);
 
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
 
-  planning_models::RobotState *ks(kmodel_);
+  planning_models::RobotState* ks(kmodel_);
   ks.setToDefaultValues();
 
   ros::WallTime start = ros::WallTime::now();
   unsigned int ns = 0;
-  for (int t = 0 ; t < 500 ; ++t)
+  for (int t = 0; t < 500; ++t)
   {
     if ((s->sample(ks.getJointStateGroup("right_arm"), ks, 2)))
       ns++;
@@ -454,7 +460,6 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   pcm2.weight = 1.0;
   c.position_constraints.push_back(pcm2);
 
-
   moveit_msgs::OrientationConstraint ocm;
   ocm.link_name = "l_wrist_roll_link";
   ocm.header.frame_id = kmodel_->getModelFrame();
@@ -484,25 +489,26 @@ TEST_F(ConstraintSamplerTestBase, DisplayGenericConstraintsSamples2)
   ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);
 
   planning_models::TransformsPtr tf = psm_->getPlanningScene()->getTransforms();
-  constraint_samplers::ConstraintSamplerPtr s = constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
+  constraint_samplers::ConstraintSamplerPtr s =
+      constraint_samplers::ConstraintSamplerManager::selectDefaultSampler(psm_->getPlanningScene(), "arms", c);
   EXPECT_TRUE(s.get() != NULL);
 
   kinematic_constraints::KinematicConstraintSet kset(kmodel_, tf);
   kset.add(c);
 
-  planning_models::RobotState *ks(kmodel_);
+  planning_models::RobotState* ks(kmodel_);
   ks.setToDefaultValues();
 
   ros::WallTime start = ros::WallTime::now();
   unsigned int ns = 0;
-  for (int t = 0 ; t < 500 ; ++t)
+  for (int t = 0; t < 500; ++t)
   {
     if ((s->sample(ks.getJointStateGroup("arms"), ks, 2)))
       ns++;
   }
   ROS_INFO("%lf samples per second", ns / (ros::WallTime::now() - start).toSec());
 
-  for (int t = 0 ; t < 100 ; ++t)
+  for (int t = 0; t < 100; ++t)
   {
     if ((s->sample(ks.getJointStateGroup("arms"), ks, 3)))
     {
@@ -601,7 +607,7 @@ TEST_F(ConstraintSamplerTestBase, VisibilityConstraint)
 }
 */
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "test_kinematic_constraints");
@@ -612,5 +618,4 @@ int main(int argc, char **argv)
   bool result = RUN_ALL_TESTS();
   sleep(1);
   return result;
-
 }

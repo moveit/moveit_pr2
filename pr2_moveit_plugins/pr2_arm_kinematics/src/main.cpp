@@ -41,7 +41,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "pr2_arm_kinematics");
   pr2_arm_kinematics::PR2ArmKinematics pr2_arm_kinematics;
 
-  if(!pr2_arm_kinematics.isActive())
+  if (!pr2_arm_kinematics.isActive())
   {
     ROS_ERROR("pr2_arm_kinematics could not be activated");
   }
@@ -50,5 +50,5 @@ int main(int argc, char** argv)
     ROS_INFO("pr2_arm_kinematics active");
     ros::spin();
   }
-  return(0);
+  return (0);
 }
