@@ -58,79 +58,51 @@ using namespace angles;
 
 namespace pr2_arm_kinematics
 {
-  Eigen::Matrix4f KDLToEigenMatrix(const KDL::Frame &p);
+Eigen::Matrix4f KDLToEigenMatrix(const KDL::Frame& p);
 
-  double computeEuclideanDistance(const std::vector<double> &array_1,
-                                  const KDL::JntArray &array_2);
+double computeEuclideanDistance(const std::vector<double>& array_1, const KDL::JntArray& array_2);
 
-  double distance(const urdf::Pose &transform);
+double distance(const urdf::Pose& transform);
 
-  bool solveQuadratic(const double &a,
-                      const double &b,
-                      const double &c,
-                      double *x1,
-                      double *x2);
+bool solveQuadratic(const double& a, const double& b, const double& c, double* x1, double* x2);
 
-  Eigen::Matrix4f matrixInverse(const Eigen::Matrix4f &g);
+Eigen::Matrix4f matrixInverse(const Eigen::Matrix4f& g);
 
-  bool solveCosineEqn(const double &a,
-                      const double &b,
-                      const double &c,
-                      double &soln1,
-                      double &soln2);
+bool solveCosineEqn(const double& a, const double& b, const double& c, double& soln1, double& soln2);
 
-  bool loadRobotModel(ros::NodeHandle node_handle,
-                      urdf::Model &robot_model,
-                      std::string &xml_string);
+bool loadRobotModel(ros::NodeHandle node_handle, urdf::Model& robot_model, std::string& xml_string);
 
-  bool getKDLChain(const std::string &xml_string,
-                   const std::string &root_name,
-                   const std::string &tip_name,
-                   KDL::Chain &kdl_chain);
+bool getKDLChain(const std::string& xml_string, const std::string& root_name, const std::string& tip_name,
+                 KDL::Chain& kdl_chain);
 
-  bool getKDLTree(const std::string &xml_string,
-                   const std::string &root_name,
-                   const std::string &tip_name,
-                   KDL::Tree &kdl_chain);
+bool getKDLTree(const std::string& xml_string, const std::string& root_name, const std::string& tip_name,
+                KDL::Tree& kdl_chain);
 
-  bool checkJointNames(const std::vector<std::string> &joint_names,
-                       const moveit_msgs::KinematicSolverInfo &chain_info);
+bool checkJointNames(const std::vector<std::string>& joint_names, const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  bool checkLinkNames(const std::vector<std::string> &link_names,
-                      const moveit_msgs::KinematicSolverInfo &chain_info);
+bool checkLinkNames(const std::vector<std::string>& link_names, const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  bool checkLinkName(const std::string &link_name,
-                     const moveit_msgs::KinematicSolverInfo &chain_info);
+bool checkLinkName(const std::string& link_name, const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  bool checkRobotState(moveit_msgs::RobotState &robot_state,
-                       const moveit_msgs::KinematicSolverInfo &chain_info);
+bool checkRobotState(moveit_msgs::RobotState& robot_state, const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  bool checkFKService(moveit_msgs::GetPositionFK::Request &request,
-                      moveit_msgs::GetPositionFK::Response &response,
-                      const moveit_msgs::KinematicSolverInfo &chain_info);
+bool checkFKService(moveit_msgs::GetPositionFK::Request& request, moveit_msgs::GetPositionFK::Response& response,
+                    const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  bool checkIKService(moveit_msgs::GetPositionIK::Request &request,
-                      moveit_msgs::GetPositionIK::Response &response,
-                      const moveit_msgs::KinematicSolverInfo &chain_info);
+bool checkIKService(moveit_msgs::GetPositionIK::Request& request, moveit_msgs::GetPositionIK::Response& response,
+                    const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  int getJointIndex(const std::string &name,
-                    const moveit_msgs::KinematicSolverInfo &chain_info);
+int getJointIndex(const std::string& name, const moveit_msgs::KinematicSolverInfo& chain_info);
 
-  bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
-                              KDL::Frame &pose_kdl,
-                              const std::string &root_frame,
-                              tf::TransformListener& tf);
+bool convertPoseToRootFrame(const geometry_msgs::PoseStamped& pose_msg, KDL::Frame& pose_kdl,
+                            const std::string& root_frame, tf::TransformListener& tf);
 
-  bool convertPoseToRootFrame(const geometry_msgs::PoseStamped &pose_msg,
-                              geometry_msgs::PoseStamped &pose_msg_out,
-                              const std::string &root_frame,
-                              tf::TransformListener& tf);
+bool convertPoseToRootFrame(const geometry_msgs::PoseStamped& pose_msg, geometry_msgs::PoseStamped& pose_msg_out,
+                            const std::string& root_frame, tf::TransformListener& tf);
 
-  int getKDLSegmentIndex(const KDL::Chain &chain,
-                         const std::string &name);
+int getKDLSegmentIndex(const KDL::Chain& chain, const std::string& name);
 
-  void getKDLChainInfo(const KDL::Chain &chain,
-                       moveit_msgs::KinematicSolverInfo &chain_info);
+void getKDLChainInfo(const KDL::Chain& chain, moveit_msgs::KinematicSolverInfo& chain_info);
 }
 
-#endif// PR2_ARM_IK_UTILS_H
+#endif  // PR2_ARM_IK_UTILS_H

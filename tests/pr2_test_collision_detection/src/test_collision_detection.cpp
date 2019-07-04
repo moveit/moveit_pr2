@@ -39,92 +39,92 @@
 #include <planning_models/conversions.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
 void findSelfCollisionAndDisplayContacts()
 {
-    ros::NodeHandle nh;
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-    planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
+  ros::NodeHandle nh;
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
+  planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
 
-    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
-    ros::Publisher pub_markers = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 5);
+  ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
+  ros::Publisher pub_markers = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 5);
 
-    sleep(1);
+  sleep(1);
 
-    collision_detection::CollisionRequest req;
-    do
-    {
+  collision_detection::CollisionRequest req;
+  do
+  {
     collision_detection::CollisionResult res;
     scene->getCurrentState().setToRandomValues();
     scene->checkSelfCollision(req, res);
     if (res.collision)
-        break;
-    } while (true);
+      break;
+  } while (true);
 
-    moveit_msgs::PlanningScene psmsg;
-    scene->getPlanningSceneMsg(psmsg);
-    pub_scene.publish(psmsg);
+  moveit_msgs::PlanningScene psmsg;
+  scene->getPlanningSceneMsg(psmsg);
+  pub_scene.publish(psmsg);
 
-    req.contacts = true;
-    req.max_contacts = 1000;
-    req.max_contacts_per_pair = 500;
-    collision_detection::CollisionResult res;
-    req.verbose = true;
-    scene->checkSelfCollision(req, res);
-    std_msgs::ColorRGBA color;
-    color.r = 1.0f;
-    color.g = 0.0f;
-    color.b = 0.0f;
-    color.a = 1.0f;
-    visualization_msgs::MarkerArray arr;
-    collision_detection::getCollisionMarkersFromContacts(arr, "/odom_combined", res.contacts, color, ros::Duration(30.0));
-    pub_markers.publish(arr);
-    ros::Duration(10).sleep();
+  req.contacts = true;
+  req.max_contacts = 1000;
+  req.max_contacts_per_pair = 500;
+  collision_detection::CollisionResult res;
+  req.verbose = true;
+  scene->checkSelfCollision(req, res);
+  std_msgs::ColorRGBA color;
+  color.r = 1.0f;
+  color.g = 0.0f;
+  color.b = 0.0f;
+  color.a = 1.0f;
+  visualization_msgs::MarkerArray arr;
+  collision_detection::getCollisionMarkersFromContacts(arr, "/odom_combined", res.contacts, color, ros::Duration(30.0));
+  pub_markers.publish(arr);
+  ros::Duration(10).sleep();
 }
 
 void testSimple()
 {
-    ros::NodeHandle nh;
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-    planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
+  ros::NodeHandle nh;
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
+  planning_scene::PlanningScenePtr scene = psm.getPlanningScene();
 
-    ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);
-    ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
-    sleep(1);
+  ros::Publisher pub_state = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 20);
+  ros::Publisher pub_scene = nh.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
+  sleep(1);
 
-    std::vector<shapes::ShapeConstPtr> attached_shapes(1, shapes::ShapeConstPtr(new shapes::Box(0.2, 0.1, 0.1)));
-    Eigen::Affine3d t;
-    t.setIdentity();
-    std::vector<Eigen::Affine3d> attached_poses(1, t);
-    std::vector<std::string> touch;
-    touch.push_back("r_wrist_roll_link");
-    touch.push_back("r_forearm_link");
-    touch.push_back("r_gripper_palm_link");
-    touch.push_back("r_gripper_l_finger_link");
-    touch.push_back("r_gripper_r_finger_link");
+  std::vector<shapes::ShapeConstPtr> attached_shapes(1, shapes::ShapeConstPtr(new shapes::Box(0.2, 0.1, 0.1)));
+  Eigen::Affine3d t;
+  t.setIdentity();
+  std::vector<Eigen::Affine3d> attached_poses(1, t);
+  std::vector<std::string> touch;
+  touch.push_back("r_wrist_roll_link");
+  touch.push_back("r_forearm_link");
+  touch.push_back("r_gripper_palm_link");
+  touch.push_back("r_gripper_l_finger_link");
+  touch.push_back("r_gripper_r_finger_link");
 
-    scene->getCurrentState().getLinkState("r_wrist_roll_link")->attachBody("attached", attached_shapes,
-                                       attached_poses, touch);
+  scene->getCurrentState()
+      .getLinkState("r_wrist_roll_link")
+      ->attachBody("attached", attached_shapes, attached_poses, touch);
 
-    collision_detection::CollisionRequest req;
-    req.verbose = true;
-    unsigned int N = 2;
+  collision_detection::CollisionRequest req;
+  req.verbose = true;
+  unsigned int N = 2;
 
-    for (unsigned int i = 0 ; i < N ; ++i)
-    {
+  for (unsigned int i = 0; i < N; ++i)
+  {
     collision_detection::CollisionResult res;
     do
     {
-        ROS_INFO("Trying new state...");
-        res.collision = false;
-        if (i + 1 == N)
+      ROS_INFO("Trying new state...");
+      res.collision = false;
+      if (i + 1 == N)
         scene->getCurrentState().setToDefaultValues();
-        else
+      else
         scene->getCurrentState().setToRandomValues();
-        scene->checkSelfCollision(req, res);
-    }
-    while (res.collision);
+      scene->checkSelfCollision(req, res);
+    } while (res.collision);
 
     ROS_INFO("Displaying valid state...");
     moveit_msgs::PlanningScene psmsg;
@@ -143,16 +143,16 @@ void testSimple()
         ros::Duration(0.01).sleep();
     }
     */
-    }
+  }
 
-    sleep(1);
+  sleep(1);
 
-    planning_scene::PlanningScenePtr colliding = planning_scene::PlanningScene::clone(scene);
-    // construct a planning scene with 100 objects and no collisions
-    random_numbers::RandomNumberGenerator rng;
-    req.verbose = false;
-    for (int i = 0 ; i < 100000 ; ++i)
-    {
+  planning_scene::PlanningScenePtr colliding = planning_scene::PlanningScene::clone(scene);
+  // construct a planning scene with 100 objects and no collisions
+  random_numbers::RandomNumberGenerator rng;
+  req.verbose = false;
+  for (int i = 0; i < 100000; ++i)
+  {
     t.translation() = Eigen::Vector3d(rng.uniformReal(-1, 1), rng.uniformReal(-1, 1), rng.uniformReal(0, 2));
     scene->getWorldNonConst()->clearObjects();
     scene->getWorldNonConst()->addToObject("spere1", shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
@@ -160,58 +160,55 @@ void testSimple()
     scene->checkCollision(req, res);
     if (!res.collision)
     {
-        int x = colliding->getWorld()->getObjectIds().size();
-        colliding->getWorldNonConst()->addToObject("speres" + boost::lexical_cast<std::string>(x),
-                                                        shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
-        std::cout << x << "\n";
-        if (x == 100)
+      int x = colliding->getWorld()->getObjectIds().size();
+      colliding->getWorldNonConst()->addToObject("speres" + boost::lexical_cast<std::string>(x),
+                                                 shapes::ShapeConstPtr(new shapes::Sphere(0.05)), t);
+      std::cout << x << "\n";
+      if (x == 100)
         break;
     }
-    }
+  }
 
-    moveit_msgs::PlanningScene psmsg;
-    colliding->getPlanningSceneMsg(psmsg);
-    pub_scene.publish(psmsg);
+  moveit_msgs::PlanningScene psmsg;
+  colliding->getPlanningSceneMsg(psmsg);
+  pub_scene.publish(psmsg);
 
-    ros::WallTime start = ros::WallTime::now();
-    unsigned int M = 1000;
-    for (unsigned int i = 0 ; i < M ; ++i)
-    {
+  ros::WallTime start = ros::WallTime::now();
+  unsigned int M = 1000;
+  for (unsigned int i = 0; i < M; ++i)
+  {
     collision_detection::CollisionResult res;
     colliding->checkCollision(req, res);
     if (res.collision)
-        ROS_ERROR("PROBLEM");
-    }
-    ROS_INFO("%lf full-collision checks per second", (double)M / (ros::WallTime::now() - start).toSec());
+      ROS_ERROR("PROBLEM");
+  }
+  ROS_INFO("%lf full-collision checks per second", (double)M / (ros::WallTime::now() - start).toSec());
 
-
-    /*
-    req.verbose = false;
-    ros::WallTime start = ros::WallTime::now();
-    //    unsigned int N = 50000;
+  /*
+  req.verbose = false;
+  ros::WallTime start = ros::WallTime::now();
+  //    unsigned int N = 50000;
 N = 50000;
-    for (unsigned int i = 0 ; i < N ; ++i)
-    {
-    collision_detection::CollisionResult res;
-    scene->getCurrentState().setToRandomValues();
-    scene->checkSelfCollision(req, res);
-    }
-    ROS_INFO("%lf self-collision checks per second", (double)N / (ros::WallTime::now() - start).toSec());
-    */
+  for (unsigned int i = 0 ; i < N ; ++i)
+  {
+  collision_detection::CollisionResult res;
+  scene->getCurrentState().setToRandomValues();
+  scene->checkSelfCollision(req, res);
+  }
+  ROS_INFO("%lf self-collision checks per second", (double)N / (ros::WallTime::now() - start).toSec());
+  */
 }
 
-
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "test_collision_detection");
-    ros::AsyncSpinner spinner(1);
-    spinner.start();
+  ros::init(argc, argv, "test_collision_detection");
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
 
-    testSimple();
-    findSelfCollisionAndDisplayContacts();
+  testSimple();
+  findSelfCollisionAndDisplayContacts();
 
-    ros::waitForShutdown();
+  ros::waitForShutdown();
 
-    return 0;
+  return 0;
 }

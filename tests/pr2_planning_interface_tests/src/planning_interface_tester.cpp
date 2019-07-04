@@ -32,7 +32,6 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-
 #include "planning_interface/planning_interface.h"
 #include <planning_scene_monitor/planning_scene_monitor.h>
 #include <pluginlib/class_loader.hpp>
@@ -41,16 +40,17 @@
 
 #include <gtest/gtest.h>
 
-static planning_scene_monitor::PlanningSceneMonitor *g_psm = NULL;
+static planning_scene_monitor::PlanningSceneMonitor* g_psm = NULL;
 
 TEST(PlanningInterfaceTester, loadAllPlanners)
 {
   pluginlib::ClassLoader<planning_interface::Planner>* planner_loader;
   try
   {
-    planner_loader = new pluginlib::ClassLoader<planning_interface::Planner>("planning_interface", "planning_interface::Planner");
+    planner_loader =
+        new pluginlib::ClassLoader<planning_interface::Planner>("planning_interface", "planning_interface::Planner");
   }
-  catch(pluginlib::PluginlibException& ex)
+  catch (pluginlib::PluginlibException& ex)
   {
     FAIL() << "Exception while creating class loader " << ex.what();
   }
@@ -64,16 +64,12 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   // Must have some planners
   ASSERT_GT(classes.size(), 0);
   printf("Loading classes:\n");
-  for(std::vector<std::string>::const_iterator it = classes.begin();
-      it != classes.end();
-      ++it)
+  for (std::vector<std::string>::const_iterator it = classes.begin(); it != classes.end(); ++it)
     printf("  %s\n", it->c_str());
   fflush(stdout);
   return;
 
-  for(std::vector<std::string>::const_iterator it = classes.begin();
-      it != classes.end();
-      ++it)
+  for (std::vector<std::string>::const_iterator it = classes.begin(); it != classes.end(); ++it)
   {
     try
     {
@@ -81,16 +77,15 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
       p->init(model);
       planners.push_back(p);
     }
-    catch(pluginlib::PluginlibException& ex)
+    catch (pluginlib::PluginlibException& ex)
     {
       // All planners must load
       ADD_FAILURE() << "Exception while loading planner: " << *it << ": " << ex.what();
     }
   }
 
-  for(std::vector<boost::shared_ptr<planning_interface::Planner> >::const_iterator it = planners.begin();
-      it != planners.end();
-      ++it)
+  for (std::vector<boost::shared_ptr<planning_interface::Planner> >::const_iterator it = planners.begin();
+       it != planners.end(); ++it)
   {
     // A dumb test: require that the planners return true from
     // canServiceRequest
@@ -106,8 +101,7 @@ TEST(PlanningInterfaceTester, loadAllPlanners)
   }
 }
 
-static const std::string ROBOT_DESCRIPTION="robot_description";
-
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
 int main(int argc, char** argv)
 {
@@ -116,7 +110,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "planner_loader");
 
   g_psm = new planning_scene_monitor::PlanningSceneMonitor(ROBOT_DESCRIPTION);
-  if(g_psm->getPlanningScene() && g_psm->getPlanningScene()->isConfigured())
+  if (g_psm->getPlanningScene() && g_psm->getPlanningScene()->isConfigured())
   {
     g_psm->startWorldGeometryMonitor();
     g_psm->startSceneMonitor();

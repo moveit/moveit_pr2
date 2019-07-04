@@ -32,19 +32,19 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-
 #include <trajectory_execution_ros/trajectory_execution_monitor_ros.h>
 #include <planning_scene_monitor/planning_scene_monitor.h>
 #include <csignal>
 
 boost::shared_ptr<trajectory_execution_ros::TrajectoryExecutionMonitorRos> emon;
 
-void sigHandler(int x) {
+void sigHandler(int x)
+{
   emon.reset();
   exit(0);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "trajectory_execution_test", ros::init_options::NoSigintHandler);
 
@@ -54,15 +54,16 @@ int main(int argc, char **argv)
   boost::shared_ptr<planning_scene_monitor::PlanningSceneMonitor> planning_scene_monitor_;
   planning_scene_monitor_.reset(new planning_scene_monitor::PlanningSceneMonitor("robot_description"));
 
-  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(planning_scene_monitor_->getPlanningScene()->getRobotModel()));
+  emon.reset(new trajectory_execution_ros::TrajectoryExecutionMonitorRos(
+      planning_scene_monitor_->getPlanningScene()->getRobotModel()));
 
   ROS_INFO_STREAM("Current for arms is " << emon->getCurrentController("arms"));
 
-  //should switch to default controller for arms, stopping other two
-  //emon->switchAssociatedStopStartControllers("arms", "both_arms_controller");
+  // should switch to default controller for arms, stopping other two
+  // emon->switchAssociatedStopStartControllers("arms", "both_arms_controller");
 
-  //sh
-  //emon->restoreToOriginalConfiguration();
+  // sh
+  // emon->restoreToOriginalConfiguration();
 
   ros::waitForShutdown();
 }

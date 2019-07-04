@@ -44,28 +44,27 @@
 
 namespace pr2_moveit_sensor_manager
 {
-
 class Pr2MoveItSensorManager : public moveit_sensor_manager::MoveItSensorManager
 {
 public:
-
   Pr2MoveItSensorManager() : node_handle_("~")
   {
     node_handle_.param("head_pointing_frame", head_pointing_frame_, std::string("/camera"));
-    head_action_client_.reset(new actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction>("/head_traj_controller/point_head_action", true));
+    head_action_client_.reset(new actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction>(
+        "/head_traj_controller/point_head_action", true));
   }
 
   virtual ~Pr2MoveItSensorManager()
   {
   }
 
-  virtual void getSensorsList(std::vector<std::string> &names) const
+  virtual void getSensorsList(std::vector<std::string>& names) const
   {
     names.resize(1);
     names[0] = "head";
   }
 
-  virtual moveit_sensor_manager::SensorInfo getSensorInfo(const std::string &name) const
+  virtual moveit_sensor_manager::SensorInfo getSensorInfo(const std::string& name) const
   {
     // I made this up.
     moveit_sensor_manager::SensorInfo si;
@@ -87,7 +86,8 @@ public:
     return true;
   }
 
-  virtual bool pointSensorTo(const std::string &name, const geometry_msgs::PointStamped &target, moveit_msgs::RobotTrajectory &sensor_trajectory)
+  virtual bool pointSensorTo(const std::string& name, const geometry_msgs::PointStamped& target,
+                             moveit_msgs::RobotTrajectory& sensor_trajectory)
   {
     if (name != "head")
     {
@@ -120,13 +120,10 @@ public:
   }
 
 protected:
-
   ros::NodeHandle node_handle_;
   std::string head_pointing_frame_;
   boost::shared_ptr<actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction> > head_action_client_;
-
 };
 
-PLUGINLIB_EXPORT_CLASS(pr2_moveit_sensor_manager::Pr2MoveItSensorManager,
-                       moveit_sensor_manager::MoveItSensorManager);
+PLUGINLIB_EXPORT_CLASS(pr2_moveit_sensor_manager::Pr2MoveItSensorManager, moveit_sensor_manager::MoveItSensorManager);
 }

@@ -38,10 +38,11 @@
 #include <moveit_msgs/ComputePlanningBenchmark.h>
 #include <kinematic_constraints/utils.h>
 
-static const std::string ROBOT_DESCRIPTION="robot_description";
-static const std::string BENCHMARK_SERVICE_NAME="benchmark_planning_problem"; // name of the advertised service (within the ~ namespace)
+static const std::string ROBOT_DESCRIPTION = "robot_description";
+static const std::string BENCHMARK_SERVICE_NAME =
+    "benchmark_planning_problem";  // name of the advertised service (within the ~ namespace)
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "call_moveit_benchmark", ros::init_options::AnonymousName);
 
@@ -73,16 +74,17 @@ int main(int argc, char **argv)
   req.motion_plan_request.num_planning_attempts = 1;
   req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
 
-  const std::vector<std::string>& joint_names = psm.getPlanningScene()->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
+  const std::vector<std::string>& joint_names =
+      psm.getPlanningScene()->getRobotModel()->getJointModelGroup("right_arm")->getJointModelNames();
   req.motion_plan_request.goal_constraints.resize(1);
   req.motion_plan_request.goal_constraints[0].joint_constraints.resize(joint_names.size());
-  for(unsigned int i = 0; i < joint_names.size(); i++)
+  for (unsigned int i = 0; i < joint_names.size(); i++)
   {
-      req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
-      req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
-      req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 0.001;
-      req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 0.001;
-      req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
+    req.motion_plan_request.goal_constraints[0].joint_constraints[i].joint_name = joint_names[i];
+    req.motion_plan_request.goal_constraints[0].joint_constraints[i].position = 0.0;
+    req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_above = 0.001;
+    req.motion_plan_request.goal_constraints[0].joint_constraints[i].tolerance_below = 0.001;
+    req.motion_plan_request.goal_constraints[0].joint_constraints[i].weight = 1.0;
   }
   req.motion_plan_request.goal_constraints[0].joint_constraints[0].position = -2.0;
   req.motion_plan_request.goal_constraints[0].joint_constraints[3].position = -.2;
@@ -107,9 +109,10 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
   ros::service::waitForService(BENCHMARK_SERVICE_NAME);
-  ros::ServiceClient benchmark_service_client = nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(BENCHMARK_SERVICE_NAME);
+  ros::ServiceClient benchmark_service_client =
+      nh.serviceClient<moveit_msgs::ComputePlanningBenchmark>(BENCHMARK_SERVICE_NAME);
   if (!benchmark_service_client.call(req, res))
-      ROS_ERROR("Error calling benchmark service");
+    ROS_ERROR("Error calling benchmark service");
 
   ros::waitForShutdown();
 

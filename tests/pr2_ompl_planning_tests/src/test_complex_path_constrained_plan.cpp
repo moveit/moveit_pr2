@@ -42,8 +42,8 @@
 #include <kinematic_constraints/utils.h>
 #include <planning_models/conversions.h>
 
-static const std::string PLANNER_SERVICE_NAME="/ompl_planning/plan_kinematic_path";
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string PLANNER_SERVICE_NAME = "/ompl_planning/plan_kinematic_path";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
 TEST(OmplPlanning, PathConstrainedSimplePlan)
 {
@@ -59,14 +59,13 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   moveit_msgs::GetMotionPlan::Response mplan_res;
 
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION, NULL);
-  planning_scene::PlanningScene &scene = *psm.getPlanningScene();
+  planning_scene::PlanningScene& scene = *psm.getPlanningScene();
   EXPECT_TRUE(scene.isConfigured());
 
   mplan_req.motion_plan_request.planner_id = "RRTConnectkConfigDefault";
   mplan_req.motion_plan_request.group_name = "arms";
   mplan_req.motion_plan_request.num_planning_attempts = 1;
   mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
-
 
   // set the goal constraints
 
@@ -93,9 +92,8 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   mplan_req.motion_plan_request.goal_constraints.resize(1);
   mplan_req.motion_plan_request.goal_constraints[0].position_constraints.push_back(pcm);
 
-
   // add path constraints
-  moveit_msgs::Constraints &c = mplan_req.motion_plan_request.path_constraints;
+  moveit_msgs::Constraints& c = mplan_req.motion_plan_request.path_constraints;
 
   moveit_msgs::PositionConstraint pcm2;
   pcm2.link_name = "r_wrist_roll_link";
@@ -143,9 +141,6 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ocm.weight = 1.0;
   c.orientation_constraints.push_back(ocm);
 
-
-
-
   // sample a start state that meets the path constraints
   kinematics_plugin_loader::KinematicsPluginLoader kinematics_loader;
   kinematics_plugin_loader::KinematicsLoaderFn kinematics_allocator = kinematics_loader.getLoaderFunction();
@@ -153,8 +148,9 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   sa[scene.getRobotModel()->getJointModelGroup("left_arm")] = kinematics_allocator;
   sa[scene.getRobotModel()->getJointModelGroup("right_arm")] = kinematics_allocator;
 
-  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage
-    (scene.getRobotModel()->getJointModelGroup("arms"), c, scene.getRobotModel(), scene.getTransforms(), kinematic_constraints::KinematicsAllocator(), sa);
+  kinematic_constraints::ConstraintSamplerPtr s = kinematic_constraints::ConstraintSampler::constructFromMessage(
+      scene.getRobotModel()->getJointModelGroup("arms"), c, scene.getRobotModel(), scene.getTransforms(),
+      kinematic_constraints::KinematicsAllocator(), sa);
 
   EXPECT_TRUE(s.get() != NULL);
 
@@ -162,9 +158,9 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   kset.add(c);
 
   bool found = false;
-  planning_models::RobotState *ks(scene.getRobotModel());
+  planning_models::RobotState* ks(scene.getRobotModel());
   ks.setToDefaultValues();
-  for (int i = 0 ; i < 100 ; ++i)
+  for (int i = 0; i < 100; ++i)
   {
     std::vector<double> values;
     if (s->sample(values, ks, 10))
@@ -188,7 +184,6 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
   EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
 
-
   moveit_msgs::DisplayTrajectory d;
   d.model_id = scene.getRobotModel()->getName();
   d.trajectory_start = mplan_res.trajectory_start;
@@ -197,7 +192,7 @@ TEST(OmplPlanning, PathConstrainedSimplePlan)
   ros::Duration(0.5).sleep();
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
 

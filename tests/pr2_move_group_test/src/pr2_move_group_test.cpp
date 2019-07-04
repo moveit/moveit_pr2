@@ -39,9 +39,9 @@
 #include <kinematic_constraints/utils.h>
 #include <planning_scene_monitor/planning_scene_monitor.h>
 
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "pr2_move_group_test", ros::init_options::AnonymousName);
 
@@ -49,11 +49,10 @@ int main(int argc, char **argv)
   spinner.start();
 
   planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-  planning_scene::PlanningScene &scene = *psm.getPlanningScene();
+  planning_scene::PlanningScene& scene = *psm.getPlanningScene();
 
   actionlib::SimpleActionClient<moveit_msgs::MoveGroupAction> act("move_group", false);
   act.waitForServer();
-
 
   moveit_msgs::MoveGroupGoal goal;
   /*
@@ -68,8 +67,6 @@ int main(int argc, char **argv)
   goal.request.goal_constraints[0].joint_constraints[0].tolerance_below = 0.001;
   goal.request.goal_constraints[0].joint_constraints[0].weight = 1.0;
   */
-
-
 
   goal.request.group_name = "right_arm";
   goal.request.num_planning_attempts = 1;
@@ -101,23 +98,26 @@ int main(int argc, char **argv)
 
   //  goal.request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
 
-  planning_models::RobotState *start = scene.getCurrentState();
+  planning_models::RobotState* start = scene.getCurrentState();
 
-  for (int i = 0 ; i < 50 ; ++i){
-  start.getJointStateGroup("right_arm")->setToRandomValues();
-  goal.request.goal_constraints.resize(1);
-  goal.request.goal_constraints[0] = kinematic_constraints::constructGoalConstraints(start.getJointStateGroup("right_arm"));
+  for (int i = 0; i < 50; ++i)
+  {
+    start.getJointStateGroup("right_arm")->setToRandomValues();
+    goal.request.goal_constraints.resize(1);
+    goal.request.goal_constraints[0] =
+        kinematic_constraints::constructGoalConstraints(start.getJointStateGroup("right_arm"));
 
-  act.sendGoal(goal);
-  if(!act.waitForResult(ros::Duration(5.0))) {
-    ROS_INFO_STREAM("Apparently returned early");
-  }
-  if (act.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("It worked!");
-  else
-    ROS_WARN_STREAM("Fail: " << act.getState().toString() << ": " << act.getState().getText());
-  std::cout << *act.getResult() << std::endl;
-  sleep(5);
+    act.sendGoal(goal);
+    if (!act.waitForResult(ros::Duration(5.0)))
+    {
+      ROS_INFO_STREAM("Apparently returned early");
+    }
+    if (act.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+      ROS_INFO("It worked!");
+    else
+      ROS_WARN_STREAM("Fail: " << act.getState().toString() << ": " << act.getState().getText());
+    std::cout << *act.getResult() << std::endl;
+    sleep(5);
   }
   return 0;
 }

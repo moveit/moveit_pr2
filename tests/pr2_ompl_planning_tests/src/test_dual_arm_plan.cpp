@@ -41,67 +41,66 @@
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <kinematic_constraints/utils.h>
 
-static const std::string PLANNER_SERVICE_NAME="/ompl_planning/plan_kinematic_path";
-static const std::string ROBOT_DESCRIPTION="robot_description";
+static const std::string PLANNER_SERVICE_NAME = "/ompl_planning/plan_kinematic_path";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
 
 TEST(OmplPlanning, SimplePlan)
 {
-    ros::NodeHandle nh;
-    ros::service::waitForService(PLANNER_SERVICE_NAME);
-    ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
+  ros::NodeHandle nh;
+  ros::service::waitForService(PLANNER_SERVICE_NAME);
+  ros::Publisher pub = nh.advertise<moveit_msgs::DisplayTrajectory>("display_motion_plan", 1);
 
-    ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
-    EXPECT_TRUE(planning_service_client.exists());
-    EXPECT_TRUE(planning_service_client.isValid());
+  ros::ServiceClient planning_service_client = nh.serviceClient<moveit_msgs::GetMotionPlan>(PLANNER_SERVICE_NAME);
+  EXPECT_TRUE(planning_service_client.exists());
+  EXPECT_TRUE(planning_service_client.isValid());
 
-    moveit_msgs::GetMotionPlan::Request mplan_req;
-    moveit_msgs::GetMotionPlan::Response mplan_res;
+  moveit_msgs::GetMotionPlan::Request mplan_req;
+  moveit_msgs::GetMotionPlan::Response mplan_res;
 
-    planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
-    planning_scene::PlanningScene &scene = *psm.getPlanningScene();
-    EXPECT_TRUE(scene.isConfigured());
+  planning_scene_monitor::PlanningSceneMonitor psm(ROBOT_DESCRIPTION);
+  planning_scene::PlanningScene& scene = *psm.getPlanningScene();
+  EXPECT_TRUE(scene.isConfigured());
 
-    mplan_req.motion_plan_request.group_name = "arms";
-    mplan_req.motion_plan_request.num_planning_attempts = 1;
-    mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
+  mplan_req.motion_plan_request.group_name = "arms";
+  mplan_req.motion_plan_request.num_planning_attempts = 1;
+  mplan_req.motion_plan_request.allowed_planning_time = ros::Duration(5.0);
 
-    geometry_msgs::PoseStamped pose;
-    pose.header.frame_id = scene.getRobotModel()->getModelFrame();
-    pose.pose.position.x = 0.55;
-    pose.pose.position.y = 0.2;
-    pose.pose.position.z = 1.25;
-    pose.pose.orientation.x = 0.0;
-    pose.pose.orientation.y = 0.0;
-    pose.pose.orientation.z = 0.0;
-    pose.pose.orientation.w = 1.0;
-    moveit_msgs::Constraints g0 = kinematic_constraints::constructGoalConstraints("l_wrist_roll_link", pose);
+  geometry_msgs::PoseStamped pose;
+  pose.header.frame_id = scene.getRobotModel()->getModelFrame();
+  pose.pose.position.x = 0.55;
+  pose.pose.position.y = 0.2;
+  pose.pose.position.z = 1.25;
+  pose.pose.orientation.x = 0.0;
+  pose.pose.orientation.y = 0.0;
+  pose.pose.orientation.z = 0.0;
+  pose.pose.orientation.w = 1.0;
+  moveit_msgs::Constraints g0 = kinematic_constraints::constructGoalConstraints("l_wrist_roll_link", pose);
 
+  pose.pose.position.x = 0.35;
+  pose.pose.position.y = -0.6;
+  pose.pose.position.z = 1.25;
+  pose.pose.orientation.x = 0.0;
+  pose.pose.orientation.y = 0.0;
+  pose.pose.orientation.z = 0.0;
+  pose.pose.orientation.w = 1.0;
+  moveit_msgs::Constraints g1 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
 
-    pose.pose.position.x = 0.35;
-    pose.pose.position.y = -0.6;
-    pose.pose.position.z = 1.25;
-    pose.pose.orientation.x = 0.0;
-    pose.pose.orientation.y = 0.0;
-    pose.pose.orientation.z = 0.0;
-    pose.pose.orientation.w = 1.0;
-    moveit_msgs::Constraints g1 = kinematic_constraints::constructGoalConstraints("r_wrist_roll_link", pose);
+  mplan_req.motion_plan_request.goal_constraints.resize(1);
+  mplan_req.motion_plan_request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
 
-    mplan_req.motion_plan_request.goal_constraints.resize(1);
-    mplan_req.motion_plan_request.goal_constraints[0] = kinematic_constraints::mergeConstraints(g1, g0);
+  ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
+  ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
+  EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
 
-    ASSERT_TRUE(planning_service_client.call(mplan_req, mplan_res));
-    ASSERT_EQ(mplan_res.error_code.val, mplan_res.error_code.SUCCESS);
-    EXPECT_GT(mplan_res.trajectory.joint_trajectory.points.size(), 0);
-
-    moveit_msgs::DisplayTrajectory d;
-    d.model_id = scene.getRobotModel()->getName();
-    d.trajectory_start = mplan_res.trajectory_start;
-    d.trajectory = mplan_res.trajectory;
-    pub.publish(d);
-    ros::Duration(0.5).sleep();
+  moveit_msgs::DisplayTrajectory d;
+  d.model_id = scene.getRobotModel()->getName();
+  d.trajectory_start = mplan_res.trajectory_start;
+  d.trajectory = mplan_res.trajectory;
+  pub.publish(d);
+  ros::Duration(0.5).sleep();
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
 
