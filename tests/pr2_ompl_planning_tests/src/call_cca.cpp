@@ -37,8 +37,9 @@
 #include <ros/ros.h>
 #include <moveit_msgs/ConstructConstraintApproximation.h>
 
-static const std::string ROBOT_DESCRIPTION="robot_description";
-static const std::string CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME="ompl_planning/construct_constraint_approximation";
+static const std::string ROBOT_DESCRIPTION = "robot_description";
+static const std::string CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME =
+    "ompl_planning/construct_constraint_approximation";
 
 moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint()
 {
@@ -101,7 +102,7 @@ moveit_msgs::ConstructConstraintApproximation::Request getDualArmConstraint()
   return cca;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "call_cca", ros::init_options::AnonymousName);
 
@@ -110,7 +111,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
   ros::service::waitForService(CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME);
-  ros::ServiceClient cca_service_client = nh.serviceClient<moveit_msgs::ConstructConstraintApproximation>(CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME);
+  ros::ServiceClient cca_service_client =
+      nh.serviceClient<moveit_msgs::ConstructConstraintApproximation>(CONSTRUCT_CONSTRAINT_APPROXIMATION_SERVICE_NAME);
 
   moveit_msgs::ConstructConstraintApproximation::Request req = getDualArmConstraint();
   moveit_msgs::ConstructConstraintApproximation::Request res;

@@ -39,18 +39,16 @@
 
 #include <urdf/model.h>
 #include <Eigen/Core>
-#include <Eigen/LU>// provides LU decomposition
+#include <Eigen/LU>  // provides LU decomposition
 #include <kdl/chainiksolver.hpp>
 #include <moveit/pr2_arm_kinematics/pr2_arm_kinematics_utils.h>
 #include <moveit/pr2_arm_kinematics/pr2_arm_kinematics_constants.h>
-
 
 namespace pr2_arm_kinematics
 {
 class PR2ArmIK
 {
 public:
-
   /** @class
    *  @brief Inverse kinematics for the PR2 arm.
    *  @author Sachin Chitta <sachinc@willowgarage.com>
@@ -66,30 +64,32 @@ public:
       @param The tip joint name of the arm
       @return true if initialization was successful, false otherwise.
   */
-  bool init(const urdf::Model &robot_model, const std::string &root_name, const std::string &tip_name);
+  bool init(const urdf::Model& robot_model, const std::string& root_name, const std::string& tip_name);
 
   /**
      @brief compute IK based on an initial guess for the shoulder pan angle.
      @param Input pose for end-effector
      @param Initial guess for shoulder pan angle
   */
-  void computeIKShoulderPan(const Eigen::Matrix4f &g_in, const double &shoulder_pan_initial_guess,std::vector<std::vector<double> > &solution) const;
+  void computeIKShoulderPan(const Eigen::Matrix4f& g_in, const double& shoulder_pan_initial_guess,
+                            std::vector<std::vector<double> >& solution) const;
 
   /**
      @brief compute IK based on an initial guess for the shoulder roll angle.
      h       @param Input pose for end-effector
      @param Initial guess for shoulder roll angle
   */
-  void computeIKShoulderRoll(const Eigen::Matrix4f &g_in, const double &shoulder_roll_initial_guess,std::vector<std::vector<double> > &solution) const;
-
+  void computeIKShoulderRoll(const Eigen::Matrix4f& g_in, const double& shoulder_roll_initial_guess,
+                             std::vector<std::vector<double> >& solution) const;
 
   //  std::vector<std::vector<double> > solution_ik_;/// a vector of ik solutions
 
   /**
-     @brief get chain information about the arm. This populates the IK query response, filling in joint level information including names and joint limits.
+     @brief get chain information about the arm. This populates the IK query response, filling in joint level
+     information including names and joint limits.
      @param The response structure to be filled in.
   */
-  void getSolverInfo(moveit_msgs::KinematicSolverInfo &info);
+  void getSolverInfo(moveit_msgs::KinematicSolverInfo& info);
 
   /**
      @brief get chain information about the arm.
@@ -98,13 +98,12 @@ public:
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  private:
+private:
+  void addJointToChainInfo(urdf::JointConstSharedPtr joint, moveit_msgs::KinematicSolverInfo& info);
 
-  void addJointToChainInfo(urdf::JointConstSharedPtr joint,moveit_msgs::KinematicSolverInfo &info);
+  bool checkJointLimits(const std::vector<double>& joint_values) const;
 
-  bool checkJointLimits(const std::vector<double> &joint_values) const;
-
-  bool checkJointLimits(const double &joint_value, const int &joint_num) const;
+  bool checkJointLimits(const double& joint_value, const int& joint_num) const;
 
   Eigen::Matrix4f grhs_, gf_, home_inv_, home_;
 
@@ -112,14 +111,14 @@ public:
 
   std::vector<double> solution_;
 
-  double shoulder_upperarm_offset_, upperarm_elbow_offset_, elbow_wrist_offset_, shoulder_wrist_offset_, shoulder_elbow_offset_, torso_shoulder_offset_x_, torso_shoulder_offset_y_, torso_shoulder_offset_z_;
+  double shoulder_upperarm_offset_, upperarm_elbow_offset_, elbow_wrist_offset_, shoulder_wrist_offset_,
+      shoulder_elbow_offset_, torso_shoulder_offset_x_, torso_shoulder_offset_y_, torso_shoulder_offset_z_;
 
   std::vector<double> min_angles_;
 
   std::vector<double> max_angles_;
 
   std::vector<bool> continuous_joint_;
-
 };
 }
-#endif// PR2_ARM_IK_H
+#endif  // PR2_ARM_IK_H

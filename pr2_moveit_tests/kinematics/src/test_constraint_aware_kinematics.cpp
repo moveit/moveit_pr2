@@ -94,10 +94,11 @@ TEST(ConstraintAwareKinematics, getIK)
   geometry_msgs::PoseStamped goal;
   goal.header.frame_id = kinematic_model->getModelFrame();
 
-  for(std::size_t i = 0; i < (unsigned int) number_ik_tests; ++i)
+  for (std::size_t i = 0; i < (unsigned int)number_ik_tests; ++i)
   {
     joint_state_group->setToRandomValues();
-    const Eigen::Affine3d &end_effector_state = joint_state_group->getRobotState()->getLinkState(ik_link_name)->getGlobalLinkTransform();
+    const Eigen::Affine3d& end_effector_state =
+        joint_state_group->getRobotState()->getLinkState(ik_link_name)->getGlobalLinkTransform();
     Eigen::Quaterniond quat(end_effector_state.rotation());
     Eigen::Vector3d point(end_effector_state.translation());
     goal.pose.position.x = point.x();
@@ -112,20 +113,19 @@ TEST(ConstraintAwareKinematics, getIK)
     kinematics_request.pose_stamped_vector_.clear();
     kinematics_request.pose_stamped_vector_.push_back(goal);
     ros::WallTime start = ros::WallTime::now();
-    if(solver.getIK(planning_scene, kinematics_request, kinematics_response))
+    if (solver.getIK(planning_scene, kinematics_request, kinematics_response))
       num_success++;
     else
-      printf("Failed in %f\n", (ros::WallTime::now()-start).toSec());
+      printf("Failed in %f\n", (ros::WallTime::now() - start).toSec());
   }
-  bool test_success = (((double)num_success)/number_ik_tests > acceptable_success_percentage/100.0);
+  bool test_success = (((double)num_success) / number_ik_tests > acceptable_success_percentage / 100.0);
   printf("success ratio: %d of %d", num_success, number_ik_tests);
   EXPECT_TRUE(test_success);
 }
 
-
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  ros::init (argc, argv, "right_arm_kinematics");
+  ros::init(argc, argv, "right_arm_kinematics");
   return RUN_ALL_TESTS();
 }

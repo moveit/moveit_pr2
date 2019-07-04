@@ -49,7 +49,6 @@
 
 namespace pr2_moveit_controller_manager
 {
-
 /// Maximum effort the PR2 gripper is allowed to exert (read as 'very large value'); this is PR2 specific
 static const double DEFAULT_MAX_GRIPPER_EFFORT = 10000.0;
 
@@ -65,19 +64,18 @@ static const std::string R_GRIPPER_JOINT = "r_gripper_motor_screw_joint";
 /// The name of the joint we expect input for to decide how to actuate the left gripper; this is PR2 specific
 static const std::string L_GRIPPER_JOINT = "l_gripper_motor_screw_joint";
 
-/// The conversion ratio that needs to be applied to get the gap opening of the gripper (m) based on the value of the motor joint actuating the gripper (PR2 specific)
+/// The conversion ratio that needs to be applied to get the gap opening of the gripper (m) based on the value of the
+/// motor joint actuating the gripper (PR2 specific)
 static const double GAP_CONVERSION_RATIO = 0.1714;
 
-template<typename T>
+template <typename T>
 class ActionBasedControllerHandle : public moveit_controller_manager::MoveItControllerHandle
 {
 public:
-  ActionBasedControllerHandle(const std::string &name, const std::string &ns) :
-    moveit_controller_manager::MoveItControllerHandle(name),
-    namespace_(ns),
-    done_(true)
+  ActionBasedControllerHandle(const std::string& name, const std::string& ns)
+    : moveit_controller_manager::MoveItControllerHandle(name), namespace_(ns), done_(true)
   {
-    controller_action_client_.reset(new actionlib::SimpleActionClient<T>(name_ +"/" + namespace_, true));
+    controller_action_client_.reset(new actionlib::SimpleActionClient<T>(name_ + "/" + namespace_, true));
     unsigned int attempts = 0;
     while (ros::ok() && !controller_action_client_->waitForServer(ros::Duration(5.0)) && ++attempts < 3)
       ROS_INFO_STREAM("Waiting for " << name_ + "/" + namespace_ << " to come up");
@@ -110,7 +108,7 @@ public:
     return true;
   }
 
-  virtual bool waitForExecution(const ros::Duration &timeout = ros::Duration(0))
+  virtual bool waitForExecution(const ros::Duration& timeout = ros::Duration(0))
   {
     if (controller_action_client_ && !done_)
       return controller_action_client_->waitForResult(timeout);
@@ -123,20 +121,17 @@ public:
   }
 
 protected:
-
   void finishControllerExecution(const actionlib::SimpleClientGoalState& state)
   {
     ROS_DEBUG_STREAM("Controller " << name_ << " is done with state " << state.toString() << ": " << state.getText());
     if (state == actionlib::SimpleClientGoalState::SUCCEEDED)
       last_exec_ = moveit_controller_manager::ExecutionStatus::SUCCEEDED;
+    else if (state == actionlib::SimpleClientGoalState::ABORTED)
+      last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
+    else if (state == actionlib::SimpleClientGoalState::PREEMPTED)
+      last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
     else
-      if (state == actionlib::SimpleClientGoalState::ABORTED)
-        last_exec_ = moveit_controller_manager::ExecutionStatus::ABORTED;
-      else
-        if (state == actionlib::SimpleClientGoalState::PREEMPTED)
-          last_exec_ = moveit_controller_manager::ExecutionStatus::PREEMPTED;
-        else
-          last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
+      last_exec_ = moveit_controller_manager::ExecutionStatus::FAILED;
     done_ = true;
   }
 
@@ -149,13 +144,12 @@ protected:
 class Pr2GripperControllerHandle : public ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>
 {
 public:
-  Pr2GripperControllerHandle(const std::string &name, const std::string &ns  = "gripper_action") :
-    ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>(name, ns),
-    closing_(false)
+  Pr2GripperControllerHandle(const std::string& name, const std::string& ns = "gripper_action")
+    : ActionBasedControllerHandle<pr2_controllers_msgs::Pr2GripperCommandAction>(name, ns), closing_(false)
   {
   }
 
-  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory &trajectory)
+  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory& trajectory)
   {
     if (!controller_action_client_)
       return false;
@@ -167,38 +161,45 @@ public:
 
     if (trajectory.joint_trajectory.points.back().positions.empty())
     {
-      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point that specifies at least one position, but 0 positions provided)");
+      ROS_ERROR("The PR2 gripper controller expects a joint trajectory with one point that specifies at least one "
+                "position, but 0 positions provided)");
       return false;
     }
 
     if (trajectory.joint_trajectory.points.size() > 1)
-      ROS_DEBUG("The PR2 gripper controller expects a joint trajectory with one point only, but %u provided. Using last point only.", (unsigned int)trajectory.joint_trajectory.points.size());
+      ROS_DEBUG("The PR2 gripper controller expects a joint trajectory with one point only, but %u provided. Using "
+                "last point only.",
+                (unsigned int)trajectory.joint_trajectory.points.size());
 
     int gripper_joint_index = -1;
-    for (std::size_t i = 0 ; i < trajectory.joint_trajectory.joint_names.size() ; ++i)
-      if (trajectory.joint_trajectory.joint_names[i] == R_GRIPPER_JOINT || trajectory.joint_trajectory.joint_names[i] == L_GRIPPER_JOINT)
+    for (std::size_t i = 0; i < trajectory.joint_trajectory.joint_names.size(); ++i)
+      if (trajectory.joint_trajectory.joint_names[i] == R_GRIPPER_JOINT ||
+          trajectory.joint_trajectory.joint_names[i] == L_GRIPPER_JOINT)
       {
-    gripper_joint_index = i;
-    break;
+        gripper_joint_index = i;
+        break;
       }
 
     if (!trajectory.joint_trajectory.joint_names.empty())
     {
       std::stringstream ss;
       ss << std::endl;
-      for (std::size_t i = 0 ; i < trajectory.joint_trajectory.joint_names.size() ; ++i)
-        ss << "PR2 gripper trajectory (" << i << "): " << trajectory.joint_trajectory.joint_names[i] << " " << trajectory.joint_trajectory.points[0].positions[i] << std::endl;
+      for (std::size_t i = 0; i < trajectory.joint_trajectory.joint_names.size(); ++i)
+        ss << "PR2 gripper trajectory (" << i << "): " << trajectory.joint_trajectory.joint_names[i] << " "
+           << trajectory.joint_trajectory.points[0].positions[i] << std::endl;
       ss << std::endl;
       ROS_DEBUG("%s", ss.str().c_str());
     }
 
     if (gripper_joint_index == -1)
     {
-      ROS_ERROR("Could not find value for gripper virtual joint. Expected joint value for '%s' or '%s'.", L_GRIPPER_JOINT.c_str(), R_GRIPPER_JOINT.c_str());
+      ROS_ERROR("Could not find value for gripper virtual joint. Expected joint value for '%s' or '%s'.",
+                L_GRIPPER_JOINT.c_str(), R_GRIPPER_JOINT.c_str());
       return false;
     }
 
-    double gap_opening = trajectory.joint_trajectory.points.back().positions[gripper_joint_index] * GAP_CONVERSION_RATIO;
+    double gap_opening =
+        trajectory.joint_trajectory.points.back().positions[gripper_joint_index] * GAP_CONVERSION_RATIO;
     ROS_DEBUG("PR2 gripper gap opening: %f", gap_opening);
     closing_ = false;
 
@@ -207,12 +208,11 @@ public:
       gap_opening = GRIPPER_OPEN;
       closing_ = false;
     }
-    else
-      if (gap_opening <= 0.0)
-      {
-        gap_opening = 0.0;
-        closing_ = true;
-      }
+    else if (gap_opening <= 0.0)
+    {
+      gap_opening = 0.0;
+      closing_ = true;
+    }
 
     pr2_controllers_msgs::Pr2GripperCommandGoal goal;
     goal.command.max_effort = DEFAULT_MAX_GRIPPER_EFFORT;
@@ -228,7 +228,6 @@ public:
   }
 
 private:
-
   void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
                               const pr2_controllers_msgs::Pr2GripperCommandResultConstPtr& result)
   {
@@ -251,16 +250,16 @@ private:
   bool closing_;
 };
 
-class Pr2FollowJointTrajectoryControllerHandle : public ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>
+class Pr2FollowJointTrajectoryControllerHandle
+    : public ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>
 {
 public:
-
-  Pr2FollowJointTrajectoryControllerHandle(const std::string &name, const std::string &ns = "follow_joint_trajectory") :
-    ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>(name, ns)
+  Pr2FollowJointTrajectoryControllerHandle(const std::string& name, const std::string& ns = "follow_joint_trajectory")
+    : ActionBasedControllerHandle<control_msgs::FollowJointTrajectoryAction>(name, ns)
   {
   }
 
-  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory &trajectory)
+  virtual bool sendTrajectory(const moveit_msgs::RobotTrajectory& trajectory)
   {
     if (!controller_action_client_)
       return false;
@@ -272,20 +271,21 @@ public:
     if (done_)
       ROS_DEBUG_STREAM("Sending trajectory to FollowJointTrajectory action for controller " << name_);
     else
-      ROS_DEBUG_STREAM("Sending continuation for the currently executed trajectory to FollowJointTrajectory action for controller " << name_);
+      ROS_DEBUG_STREAM(
+          "Sending continuation for the currently executed trajectory to FollowJointTrajectory action for controller "
+          << name_);
     control_msgs::FollowJointTrajectoryGoal goal;
     goal.trajectory = trajectory.joint_trajectory;
-    controller_action_client_->sendGoal(goal,
-                                        boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerDoneCallback, this, _1, _2),
-                                        boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerActiveCallback, this),
-                                        boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerFeedbackCallback, this, _1));
+    controller_action_client_->sendGoal(
+        goal, boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerDoneCallback, this, _1, _2),
+        boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerActiveCallback, this),
+        boost::bind(&Pr2FollowJointTrajectoryControllerHandle::controllerFeedbackCallback, this, _1));
     done_ = false;
     last_exec_ = moveit_controller_manager::ExecutionStatus::RUNNING;
     return true;
   }
 
 protected:
-
   void controllerDoneCallback(const actionlib::SimpleClientGoalState& state,
                               const control_msgs::FollowJointTrajectoryResultConstPtr& result)
   {
@@ -305,14 +305,14 @@ protected:
 class Pr2MoveItControllerManager : public moveit_controller_manager::MoveItControllerManager
 {
 public:
-
   Pr2MoveItControllerManager() : node_handle_("~")
   {
     if (node_handle_.hasParam("controller_manager_name"))
       node_handle_.getParam("controller_manager_name", controller_manager_name_);
     if (controller_manager_name_.empty())
-      node_handle_.param("pr2_controller_manager_name", controller_manager_name_, std::string("pr2_controller_manager"));
-    if (node_handle_.hasParam("use_controller_manager")) // 'use_controller_manager' is the old name
+      node_handle_.param("pr2_controller_manager_name", controller_manager_name_,
+                         std::string("pr2_controller_manager"));
+    if (node_handle_.hasParam("use_controller_manager"))  // 'use_controller_manager' is the old name
       node_handle_.param("use_controller_manager", use_controller_manager_, true);
     else
       node_handle_.param("use_pr2_controller_manager", use_controller_manager_, true);
@@ -324,7 +324,7 @@ public:
       if (controller_list.getType() != XmlRpc::XmlRpcValue::TypeArray)
         ROS_WARN("Controller list should be specified as an array");
       else
-        for (int i = 0 ; i < controller_list.size() ; ++i)
+        for (int i = 0; i < controller_list.size(); ++i)
           if (!controller_list[i].hasMember("name") || !controller_list[i].hasMember("joints"))
             ROS_WARN("Name and joints must be specifed for each controller");
           else
@@ -364,7 +364,7 @@ public:
               if (controller_list[i]["joints"].getType() == XmlRpc::XmlRpcValue::TypeArray)
               {
                 int nj = controller_list[i]["joints"].size();
-                for (int j = 0 ; j < nj ; ++j)
+                for (int j = 0; j < nj; ++j)
                   ci.joints_.push_back(std::string(controller_list[i]["joints"][j]));
               }
               else
@@ -383,29 +383,42 @@ public:
       if (use_controller_manager_)
         ROS_DEBUG_STREAM("No controller list specified. Using list obtained from the " << controller_manager_name_);
       else
-        ROS_ERROR_STREAM("Not using a controller manager and no controllers specified. There are no known controllers.");
+        ROS_ERROR_STREAM(
+            "Not using a controller manager and no controllers specified. There are no known controllers.");
     }
 
     if (use_controller_manager_)
     {
       static const unsigned int max_attempts = 5;
       unsigned int attempts = 0;
-      while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/list_controllers", ros::Duration(5.0)) && ++attempts < max_attempts)
-        ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/list_controllers" << " to come up");
+      while (ros::ok() &&
+             !ros::service::waitForService(controller_manager_name_ + "/list_controllers", ros::Duration(5.0)) &&
+             ++attempts < max_attempts)
+        ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/list_controllers"
+                                               << " to come up");
 
       if (attempts < max_attempts)
-        while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/switch_controller", ros::Duration(5.0)) && ++attempts < max_attempts)
-          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/switch_controller" << " to come up");
+        while (ros::ok() &&
+               !ros::service::waitForService(controller_manager_name_ + "/switch_controller", ros::Duration(5.0)) &&
+               ++attempts < max_attempts)
+          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/switch_controller"
+                                                 << " to come up");
 
       if (attempts < max_attempts)
-        while (ros::ok() && !ros::service::waitForService(controller_manager_name_ + "/load_controller", ros::Duration(5.0))  && ++attempts < max_attempts)
-          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/load_controller" << " to come up");
+        while (ros::ok() &&
+               !ros::service::waitForService(controller_manager_name_ + "/load_controller", ros::Duration(5.0)) &&
+               ++attempts < max_attempts)
+          ROS_INFO_STREAM("Waiting for service " << controller_manager_name_ + "/load_controller"
+                                                 << " to come up");
 
       if (attempts < max_attempts)
       {
-        lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(controller_manager_name_ + "/list_controllers", true);
-        switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(controller_manager_name_ + "/switch_controller", true);
-        loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(controller_manager_name_ + "/load_controller", true);
+        lister_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::ListControllers>(
+            controller_manager_name_ + "/list_controllers", true);
+        switcher_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::SwitchController>(
+            controller_manager_name_ + "/switch_controller", true);
+        loader_service_ = root_node_handle_.serviceClient<pr2_mechanism_msgs::LoadController>(
+            controller_manager_name_ + "/load_controller", true);
       }
       else
         ROS_ERROR("Not using the PR2 controller manager");
@@ -416,16 +429,17 @@ public:
   {
   }
 
-  virtual moveit_controller_manager::MoveItControllerHandlePtr getControllerHandle(const std::string &name)
+  virtual moveit_controller_manager::MoveItControllerHandlePtr getControllerHandle(const std::string& name)
   {
-    std::map<std::string, moveit_controller_manager::MoveItControllerHandlePtr>::const_iterator it = handle_cache_.find(name);
+    std::map<std::string, moveit_controller_manager::MoveItControllerHandlePtr>::const_iterator it =
+        handle_cache_.find(name);
     if (it != handle_cache_.end())
       return it->second;
 
     moveit_controller_manager::MoveItControllerHandlePtr new_handle;
     if (possibly_unloaded_controllers_.find(name) != possibly_unloaded_controllers_.end())
     {
-      const std::string &ns = possibly_unloaded_controllers_.at(name).ns_;
+      const std::string& ns = possibly_unloaded_controllers_.at(name).ns_;
       new_handle = getControllerHandleHelper(name, ns);
     }
     else
@@ -436,36 +450,38 @@ public:
     return new_handle;
   }
 
-  virtual void getControllersList(std::vector<std::string> &names)
+  virtual void getControllersList(std::vector<std::string>& names)
   {
-    const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+    const pr2_mechanism_msgs::ListControllers::Response& res = getListControllerServiceResponse();
     std::set<std::string> names_set;
     names_set.insert(res.controllers.begin(), res.controllers.end());
 
-    for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
+    for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin();
+         it != possibly_unloaded_controllers_.end(); ++it)
       names_set.insert(it->first);
 
     names.clear();
     names.insert(names.end(), names_set.begin(), names_set.end());
   }
 
-  virtual void getActiveControllers(std::vector<std::string> &names)
+  virtual void getActiveControllers(std::vector<std::string>& names)
   {
     names.clear();
     if (use_controller_manager_)
     {
-      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+      const pr2_mechanism_msgs::ListControllers::Response& res = getListControllerServiceResponse();
       for (std::size_t i = 0; i < res.controllers.size(); ++i)
         if (res.state[i] == "running")
           names.push_back(res.controllers[i]);
     }
     else
       // we assume best case scenario if we can't test whether the controller is active or not
-      for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin() ; it != possibly_unloaded_controllers_.end() ; ++it)
+      for (std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.begin();
+           it != possibly_unloaded_controllers_.end(); ++it)
         names.push_back(it->first);
   }
 
-  virtual void getControllerJoints(const std::string &name, std::vector<std::string> &joints)
+  virtual void getControllerJoints(const std::string& name, std::vector<std::string>& joints)
   {
     std::map<std::string, ControllerInformation>::const_iterator it = possibly_unloaded_controllers_.find(name);
     if (it != possibly_unloaded_controllers_.end())
@@ -479,30 +495,32 @@ public:
         XmlRpc::XmlRpcValue joints_list;
         node_handle_.getParam(param_name, joints_list);
         if (joints_list.getType() == XmlRpc::XmlRpcValue::TypeArray)
-          for (int i = 0 ; i < joints_list.size() ; ++i)
+          for (int i = 0; i < joints_list.size(); ++i)
             joints.push_back((std::string)joints_list[i]);
       }
-      else
-        if (node_handle_.searchParam(name + "/joint", param_name))
-        {
-          std::string joint_name;
-          if (node_handle_.getParam(param_name, joint_name))
-            joints.push_back(joint_name);
-        }
+      else if (node_handle_.searchParam(name + "/joint", param_name))
+      {
+        std::string joint_name;
+        if (node_handle_.getParam(param_name, joint_name))
+          joints.push_back(joint_name);
+      }
       if (joints.empty())
-        ROS_INFO("The joints for controller '%s' are not known and were not found on the ROS param server under '%s/joints'or '%s/joint'. "
-                 "Perhaps the controller configuration is not loaded on the param server?", name.c_str(), name.c_str(), name.c_str());
-      ControllerInformation &ci = possibly_unloaded_controllers_[name];
+        ROS_INFO("The joints for controller '%s' are not known and were not found on the ROS param server under "
+                 "'%s/joints'or '%s/joint'. "
+                 "Perhaps the controller configuration is not loaded on the param server?",
+                 name.c_str(), name.c_str(), name.c_str());
+      ControllerInformation& ci = possibly_unloaded_controllers_[name];
       ci.joints_ = joints;
     }
   }
 
-  virtual moveit_controller_manager::MoveItControllerManager::ControllerState getControllerState(const std::string &name)
+  virtual moveit_controller_manager::MoveItControllerManager::ControllerState
+  getControllerState(const std::string& name)
   {
     moveit_controller_manager::MoveItControllerManager::ControllerState state;
     if (use_controller_manager_)
     {
-      const pr2_mechanism_msgs::ListControllers::Response &res = getListControllerServiceResponse();
+      const pr2_mechanism_msgs::ListControllers::Response& res = getListControllerServiceResponse();
       for (std::size_t i = 0; i < res.controllers.size(); ++i)
       {
         if (res.controllers[i] == name)
@@ -526,7 +544,7 @@ public:
     return state;
   }
 
-  virtual bool switchControllers(const std::vector<std::string> &activate, const std::vector<std::string> &deactivate)
+  virtual bool switchControllers(const std::vector<std::string>& activate, const std::vector<std::string>& deactivate)
   {
     if (!use_controller_manager_)
     {
@@ -537,9 +555,9 @@ public:
     if (!activate.empty())
     {
       // load controllers to be activated, if needed
-      const std::vector<std::string> &loaded_c = getListControllerServiceResponse().controllers;
+      const std::vector<std::string>& loaded_c = getListControllerServiceResponse().controllers;
       std::set<std::string> loaded_c_set(loaded_c.begin(), loaded_c.end());
-      for (std::size_t i = 0 ; i < activate.size() ; ++i)
+      for (std::size_t i = 0; i < activate.size(); ++i)
         if (loaded_c_set.find(activate[i]) == loaded_c_set.end())
         {
           handle_cache_.erase(activate[i]);
@@ -577,8 +595,7 @@ public:
   }
 
 protected:
-
-  const pr2_mechanism_msgs::ListControllers::Response &getListControllerServiceResponse()
+  const pr2_mechanism_msgs::ListControllers::Response& getListControllerServiceResponse()
   {
     if (use_controller_manager_)
     {
@@ -594,7 +611,8 @@ protected:
     return cached_lister_response_;
   }
 
-  moveit_controller_manager::MoveItControllerHandlePtr getControllerHandleHelper(const std::string &name, const std::string &ns)
+  moveit_controller_manager::MoveItControllerHandlePtr getControllerHandleHelper(const std::string& name,
+                                                                                 const std::string& ns)
   {
     moveit_controller_manager::MoveItControllerHandlePtr new_handle;
     if (name == "l_gripper_controller" || name == "r_gripper_controller")
@@ -605,7 +623,8 @@ protected:
     }
     else
     {
-      new_handle.reset(ns.empty() ? new Pr2FollowJointTrajectoryControllerHandle(name) : new Pr2FollowJointTrajectoryControllerHandle(name, ns));
+      new_handle.reset(ns.empty() ? new Pr2FollowJointTrajectoryControllerHandle(name) :
+                                    new Pr2FollowJointTrajectoryControllerHandle(name, ns));
       if (!static_cast<Pr2FollowJointTrajectoryControllerHandle*>(new_handle.get())->isConnected())
         new_handle.reset();
     }
@@ -638,7 +657,6 @@ protected:
   };
   std::map<std::string, ControllerInformation> possibly_unloaded_controllers_;
 };
-
 }
 
 PLUGINLIB_EXPORT_CLASS(pr2_moveit_controller_manager::Pr2MoveItControllerManager,

@@ -37,7 +37,7 @@
 #include <move_group_interface/move_group.h>
 #include <ros/ros.h>
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   ros::init(argc, argv, "rw_move_group_interface_test", ros::init_options::AnonymousName);
 
@@ -45,76 +45,74 @@ int main(int argc, char **argv)
   spinner.start();
 
   move_group_interface::MoveGroup group("arm");
-//  move_group_interface::MoveGroup group2("left_arm");
-/*
-  std::vector<double> v0(7,0.0);
-  group.setJointValueTarget(v0);
+  //  move_group_interface::MoveGroup group2("left_arm");
+  /*
+    std::vector<double> v0(7,0.0);
+    group.setJointValueTarget(v0);
 
-  group.move();
-  sleep(1);
-  return 0;
-*/
-/*
-  std::vector<double> v;
-  v.push_back(0.4455);
-  v.push_back(-0.1734);
-  v.push_back(1.2177);
-  v.push_back(-0.18);
-  v.push_back(-1.37);
-  v.push_back(0);
-  v.push_back(0);
+    group.move();
+    sleep(1);
+    return 0;
+  */
+  /*
+    std::vector<double> v;
+    v.push_back(0.4455);
+    v.push_back(-0.1734);
+    v.push_back(1.2177);
+    v.push_back(-0.18);
+    v.push_back(-1.37);
+    v.push_back(0);
+    v.push_back(0);
 
-  group.setJointValueTarget(v);
+    group.setJointValueTarget(v);
 
-  group.move();
+    group.move();
 
-  sleep(3);
+    sleep(3);
 
-  //    std::vector<double> v;
+    //    std::vector<double> v;
 
-  v.clear();
-  v.push_back(-1.1);
-  v.push_back(0.5);
-  v.push_back(-0.373);
-  v.push_back(0.126);
-  v.push_back(-1.196);
-  v.push_back(0);
-  v.push_back(0);
-*/
+    v.clear();
+    v.push_back(-1.1);
+    v.push_back(0.5);
+    v.push_back(-0.373);
+    v.push_back(0.126);
+    v.push_back(-1.196);
+    v.push_back(0);
+    v.push_back(0);
+  */
 
+  /*
+  // safe plan
+    std::vector<double> v;
 
-/*
-// safe plan
-  std::vector<double> v;
+    v.push_back(0.27);
+    v.push_back(-0.68);
+    v.push_back(-0.89);
+    v.push_back(-1.09);
+    v.push_back(-0.87);
+    v.push_back(0);
+    v.push_back(0);
 
-  v.push_back(0.27);
-  v.push_back(-0.68);
-  v.push_back(-0.89);
-  v.push_back(-1.09);
-  v.push_back(-0.87);
-  v.push_back(0);
-  v.push_back(0);
+    group.setJointValueTarget(v);
+    group.move();
+    sleep(2);
 
-  group.setJointValueTarget(v);
-  group.move();
-  sleep(2);
+    std::vector<double> q;
+    q.push_back(0.47);
+    q.push_back(0.94);
+    q.push_back(-0.04);
+    q.push_back(0.95);
+    q.push_back(-1.67);
+    q.push_back(0);
+    q.push_back(0);
 
-  std::vector<double> q;
-  q.push_back(0.47);
-  q.push_back(0.94);
-  q.push_back(-0.04);
-  q.push_back(0.95);
-  q.push_back(-1.67);
-  q.push_back(0);
-  q.push_back(0);
+    group.setJointValueTarget(q);
+    group.move();
+    sleep(1);
+  */
 
-  group.setJointValueTarget(q);
-  group.move();
-  sleep(1);
-*/
-
-
-// evil plan
+  // evil plan
   std::vector<double> v;
 
   v.push_back(1.15);
@@ -141,8 +139,6 @@ int main(int argc, char **argv)
   group.setJointValueTarget(q);
   group.move();
   sleep(1);
-
-
 
   return 0;
 }
