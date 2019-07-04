@@ -19,8 +19,10 @@
   <build_depend>cmake_modules</build_depend>
   <build_depend>moveit_core</build_depend>
   <build_depend>roscpp</build_depend>
+  <build_depend>rosconsole</build_depend>
   <build_depend>kdl_parser</build_depend>
   <build_depend>urdf</build_depend>
+  <build_depend>tf</build_depend>
   <build_depend>tf_conversions</build_depend>
   <build_depend>eigen_conversions</build_depend>
   <build_depend>pluginlib</build_depend>
@@ -28,12 +30,13 @@
   <build_depend>pr2_mechanism_msgs</build_depend>
   <build_depend>pr2_controllers_msgs</build_depend>
   <build_depend>actionlib</build_depend>
-  <build_depend>angles</build_depend>
 
   <run_depend>moveit_core</run_depend>
   <run_depend>roscpp</run_depend>
+  <run_depend>rosconsole</run_depend>
   <run_depend>kdl_parser</run_depend>
   <run_depend>urdf</run_depend>
+  <run_depend>tf</run_depend>
   <run_depend>tf_conversions</run_depend>
   <run_depend>eigen_conversions</run_depend>
   <run_depend>pluginlib</run_depend>
@@ -41,7 +44,6 @@
   <run_depend>pr2_mechanism_msgs</run_depend>
   <run_depend>pr2_controllers_msgs</run_depend>
   <run_depend>actionlib</run_depend> 
-  <run_depend>angles</run_depend>
 
   <export>
     <moveit_core plugin="${prefix}/pr2_moveit_sensor_manager_plugin_description.xml"/>
