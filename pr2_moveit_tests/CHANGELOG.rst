@@ -2,6 +2,13 @@
 Changelog for package pr2_moveit_tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.2 (2019-10-01)
+------------------
+* [maintenance] Fix travis (`#103 <https://github.com/ros-planning/moveit_pr2/issues/103>`_)
+  - Implement kinematics test with a gtest fixture class
+  - Fix catkin_lint issues
+* Contributors: Robert Haschke
+
 0.7.1 (2019-03-31)
 ------------------
 * adjust tests to Ptr typedefs

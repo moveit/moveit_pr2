@@ -2,6 +2,12 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.2 (2019-10-01)
+------------------
+* [maintenance] Fix Travis (`#103 <https://github.com/ros-planning/moveit_pr2/issues/103>`_)
+* [maintenance] Adapt IK to newer KDL API (`#101 <https://github.com/ros-planning/moveit_pr2/issues/101>`_)
+* Contributors: Kei Okada, Robert Haschke
+
 0.7.1 (2019-03-31)
 ------------------
 * use urdf typedefs to stay compatible with boost vs std ptrs
