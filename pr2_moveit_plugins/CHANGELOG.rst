@@ -2,6 +2,11 @@
 Changelog for package pr2_moveit_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.7.3 (2019-10-06)
+------------------
+* [fix] Add missing package: angles
+* Contributors: Robert Haschke
+
 0.7.2 (2019-10-01)
 ------------------
 * [maintenance] Fix Travis (`#103 <https://github.com/ros-planning/moveit_pr2/issues/103>`_)
