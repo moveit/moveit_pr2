@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   tf_conversions
   urdf
+  angles
 )
 
 find_package(Eigen3 REQUIRED)
