@@ -19,4 +19,5 @@
   <exec_depend>joint_state_publisher</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>pr2_description</exec_depend>
+  <exec_depend>pr2_moveit_plugins</exec_depend>
 </package>
