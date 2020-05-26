@@ -2,7 +2,10 @@ moveit_setup_assistant_config:
   URDF:
     package: pr2_description
     relative_path: robots/pr2.urdf.xacro
+    xacro_args: ""
   SRDF:
     relative_path: config/pr2.srdf
   CONFIG:
-    generated_timestamp: 1364768330
+    author_name: MoveIt Setup Assistant
+    author_email: assistant@moveit.ros.org
+    generated_timestamp: 1590536702
