@@ -209,7 +209,7 @@ left_arm_and_torso:
     - LazyPRMstar
     - SPARS
     - SPARStwo
-  projection_evaluator: joints(torso_lift_joint,l_shoulder_pan_joint)
+  projection_evaluator: joints(l_shoulder_pan_joint,l_shoulder_lift_joint)
   longest_valid_segment_fraction: 0.005
 right_arm:
   default_planner_config: ""
@@ -238,7 +238,7 @@ right_arm:
     - LazyPRMstar
     - SPARS
     - SPARStwo
-  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
+  projection_evaluator: link(r_wrist_roll_link)
   longest_valid_segment_fraction: 0.005
 right_arm_and_torso:
   default_planner_config: ""
@@ -267,7 +267,7 @@ right_arm_and_torso:
     - LazyPRMstar
     - SPARS
     - SPARStwo
-  projection_evaluator: joints(torso_lift_joint,r_shoulder_pan_joint)
+  projection_evaluator: joints(r_shoulder_pan_joint,r_shoulder_lift_joint)
   longest_valid_segment_fraction: 0.005
 arms:
   default_planner_config: ""
@@ -296,7 +296,7 @@ arms:
     - LazyPRMstar
     - SPARS
     - SPARStwo
-  projection_evaluator: joints(l_shoulder_pan_joint,l_shoulder_lift_joint)
+  projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
   longest_valid_segment_fraction: 0.005
 head:
   default_planner_config: ""
@@ -386,6 +386,7 @@ arms_and_torso:
 whole_body:
   default_planner_config: ""
   planner_configs:
+  projection_evaluator: joints(r_shoulder_pan_joint,l_shoulder_pan_joint)
     - AnytimePathShortening
     - SBL
     - EST
