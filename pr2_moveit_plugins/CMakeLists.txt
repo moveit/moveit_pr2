@@ -36,8 +36,6 @@ catkin_package(
     pr2_mechanism_msgs
 )
 
-add_compile_options(-std=c++11)
-
 include_directories(pr2_arm_kinematics/include)
 include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 include_directories(${catkin_INCLUDE_DIRS})
